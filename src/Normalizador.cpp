@@ -17,18 +17,12 @@ Normalizador::Normalizador() {
 Normalizador::~Normalizador() {
 	// TODO Auto-generated destructor stub
 }
-std::string Normalizador::toStr(char c ) {
-   return std::string( 1, c );
-}
 
-std::string Normalizador::normalizarString(std::string& palabra){
-	this->str.clear();
-	 for (unsigned i=0; i<palabra.length(); ++i){
-		 //this->toStr(palabra.at(i));
-		 this->str.insert(i,this->toStr(this->normalizarLetra(palabra.at(i))));
-	 }
 
-	return this->str;
+std::string Normalizador::stringMinuscula(std::string& palabra){
+
+	 transform(palabra.begin(), palabra.end(), palabra.begin(), ::tolower);
+	return palabra;
 }
 
 char Normalizador::normalizarLetra(char letra){

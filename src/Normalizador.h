@@ -10,12 +10,10 @@
 
 #include <string>
 #include <locale>
+#include <algorithm>
 
 class Normalizador {
-private:
 
-	std::string str;
-	std::string toStr( char c );
 public:
 	Normalizador();
 	virtual ~Normalizador();
