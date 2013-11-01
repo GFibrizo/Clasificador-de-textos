@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <string.h>
+#include <ios>
 
 class ManejadorArchivos {
 private:
@@ -26,9 +27,11 @@ public:
 
   void abrirLectura(const std::string& miruta);
 
-  bool leerunalinea(std::string& micadena);
+  bool leerUnaLinea(std::string& micadena);
 
-  void terminarlinea();
+  void terminarLinea();
+
+  bool estaAlFinal();
 
 };
 #endif /* MANEJADORARCHIVOS_H_ */

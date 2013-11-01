@@ -45,7 +45,7 @@ void ManejadorArchivos::abrirLectura(const std::string& nombre){
 //}
 // Lo que lee lo guardo en micadena
 //Retorna true si pudo leer una linea, o false en caso contrario
-bool ManejadorArchivos::leerunalinea(string& micadena){
+bool ManejadorArchivos::leerUnaLinea(string& micadena){
 
 	char linea[256];
 
@@ -69,13 +69,19 @@ bool ManejadorArchivos::leerunalinea(string& micadena){
  * Posiciona el cursor en una nueva linea debajo de la actual
  *
  */
-void ManejadorArchivos::terminarlinea() {
+void ManejadorArchivos::terminarLinea() {
   // intenta escribir en el archivo
   miarchivo << endl;
 
   if (miarchivo.fail())
     //si se produjo un error, arroja una excepcion
     throw std::ios_base::failure("No se pudo terminar la linea");
+}
+
+bool ManejadorArchivos::estaAlFinal(){
+	
+	return miarchivo.eof();
+	
 }
 
 
