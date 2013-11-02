@@ -15,16 +15,17 @@
 
 #define CANT_MAX 1000
 #define CANT_DE_SEPARADORES 61
+#define RUTA_STOPWORDS "/files/stop_words"
+#define RUTA_ARCHIVOS "/files/"
+#define ARCHIVO_HASH_SECUNDARIO "archivo_hash2_1"
 
 void preprocesarDatos() {
 
 	//levanta archivos del directorio:
-	std::vector<std::string> vector_archivos = leer_dir ("/files/");
+	std::vector<std::string> vector_archivos = leer_dir (RUTA_ARCHIVOS);
 
 	//hashes a utilizar:
-	typedef std::unordered_map<std::string,std::int> hash;
-	hash hash_stopwords = devolver_hash_stopwords(); //
-	/*hash hash_abecedario = devolver_hash_abecedario(); */
+	typedef std::unordered_map<std::string,std::int> hash; // puede ir afuera
 	hash hash_aux;
 	hash hashPrincipal = unordered_map(1000);
 	hash hashSecundario = unordered_map(1000);
@@ -32,10 +33,11 @@ void preprocesarDatos() {
 	
 	//Crea instancias de las clases usadas:
 	ManejadorArchivos manejador;
+	VerificadorStopWords verificador[RUTA_STOPWORDS];
 	
 	//Archivo para hashes secundarios:
 	std::fstream archivoHashSecundario;
-	archivoHashSecundario.open("archivo_hash2_1", std::fstream::app); //modo append
+	archivoHashSecundario.open(ARCHIVO_HASH_SECUNDARIO, std::fstream::app); //modo append
 	//si no se puede abrir:
 	if (!archivoHashSecundario.is_open()){
 		throw std::ios_base::failure("El archivo no se abre");
@@ -50,7 +52,7 @@ void preprocesarDatos() {
 	//trabaja con cada archivo:
 	for (i = 0; i >= vector_archivos.size(); i++){
 		manejador.abrirLectura(vector_archivos[i]);
-		while (!manejador.estaAlFinal()){
+		while (!manejador.estaAlFinal()) {
 			manejador.leerunalinea(auxLinea);
 		
 			/* ¿Que deberia hacer con la linea? le tiene que sacar los 
@@ -67,7 +69,7 @@ void preprocesarDatos() {
 					palabra = auxPalabra;
 					pasarAminusculas(palabra);
 					//veo si es un stopword y sino lo agrego a hashes:
-					if (!hashStopwords.count(palabra)){
+					if ((verificador.verificarPalabra(palabra)) == false){
 						agregarElementoAHash(hashPrincipal, palabra);
 						agregarElementoAHash(hashSecundario, palabra);
 					}	
@@ -76,9 +78,8 @@ void preprocesarDatos() {
 			delete []linea;
 			delete auxPalabra;
 				
-		} //termina de trabajar con ese archivo
-		//CERRAR ESE ARCHIVO
-		
+		} //termina de trabajar con ese archivo, el destructor lo cierra.
+				
 		//guardo la referencia al hash secundario viejo en una cola de hashes
 		colaHashesSecundarios.push(hashSecundario);
 		//referencio la variable hash_secundario a un nuevo hash de un nuevo archivo
@@ -91,13 +92,13 @@ void preprocesarDatos() {
 			while (colaHashesSecundarios.size() > 0){
 				hashAux = colaHashesSecundarios.pop();
 				escribirArchivoDeHash(archivoHashSecundario, hashAux);
-				~hashAux;
+				~hashAux;//
 			}
 		}
 		
 		
 	}
-	//CERRAR ARCHIVO DE HASH SECUNDARIO	
+	archivoHashSecundario.close();
 
 	
 }
@@ -107,15 +108,15 @@ void preprocesarDatos() {
 
 //Si la clave no esta en el hash, la agrega asociada a un valor 0.
 //Si la clave esta en el hash, aumenta en 1 el valor asociado.
-void agregar_elemento_a_hash(unordered_map<char*,int> hash, const char* clave) {
+void agregar_elemento_a_hash(unordered_map<str::string,int> hash, const str::string clave) {
 	
 	if (hash.count(clave) == 1) hash[clave] += 1;
 	hash[clave] = 0;
 	
 }
 
-
-void escribir_archivo_de_hash(FILE* archivo, unordered_map<char*,int> hash) {
+//OJO: no es char* es std::string
+void escribir_archivo_de_hash(std::fstream archivo, unordered_map<std::string,int> hash) {
 	
 	for (auto iterador = hash.begin(); iterador != hash.end(); iterador++){
 		//FALTA COMPLETAR
@@ -123,7 +124,6 @@ void escribir_archivo_de_hash(FILE* archivo, unordered_map<char*,int> hash) {
 	}
 	
 }
-
 
 
 void pasarAminusculas(std::string& str){
