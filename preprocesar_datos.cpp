@@ -1,5 +1,5 @@
-#include <stdio>
-#include <stdlib>
+#include <stdio.h>
+#include <stdlib.h>
 #include <cstdbool>
 #include <fstream>
 #include <iostream>
@@ -59,7 +59,7 @@ void preprocesarDatos() {
 			 * descarta, sino la agrega a los hashes correspondientes.
 			 */
 			char *linea = new char[256];
-			strcpy(linea, auxLinea.c_str());
+			strcpy(linea, auxLinea.c_str()); //
 			//auxPalabra va a tener una lista de palabras sacando los tokens 
 			char* auxPalabra = strtok(linea,*invalidos);
 
