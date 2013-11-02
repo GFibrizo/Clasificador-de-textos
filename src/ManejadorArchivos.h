@@ -1,8 +1,5 @@
 /*
  * ManejadorArchivos.h
- *
- *  Created on: 25/05/2013
- *      Author: pablo
  */
 
 #ifndef MANEJADORARCHIVOS_H_

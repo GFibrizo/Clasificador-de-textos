@@ -15,8 +15,11 @@ class VerificadorStopWords {
 private:
 	std::tr1::unordered_set<std::string> tabla;
 public:
+	//constructor
 	VerificadorStopWords(std::string ruta);
+	//destructor
 	virtual ~VerificadorStopWords();
+	//Verifica si es un stopword
 	bool verificarPalabra(std::string);
 };
 

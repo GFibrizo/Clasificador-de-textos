@@ -1,8 +1,5 @@
 /*
  * ManejadorArchivos.cpp
- *
- *  Created on: 25/05/2013
- *      Author: pablo
  */
 
 #include "ManejadorArchivos.h"
@@ -15,6 +12,7 @@ ManejadorArchivos::ManejadorArchivos(){}
 
 
 /**
+  * Destructor del ManejadorArchivos:
   * Cierra el archivo unicamente, no lo destruye
   */
 ManejadorArchivos::~ManejadorArchivos() {
@@ -24,11 +22,11 @@ ManejadorArchivos::~ManejadorArchivos() {
 /*Abre el archivo pasado por parametro
  * en modo LECTURA
  */
-void ManejadorArchivos::abrirLectura(const std::string& nombre){
+void ManejadorArchivos::abrirLectura(const std::string &nombre){
 
 
 	//intenta abrir el archivo en modo lectura
-	  miarchivo.open(nombre.c_str(), std::fstream::in);
+	  miarchivo.open(nombre.c_str(), std::fstream::in); //in = read.
 
 	  if (!miarchivo.is_open())
 	          // si no se puede abrir
@@ -40,17 +38,17 @@ void ManejadorArchivos::abrirLectura(const std::string& nombre){
 //void ManejadorArchivos::abrirEscritura(const std::string& miruta){
 
 //	miarchivo.open(miruta.c_str(), std::fstream::in);
-
-
 //}
+
+
 // Lo que lee lo guardo en micadena
-//Retorna true si pudo leer una linea, o false en caso contrario
-bool ManejadorArchivos::leerUnaLinea(string& micadena){
+// Retorna true si pudo leer una linea, o false en caso contrario
+bool ManejadorArchivos::leerunalinea(string &micadena){
 
 	char linea[256];
 
-	  // lee del archivo a la linea, hasta haber leido:
-	  // MAX_LENGTH caracteres, o un fin de linea
+	  // lee del archivo a la linea, hasta haber leido
+	  // MAX_LENGTH caracteres, o un fin de linea:
 	  miarchivo.getline( (char*)&linea , 256 , '\n');
 	  micadena = linea;
 

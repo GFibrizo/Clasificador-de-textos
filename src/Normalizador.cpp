@@ -25,6 +25,7 @@ std::string Normalizador::stringMinuscula(std::string& palabra){
 	return palabra;
 }
 
+//CANCELADO:
 char Normalizador::normalizarLetra(char letra){
 	char temp;
 	//si no es una letra y no es espacio, retorno NULL

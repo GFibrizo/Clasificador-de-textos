@@ -8,9 +8,8 @@
 #include "VerificadorStopWords.h"
 
 
-
+//constructor: levanta el archivo de stopwords
 VerificadorStopWords::VerificadorStopWords(std::string ruta) {
-
 
 		ManejadorArchivos archivo;
 		archivo.abrirLectura(ruta);
@@ -21,8 +20,8 @@ VerificadorStopWords::VerificadorStopWords(std::string ruta) {
 		}
 
 }
-bool VerificadorStopWords::verificarPalabra(std::string palabra){
 
+bool VerificadorStopWords::verificarPalabra(std::string palabra){
 
 	if(tabla.count(palabra)==0){
 		return false;
