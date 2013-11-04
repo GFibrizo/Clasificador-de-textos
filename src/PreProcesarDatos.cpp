@@ -45,11 +45,22 @@ void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
 
 }
 
-
+string PreProcesarDatos::numberToString(int number){
+	stringstream ss;
+	ss << number;
+	string str = ss.str();
+	return str;
+}
 void PreProcesarDatos::escribirArchivoDeHash(hash hash){
+	string aux;
 
 	for (hash::iterator it= hash.begin(); it != hash.end(); it++){
-		//this->archivoHashSecundario.write(it->first,it->first.length());
+		aux.operator =(it->first);
+		aux.append(this->numberToString(it->second));
+		//aux=it->first;
+
+		//tam=std::tuple_size<decltype(it->pair)>::value;
+		this->archivoHashSecundario.write(aux.c_str(),aux.length());
 
 	}
 }

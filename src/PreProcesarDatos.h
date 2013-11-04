@@ -49,7 +49,8 @@ private:
 
 	void pasarAminusculas(string& str);
 	void escribirArchivoDeHash(hash hash);
-	void agregarElementoAHash(hash hash, string clave);
+	void agregarElementoAHash(hash& hash, string clave);
+	string numberToString(int number);
 public:
 	PreProcesarDatos(const char* ruta);
 	virtual ~PreProcesarDatos();
