@@ -15,8 +15,9 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 	this->vector_archivos = lecDirectorio->leerDir (ruta);
 	this->verifStopWord= new VerificadorStopWords(DIR_STOP_WORDS);
 	this->manejador = new ManejadorArchivos() ;
-	this->hashPrincipal= tr1::unordered_map(1000);
-	this->hashSecundario= tr1::unordered_map(1000);
+//TODO ver como inicializar estos hash, de esta manera no funca
+//	this->hashPrincipal= tr1::unordered_map(1000);
+//	this->hashSecundario= tr1::unordered_map(1000);
 	this->archivoHashSecundario.open(DIR_FILE_HASH_2, fstream::app); //modo append
 		//si no se puede abrir:
 		if (!this->archivoHashSecundario.is_open()){
