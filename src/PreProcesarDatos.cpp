@@ -15,8 +15,6 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 	this->vector_archivos = lecDirectorio->leerDir (ruta);
 	this->verifStopWord= new VerificadorStopWords(DIR_STOP_WORDS);
 
-	//this->hashPrincipal= tr1::unordered_map(1000);
-	//this->hashSecundario= tr1::unordered_map(1000);
 	this->archivoHashSecundario.open(DIR_FILE_HASH_2, fstream::app); //modo append
 		//si no se puede abrir:
 		if (!this->archivoHashSecundario.is_open()){
@@ -37,20 +35,23 @@ void PreProcesarDatos::pasarAminusculas(string& str){
 
 //Si la clave no esta en el hash, la agrega asociada a un valor 0.
 //Si la clave esta en el hash, aumenta en 1 el valor asociado.
-void PreProcesarDatos::agregarElementoAHash(hash hash, string clave){
+void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
 
-//	if (hash.count(clave) == 1) hash[clave] += 1;
-//	hash[clave] = 0;
+	if (hash.count(clave) > 0){
+		 hash[clave]=hash[clave]+ 1;
+		 return;
+	}
+	hash[clave] = 1;
 
 }
 
 
 void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 
-//	for (auto iterador = hash.begin(); iterador != hash.end(); iterador++){
-//		//FALTA COMPLETAR
-//
-//	}
+	for (hash::iterator it= hash.begin(); it != hash.end(); it++){
+		//this->archivoHashSecundario.write(it->first,it->first.length());
+
+	}
 }
 
 void PreProcesarDatos::preProcesarDatos(){
@@ -82,7 +83,7 @@ void PreProcesarDatos::preProcesarDatos(){
 					//veo si es un stopword y sino lo agrego a hashes:
 					if(!this->verifStopWord->verificarPalabra(palabra)){
 						//COUT
-						cout<<palabra<<endl;
+						//cout<<palabra<<endl;
 						agregarElementoAHash(this->hashPrincipal, palabra);
 						agregarElementoAHash(this->hashSecundario, palabra);
 					}
@@ -104,8 +105,10 @@ void PreProcesarDatos::preProcesarDatos(){
 		 * en memoria, estos se guardan en un archivo. */
 		if (this->colaHashesSecundarios.size() >= CANT_MAX){
 			while (this->colaHashesSecundarios.size() > 0){
-				//TODO incorrecto el modo de asignacion
-				//this->hashAux.insert(this->colaHashesSecundarios.pop());; // = this->colaHashesSecundarios.pop();
+				//TODO esto es muy dudoso
+
+				this->hashAux  = this->colaHashesSecundarios.front();
+				this->colaHashesSecundarios.pop();
 				escribirArchivoDeHash(this->hashAux);
 			}
 		}
