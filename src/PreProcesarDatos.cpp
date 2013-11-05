@@ -14,8 +14,7 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 	//levanta archivos del directorio:
 	this->vector_archivos = lecDirectorio->leerDir (ruta);
 	this->verifStopWord= new VerificadorStopWords(DIR_STOP_WORDS);
-
-	this->archivoHashSecundario.open(DIR_FILE_HASH_2, fstream::app); //modo append
+	this->archivoHashSecundario.open(DIR_FILE_HASH_2, ios_base::out | ios_base::app); //modo append
 		//si no se puede abrir:
 		if (!this->archivoHashSecundario.is_open()){
 			throw std::ios_base::failure("El archivo no se abre");
@@ -53,16 +52,17 @@ string PreProcesarDatos::numberToString(int number){
 }
 void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 	string aux;
-
+	//cout<<"llega a la funcion"<<endl;
 	for (hash::iterator it= hash.begin(); it != hash.end(); it++){
 		aux.operator =(it->first);
+		aux.append(",");
 		aux.append(this->numberToString(it->second));
-		//aux=it->first;
-
-		//tam=std::tuple_size<decltype(it->pair)>::value;
-		this->archivoHashSecundario.write(aux.c_str(),aux.length());
-
+		this->archivoHashSecundario << aux.c_str();
+		//cout<<"Clave-Valor: "<<aux<<" tamaño: "<<aux.length()<<endl;
 	}
+	//aux.append("\n");
+	this->archivoHashSecundario <<  endl;
+	//this->archivoHashSecundario.write(aux.c_str(),aux.length());
 }
 
 void PreProcesarDatos::preProcesarDatos(){
@@ -94,7 +94,7 @@ void PreProcesarDatos::preProcesarDatos(){
 					//veo si es un stopword y sino lo agrego a hashes:
 					if(!this->verifStopWord->verificarPalabra(palabra)){
 						//COUT
-						//cout<<palabra<<endl;
+						cout<<palabra<<endl;
 						agregarElementoAHash(this->hashPrincipal, palabra);
 						agregarElementoAHash(this->hashSecundario, palabra);
 					}

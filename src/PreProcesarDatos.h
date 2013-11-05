@@ -24,7 +24,7 @@
 #include "LectorDirectorios.h"
 
 
-#define CANT_MAX 1000
+#define CANT_MAX 3//1000
 #define CANT_DE_SEPARADORES 61
 //TODO Tratar de tener separados los directorios donde se utilicen archivos que utiliza el sistema
 #define DIR_STOP_WORDS "sistema/stop_words"
@@ -41,7 +41,8 @@ private:
 	hash hashPrincipal;
 	hash hashSecundario;
 	queue<hash> colaHashesSecundarios;
-	fstream archivoHashSecundario;
+	//fstream archivoHashSecundario;
+	ofstream archivoHashSecundario;
 	vector<string> vector_archivos;
 	const char* invalidos;
 	ManejadorArchivos* manejador;
