@@ -15,6 +15,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <tr1/unordered_map>
 #include <vector>
 #include <queue>
@@ -22,6 +23,7 @@
 #include "ManejadorArchivos.h"
 #include "VerificadorStopWords.h"
 #include "LectorDirectorios.h"
+#include "Porter.h"
 
 
 #define CANT_MAX 3//1000
@@ -52,6 +54,8 @@ private:
 	void escribirArchivoDeHash(hash hash);
 	void agregarElementoAHash(hash& hash, string clave);
 	string numberToString(int number);
+	void generarArchivoConDatosPonderados();
+	string stem_palabra(string palabra);
 public:
 	PreProcesarDatos(const char* ruta);
 	virtual ~PreProcesarDatos();

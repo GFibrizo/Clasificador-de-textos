@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <getopt.h>
 
-int main (int argc, char **argv) {
+int main1 (int argc, char **argv) {
 
 	bool one_flag = false;
 	bool g_flag = false;

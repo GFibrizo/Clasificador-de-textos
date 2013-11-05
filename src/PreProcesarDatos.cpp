@@ -93,6 +93,7 @@ void PreProcesarDatos::preProcesarDatos(){
 					pasarAminusculas(palabra);
 					//veo si es un stopword y sino lo agrego a hashes:
 					if(!this->verifStopWord->verificarPalabra(palabra)){
+						palabra = stem_palabra(palabra);
 						//COUT
 						cout<<palabra<<endl;
 						agregarElementoAHash(this->hashPrincipal, palabra);
@@ -132,4 +133,26 @@ void PreProcesarDatos::preProcesarDatos(){
 
 const char* PreProcesarDatos::getInvalidos(){
 	return this->invalidos;
+}
+
+
+void PreProcesarDatos::generarArchivoConDatosPonderados(){
+	
+	//TO BE IMPLEMENTED
+	
+	
+}
+
+
+string stem_palabra(string palabra){
+	
+	char *palabra_c = new char[palabra.length() + 1];
+	strcpy(palabra_c, palabra.c_str());
+
+	int final = stem(palabra_c, 0, strlen(palabra_c)-1);
+	delete [] palabra_c;
+	
+	return palabra.substr(0,final);
+	
+	
 }
