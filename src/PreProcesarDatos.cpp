@@ -96,6 +96,7 @@ void PreProcesarDatos::preProcesarDatos(){
 						palabra = stem_palabra(palabra);
 						//COUT
 						cout<<palabra<<endl;
+                  //TODO Ver que estamos agregando al hash principal, no coincide con lo que esta en el informe
 						agregarElementoAHash(this->hashPrincipal, palabra);
 						agregarElementoAHash(this->hashSecundario, palabra);
 					}
