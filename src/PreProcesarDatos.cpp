@@ -144,7 +144,7 @@ void PreProcesarDatos::generarArchivoConDatosPonderados(){
 }
 
 
-string stem_palabra(string palabra){
+string PreProcesarDatos::stem_palabra(string palabra){
 	
 	char *palabra_c = new char[palabra.length() + 1];
 	strcpy(palabra_c, palabra.c_str());
