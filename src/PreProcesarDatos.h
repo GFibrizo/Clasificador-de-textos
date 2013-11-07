@@ -37,8 +37,13 @@ using namespace std;
 
 class PreProcesarDatos {
 private:
-	//hashes a utilizar:
-	typedef tr1::unordered_map<string,int> hash;
+	typedef struct {
+			int frecuencia;
+			int documentos;
+		}t_datosHash;
+		//hashes a utilizar:
+		typedef tr1::unordered_map<string,t_datosHash> t_hashPrincipal;
+		typedef tr1::unordered_map<string,int> hash;
 	hash hashAux;
 	hash hashPrincipal;
 	hash hashSecundario;
@@ -56,6 +61,7 @@ private:
 	string numberToString(int number);
 	void generarArchivoConDatosPonderados();
 	string stem_palabra(string palabra);
+	void agregarElementoAHashPrincipal(t_hashPrincipal& hash,string palabra,int numDoc);
 public:
 	PreProcesarDatos(const char* ruta);
 	virtual ~PreProcesarDatos();

@@ -15,6 +15,7 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 	this->vector_archivos = lecDirectorio->leerDir (ruta);
 	this->verifStopWord= new VerificadorStopWords(DIR_STOP_WORDS);
 	this->archivoHashSecundario.open(DIR_FILE_HASH_2, ios_base::out | ios_base::app); //modo append
+	this->verifDocDiferentes=0;
 		//si no se puede abrir:
 		if (!this->archivoHashSecundario.is_open()){
 			throw std::ios_base::failure("El archivo no se abre");
@@ -44,6 +45,26 @@ void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
 
 }
 
+void PreProcesarDatos::agregarElementoAHashPrincipal(t_hashPrincipal& hash,string clave,int numDoc){
+	//Si encuentra la clave en el hash
+
+	if (hash.count(clave) > 0){
+
+		//si el documento actual es diferente al documento anterior
+		if(this->verifDocDiferentes!=numDoc){
+
+			hash[clave].documentos=hash[clave].documentos+1;
+			this->verifDocDiferentes=numDoc;
+
+		}
+		hash[clave].frecuencia=hash[clave].frecuencia+1;
+
+		return;
+	}
+	hash[clave].documentos=1;
+	hash[clave].frecuencia=1;
+}
+
 string PreProcesarDatos::numberToString(int number){
 	stringstream ss;
 	ss << number;
@@ -52,17 +73,15 @@ string PreProcesarDatos::numberToString(int number){
 }
 void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 	string aux;
-	//cout<<"llega a la funcion"<<endl;
 	for (hash::iterator it= hash.begin(); it != hash.end(); it++){
 		aux.operator =(it->first);
 		aux.append(",");
 		aux.append(this->numberToString(it->second));
+		aux.append(" ");
 		this->archivoHashSecundario << aux.c_str();
-		//cout<<"Clave-Valor: "<<aux<<" tamaño: "<<aux.length()<<endl;
 	}
-	//aux.append("\n");
 	this->archivoHashSecundario <<  endl;
-	//this->archivoHashSecundario.write(aux.c_str(),aux.length());
+
 }
 
 void PreProcesarDatos::preProcesarDatos(){
@@ -97,7 +116,7 @@ void PreProcesarDatos::preProcesarDatos(){
 						//COUT
 						cout<<palabra<<endl;
                   //TODO Ver que estamos agregando al hash principal, no coincide con lo que esta en el informe
-						agregarElementoAHash(this->hashPrincipal, palabra);
+						agregarElementoAHashPrincipal(this->hashPrincipal, palabra,i);
 						agregarElementoAHash(this->hashSecundario, palabra);
 					}
 					auxPalabra = strtok (NULL, this->invalidos);// "siguiente"
