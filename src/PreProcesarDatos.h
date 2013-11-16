@@ -54,6 +54,8 @@ private:
 	const char* invalidos;
 	ManejadorArchivos* manejador;
 	VerificadorStopWords* verifStopWord;
+	int  verifDocDiferentes;
+	string directorio;
 
 	void pasarAminusculas(string& str);
 	void escribirArchivoDeHash(hash hash);
@@ -62,11 +64,12 @@ private:
 	void generarArchivoConDatosPonderados();
 	string stem_palabra(string palabra);
 	void agregarElementoAHashPrincipal(t_hashPrincipal& hash,string palabra,int numDoc);
+	void relative_dir_base_split(const string& path, string& dir);
 public:
 	PreProcesarDatos(const char* ruta);
 	virtual ~PreProcesarDatos();
 	void preProcesarDatos();
-	const char* getInvalidos();
+
 
 };
 

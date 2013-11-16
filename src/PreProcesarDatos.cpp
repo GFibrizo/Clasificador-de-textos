@@ -7,7 +7,21 @@
 
 #include "PreProcesarDatos.h"
 
+void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir)
+{
+  std::string::size_type slash_pos = path.rfind("/"); //Find the last slash
+  if (slash_pos != std::string::npos) //If there is a slash
+  {
+    slash_pos++;
+    dir = path.substr(0, slash_pos); //Directory is before slash
 
+  }
+  else //Otherwise, there is no directory present
+  {
+    dir.clear();
+
+  }
+}
 PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890";//[CANT_DE_SEPARADORES]
 	LectorDirectorios * lecDirectorio= new LectorDirectorios();
@@ -20,7 +34,7 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 		if (!this->archivoHashSecundario.is_open()){
 			throw std::ios_base::failure("El archivo no se abre");
 		}
-
+	this->relative_dir_base_split(ruta,this->directorio);
 }
 
 PreProcesarDatos::~PreProcesarDatos() {
@@ -95,7 +109,7 @@ void PreProcesarDatos::preProcesarDatos(){
 		cout<<"Archivo: "<<this->vector_archivos[i]<<endl;
 		//TODO ver repositorio donde estaran los archivos
 		this->manejador = new ManejadorArchivos() ;
-		this->manejador->abrirLectura("files/"+this->vector_archivos[i]);
+		this->manejador->abrirLectura(this->directorio+this->vector_archivos[i]);
 			while ( this->manejador->leerUnaLinea(auxLinea)){
 			/* ¿Que deberia hacer con la linea? le tiene que sacar los
 			 * simbolos, numeros y espacios e ir devolviendo por palabra.
