@@ -32,7 +32,7 @@ public:
 	//Destructor
 	~Distancia();
 
-	double calcular_mas_cercano(double vector[CANT_DOCS], double* lista_de_vectores);
+	double* calcular_mas_cercano(double vector[CANT_DOCS], double* lista_de_vectores[]);
   
   
 };
