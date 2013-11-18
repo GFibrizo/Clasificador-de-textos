@@ -7,7 +7,7 @@
 
 #include "Punto.h"
 
-Punto::Punto() {
+Punto::Punto(vector<double> frecPond,int doc) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -15,4 +15,4 @@ Punto::Punto() {
 Punto::~Punto() {
 	// TODO Auto-generated destructor stub
 }
-
+Punto::Punto(){}

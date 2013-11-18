@@ -8,22 +8,22 @@
 #include "Cluster.h"
 using namespace std;
 Cluster::Cluster() {
-	this->clustroide= new  Punto();
+
 
 }
 
 Cluster::~Cluster() {
-	//delete this->puntos;
-	//delete this->clustroide;
+
 
 }
 
 	void Cluster::agregarElemento(Punto elemento){
 
+
 	}
-//	Punto Cluster::getClustroide(){
-//
-//	}
+	Punto Cluster::getClustroide(){
+		return this->clustroide;
+	}
 	bool Cluster::esSimilar(Cluster cluster){
 		return true;
 	}

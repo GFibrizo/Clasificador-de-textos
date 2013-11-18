@@ -15,7 +15,9 @@ private:
 	vector<double> frecPond;
 	int doc;
 public:
+	//Constructor por defecto en blanco
 	Punto();
+	Punto(vector<double> frecPond,int doc);
 	virtual ~Punto();
 };
 
