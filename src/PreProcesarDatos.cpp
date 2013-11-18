@@ -22,6 +22,11 @@ void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir)
 
   }
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+
 PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890";//[CANT_DE_SEPARADORES]
 	LectorDirectorios * lecDirectorio= new LectorDirectorios();
@@ -37,15 +42,27 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 	this->relative_dir_base_split(ruta,this->directorio);
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 PreProcesarDatos::~PreProcesarDatos() {
 
 	delete this->verifStopWord;
 	//delete this->manejador;
 	archivoHashSecundario.close();
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+
 void PreProcesarDatos::pasarAminusculas(string& str){
      transform(str.begin(), str.end(), str.begin(), ::tolower);
 }
+
+/**********************************************************************/
+/**********************************************************************/
 
 //Si la clave no esta en el hash, la agrega asociada a un valor 0.
 //Si la clave esta en el hash, aumenta en 1 el valor asociado.
@@ -56,13 +73,16 @@ void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
 		 return;
 	}
 	hash[clave] = 1;
-
 }
 
-void PreProcesarDatos::agregarElementoAHashPrincipal(t_hashPrincipal& hash,string clave,int numDoc){
+/**********************************************************************/
+/**********************************************************************/
+
+
+void PreProcesarDatos::agregarElementoAHashPrincipal(hash& hash,string clave, bool cambio_doc){
 	//Si encuentra la clave en el hash
 
-	if (hash.count(clave) > 0){
+/*	if (hash.count(clave) > 0){
 
 		//si el documento actual es diferente al documento anterior
 		if(this->verifDocDiferentes!=numDoc){
@@ -76,8 +96,17 @@ void PreProcesarDatos::agregarElementoAHashPrincipal(t_hashPrincipal& hash,strin
 		return;
 	}
 	hash[clave].documentos=1;
-	hash[clave].frecuencia=1;
+	hash[clave].frecuencia=1;*/
+	
+	if (cambio_doc){
+		hash[clave]=hash[clave]+ 1;	//aumento cant de docs
+		return;
+	}
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 string PreProcesarDatos::numberToString(int number){
 	stringstream ss;
@@ -85,24 +114,40 @@ string PreProcesarDatos::numberToString(int number){
 	string str = ss.str();
 	return str;
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+
 void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 	string aux;
 	for (hash::iterator it= hash.begin(); it != hash.end(); it++){
 		aux.operator =(it->first);
 		aux.append(",");
 		aux.append(this->numberToString(it->second));
-		aux.append(" ");
-		this->archivoHashSecundario << aux.c_str();
+//<<<<<<< .mine
+		//aux.append("\n");
+		this->archivoHashSecundario << aux.c_str() << endl;
+//=======
+//		aux.append(" ");
+//		this->archivoHashSecundario << aux.c_str();
+//>>>>>>> .r42
 	}
-	this->archivoHashSecundario <<  endl;
+	this->archivoHashSecundario <<  "/\n";
+	//this->archivoHashSecundario << "\n";
 
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 void PreProcesarDatos::preProcesarDatos(){
 	string auxLinea;
 	string palabra;
 	//trabaja con cada archivo:
 	unsigned int i;
+	unsigned int ant_i = -1;
 
 	for (i = 0; i <= this->vector_archivos.size(); i++){
 		//COUT prueba para ver que archivos se recupero en el directorio
@@ -110,7 +155,7 @@ void PreProcesarDatos::preProcesarDatos(){
 		//TODO ver repositorio donde estaran los archivos
 		this->manejador = new ManejadorArchivos() ;
 		this->manejador->abrirLectura(this->directorio+this->vector_archivos[i]);
-			while ( this->manejador->leerUnaLinea(auxLinea)){
+		while ( this->manejador->leerUnaLinea(auxLinea)){
 			/* ¿Que deberia hacer con la linea? le tiene que sacar los
 			 * simbolos, numeros y espacios e ir devolviendo por palabra.
 			 * Luego comprueba si la palabra es un stopword. Si lo es, la
@@ -118,7 +163,7 @@ void PreProcesarDatos::preProcesarDatos(){
 			 */
 			char *linea = new char[256];
 			strcpy(linea, auxLinea.c_str()); //
-			//auxPalabra va a tener una lista de palabras sacando los tokens
+			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
 			char* auxPalabra = strtok(linea,this->invalidos);
 
 			while ( auxPalabra != NULL ){
@@ -130,14 +175,14 @@ void PreProcesarDatos::preProcesarDatos(){
 						//COUT
 						cout<<palabra<<endl;
                   //TODO Ver que estamos agregando al hash principal, no coincide con lo que esta en el informe
-						agregarElementoAHashPrincipal(this->hashPrincipal, palabra,i);
+						agregarElementoAHashPrincipal(this->hashPrincipal, palabra, i != ant_i);
 						agregarElementoAHash(this->hashSecundario, palabra);
 					}
 					auxPalabra = strtok (NULL, this->invalidos);// "siguiente"
+					ant_i = i;
 			}
 			delete []linea;
 			delete auxPalabra;
-
 		} //termina de trabajar con ese archivo
 		//CERRAR ESE ARCHIVO
 		delete this->manejador;
@@ -165,17 +210,52 @@ void PreProcesarDatos::preProcesarDatos(){
 
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 const char* PreProcesarDatos::getInvalidos(){
 	return this->invalidos;
 }
 
+/**********************************************************************/
+/**********************************************************************/
 
-void PreProcesarDatos::generarArchivoConDatosPonderados(){
+
+void PreProcesarDatos::generarIndiceDocumentos(){
 	
-	//TO BE IMPLEMENTED
+	/*string auxLinea;
+	this->manejador = new ManejadorArchivos();
+	this->manejador->abrirLectura("sistema/file_hash2");
+	hash hashDocsEnMemoria;
 	
+	for (hash::iterator it= hashPrincipal.begin(); it != hash.end(); it++){
+		hashDocsEnMemoria[it->first] = 0;
+	}
 	
+	while ( this->manejador->leerUnaLinea(auxLinea)){
+	
+		char *linea = new char[50];
+		strcpy(linea, auxLinea.c_str());
+		string clave = str(strtok(linea, ",\n"));
+		string frecuencia = str(strtok(linea, ",\n"));
+		
+		
+		
+		if (clave.compare("/") == 0){
+			this->colaHashesSecundarios.push(hashDocsEnMemoria);
+			hash nuevoHash;
+			hashDocsEnMemoria = nuevoHash;
+			continue;
+		}
+			
+		hashDocsEnMemoria[clave] = frecuencia;
+		
+	}*/
 }
+
+/**********************************************************************/
+/**********************************************************************/
 
 
 string PreProcesarDatos::stem_palabra(string palabra){
@@ -187,6 +267,5 @@ string PreProcesarDatos::stem_palabra(string palabra){
 	delete [] palabra_c;
 	
 	return palabra.substr(0,final);
-	
-	
+		
 }

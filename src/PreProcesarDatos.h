@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <map>
 #include <tr1/unordered_map>
 #include <vector>
 #include <queue>
@@ -42,8 +43,8 @@ private:
 			int documentos;
 		}t_datosHash;
 		//hashes a utilizar:
-		typedef tr1::unordered_map<string,t_datosHash> t_hashPrincipal;
-		typedef tr1::unordered_map<string,int> hash;
+		//typedef tr1::unordered_map<string,t_datosHash> t_hashPrincipal;
+		typedef map<string,int> hash;
 	hash hashAux;
 	hash hashPrincipal;
 	hash hashSecundario;
@@ -61,10 +62,11 @@ private:
 	void escribirArchivoDeHash(hash hash);
 	void agregarElementoAHash(hash& hash, string clave);
 	string numberToString(int number);
-	void generarArchivoConDatosPonderados();
+	void generarIndiceDocumentos();
 	string stem_palabra(string palabra);
-	void agregarElementoAHashPrincipal(t_hashPrincipal& hash,string palabra,int numDoc);
+	void agregarElementoAHashPrincipal(hash& hash,string palabra, bool cambio_doc);
 	void relative_dir_base_split(const string& path, string& dir);
+	const char* getInvalidos();
 public:
 	PreProcesarDatos(const char* ruta);
 	virtual ~PreProcesarDatos();

@@ -48,8 +48,8 @@ bool ManejadorArchivos::leerUnaLinea(string &micadena){
 	char linea[256];
 
 	  // lee del archivo a la linea, hasta haber leido
-	  // MAX_LENGTH caracteres, o un fin de linea:
-	  miarchivo.getline( (char*)&linea , 256 , '\n');
+	  // MAX_LENGTH caracteres(en este caso 100 kbytes
+	  miarchivo.getline( (char*)&linea , 102400);
 	  micadena = linea;
 
 	  if (miarchivo.fail() ) {
