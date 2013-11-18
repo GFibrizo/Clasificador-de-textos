@@ -8,11 +8,26 @@
 #include "Cluster.h"
 using namespace std;
 Cluster::Cluster() {
-	// TODO Auto-generated constructor stub
+	this->clustroide= new  Punto();
 
 }
 
 Cluster::~Cluster() {
-	// TODO Auto-generated destructor stub
+	//delete this->puntos;
+	//delete this->clustroide;
+
 }
 
+	void Cluster::agregarElemento(Punto elemento){
+
+	}
+//	Punto Cluster::getClustroide(){
+//
+//	}
+	bool Cluster::esSimilar(Cluster cluster){
+		return true;
+	}
+	double Cluster::gradoCohesion(){
+		return 0;
+	}
+	void Cluster::calcularClustroide(){}

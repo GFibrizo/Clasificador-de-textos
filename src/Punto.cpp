@@ -6,7 +6,7 @@
  */
 
 #include "Punto.h"
-using namespace std;
+
 Punto::Punto() {
 	// TODO Auto-generated constructor stub
 

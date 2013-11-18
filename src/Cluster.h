@@ -11,7 +11,7 @@
 using namespace std;
 class Cluster {
 private:
-	Punto clustroide;
+	Punto* clustroide;
 	vector<Punto*> puntos;
 	void calcularClustroide();
 public:

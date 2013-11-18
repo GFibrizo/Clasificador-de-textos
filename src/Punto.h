@@ -7,6 +7,7 @@
 
 #ifndef PUNTO_H_
 #define PUNTO_H_
+#include <vector>
 using namespace std;
 
 class Punto {
@@ -14,7 +15,7 @@ private:
 	vector<double> frecPond;
 	int doc;
 public:
-	Punto(vector<double> frecPond,int doc);
+	Punto();
 	virtual ~Punto();
 };
 

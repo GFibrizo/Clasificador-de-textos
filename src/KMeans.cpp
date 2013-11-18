@@ -16,10 +16,10 @@ KMeans::~KMeans() {
 	// TODO Auto-generated destructor stub
 }
 
-vector<Cluster> calcularClusters(){
-
-	return NULL;
-}
+//vector<Cluster> calcularClusters(){
+//
+//	return NULL;
+//}
 void agregarElemento(Punto elemento){
 
 
