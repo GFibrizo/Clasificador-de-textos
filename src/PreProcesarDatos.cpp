@@ -98,6 +98,8 @@ void PreProcesarDatos::agregarElementoAHashPrincipal(hash& hash,string clave, bo
 	hash[clave].documentos=1;
 	hash[clave].frecuencia=1;*/
 	
+	if (hash.count(clave) == 0) hash[clave] = 1;
+	
 	if (cambio_doc){
 		hash[clave]=hash[clave]+ 1;	//aumento cant de docs
 		return;
@@ -224,7 +226,7 @@ const char* PreProcesarDatos::getInvalidos(){
 
 void PreProcesarDatos::generarIndiceDocumentos(){
 	
-	/*string auxLinea;
+	string auxLinea;
 	this->manejador = new ManejadorArchivos();
 	this->manejador->abrirLectura("sistema/file_hash2");
 	hash hashDocsEnMemoria;
@@ -235,7 +237,7 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 	
 	while ( this->manejador->leerUnaLinea(auxLinea)){
 	
-		char *linea = new char[50];
+		char *linea = new char[102400];
 		strcpy(linea, auxLinea.c_str());
 		string clave = str(strtok(linea, ",\n"));
 		string frecuencia = str(strtok(linea, ",\n"));
@@ -251,7 +253,7 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 			
 		hashDocsEnMemoria[clave] = frecuencia;
 		
-	}*/
+	}
 }
 
 /**********************************************************************/
