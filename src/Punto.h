@@ -12,9 +12,9 @@ using namespace std;
 class Punto {
 private:
 	vector<double> frecPond;
-	int cantDoc;
+	int doc;
 public:
-	Punto();
+	Punto(vector<double> frecPond,int doc);
 	virtual ~Punto();
 };
 
