@@ -15,12 +15,20 @@ class Punto {
 private:
 	vector<double> frecPond;
 	int doc;
+
 public:
 	Punto();
 	Punto(vector<double> frecPond,int doc);
 	virtual ~Punto();
 	double getNorma();
+
+
+	int getDocumento();
+	Punto  calcularCercanos(vector<Punto>  puntos);
+	double distanciaCoseno(Punto otroPunto);
+
 	vector<double> vectorDeFrecuencias();
+
 };
 
 #endif /* PUNTO_H_ */

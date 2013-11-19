@@ -78,7 +78,8 @@ vector<Punto> JerarquicoAglomerativo::buckShot(int cantDocs,unsigned int cantSem
 		for (i = 0; i < lista_puntos.size(); i++){
 		Punto actual = lista_puntos[i];
 			for (j = i+1; j < lista_puntos.size(); j++){
-				distancia = Distancia::distanciaCoseno(actual, lista_puntos[j]);
+				//distancia = Distancia::distanciaCoseno(actual, lista_puntos[j]);
+				distancia = actual.distanciaCoseno(lista_puntos[j]);
 				arista = Arista::Arista(actual, lista_puntos[j],distancia, i,j);
 				lista_puntos.push_back(arista);
 			}
@@ -125,7 +126,3 @@ Punto::Punto buscar_promedio(Arista::Arista arista){
 
 
 
-
-int main(){
-	return 0;
-}

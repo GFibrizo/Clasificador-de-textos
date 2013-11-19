@@ -37,3 +37,6 @@ Cluster::~Cluster() {
 
 
 	}
+	vector<Punto*> Cluster::getPuntos(){
+		return this->puntos;
+	}
