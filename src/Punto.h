@@ -8,6 +8,7 @@
 #ifndef PUNTO_H_
 #define PUNTO_H_
 #include <vector>
+#include<math.h>
 using namespace std;
 
 class Punto {
@@ -15,10 +16,10 @@ private:
 	vector<double> frecPond;
 	int doc;
 public:
-	//Constructor por defecto en blanco
 	Punto();
 	Punto(vector<double> frecPond,int doc);
 	virtual ~Punto();
+	double getNorma();
 };
 
 #endif /* PUNTO_H_ */

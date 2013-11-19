@@ -7,21 +7,24 @@
 
 #include "Cluster.h"
 using namespace std;
+
 Cluster::Cluster() {
+	this->clustroide= new Punto();
 
 
 }
 
 Cluster::~Cluster() {
+	delete this->clustroide;
 
 
 }
 
-	void Cluster::agregarElemento(Punto elemento){
-
+	void Cluster::agregarElemento(Punto* elemento){
+		this->puntos.push_back(elemento);
 
 	}
-	Punto Cluster::getClustroide(){
+	Punto* Cluster::getClustroide(){
 		return this->clustroide;
 	}
 	bool Cluster::esSimilar(Cluster cluster){
@@ -30,4 +33,7 @@ Cluster::~Cluster() {
 	double Cluster::gradoCohesion(){
 		return 0;
 	}
-	void Cluster::calcularClustroide(){}
+	void Cluster::calcularClustroide(){
+
+
+	}
