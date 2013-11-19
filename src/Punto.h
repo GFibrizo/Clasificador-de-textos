@@ -20,6 +20,7 @@ public:
 	Punto(vector<double> frecPond,int doc);
 	virtual ~Punto();
 	double getNorma();
+	vector<double> vectorDeFrecuencias();
 };
 
 #endif /* PUNTO_H_ */

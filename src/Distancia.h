@@ -13,8 +13,8 @@
 #include <cstdio>
 #include <math.h>
 #include <vector>
+#include "Punto.h"
 
-#define CANT_DOCS 3 //solo de prueba
 
 using namespace std;
 
@@ -22,7 +22,7 @@ class Distancia {
 	
 private:
 	
-	double distanciaCoseno(double vector1[CANT_DOCS], double vector2[CANT_DOCS]);
+	double distanciaCoseno(Punto punto1, Punto punto2);
    
 
 public:
@@ -32,7 +32,7 @@ public:
 	//Destructor
 	~Distancia();
 
-	double* calcular_mas_cercano(double vector[CANT_DOCS], double* lista_de_vectores[]);
+	Punto calcular_mas_cercano(Punto v1, vector<Punto> lista_de_puntos);
   
   
 };

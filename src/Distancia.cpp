@@ -8,13 +8,14 @@ Distancia::~Distancia(){}
 
 
 //Recibe dos vectores de frecuencias, devuelve la distancia entre los vectores calculada con el metodo del coseno
-double distanciaCoseno(double vector1[CANT_DOCS], double vector2[CANT_DOCS]){
+double distanciaCoseno(Punto punto1, Punto punto2){
 	double suma = 0.0;
 	double norma1 = 0.0;
 	double norma2 = 0.0;
 	double coseno;
-	
-	for (int i=0; i<CANT_DOCS; i++){
+	vector <double> vector1 = punto1.vectorDeFrecuencias();
+	vector <double> vector2 = punto2.vectorDeFrecuencias();
+	for (int i=0; i<vector1.size(); i++){ 
 		suma += (vector1[i] * vector2[i]);
 		norma1 += (vector1[i] * vector1[i]);
 		norma2 += (vector2[i] * vector2[i]);
@@ -24,22 +25,20 @@ double distanciaCoseno(double vector1[CANT_DOCS], double vector2[CANT_DOCS]){
 	return coseno;
 }	
 
-// Recibe un vector v1 y una lista de vectores.
-// Devuelve el vector de la lista de vectores que este mas cerca de v1.
-// No estoy segura de "double* lista_de_vectores "
-double* calcular_mas_cercano(double vector[CANT_DOCS], double* lista_de_vectores[]){
+// Recibe un punto v1 y una lista de puntos.
+// Devuelve el punto de la lista de puntos que este mas cerca de v1.
+Punto calcular_mas_cercano(Punto v1, vector<Punto> lista_de_puntos){
 	double distancia_maxima = 0;
 	double distancia_coseno;
-	double* vector_mas_cercano;
-	int largo_lista_de_vectores = 3; //CAMBIAR, SOLO PARA PROBAR,depende de como se declare el vector.
-	for (int i=0; i < largo_lista_de_vectores; i++){
-		distancia_coseno = distanciaCoseno(vector, lista_de_vectores[i]);
+	Punto punto_mas_cercano;
+	for (unsigned int i=0; i < lista_de_puntos.size(); i++){
+		distancia_coseno = distanciaCoseno(v1, lista_de_puntos[i]);
 		if (distancia_coseno > distancia_maxima){
 			distancia_maxima = distancia_coseno;
-			vector_mas_cercano = lista_de_vectores[i];
+			punto_mas_cercano = lista_de_puntos[i];
 		}				
 	}
-	return vector_mas_cercano;	
+	return punto_mas_cercano;	
 }
 
 	
