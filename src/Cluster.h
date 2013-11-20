@@ -14,6 +14,7 @@ private:
 	Punto* centroide;
 	vector<Punto*> puntos;
 	void calcularCentroide();
+	
 public:
 	Cluster();
 	virtual ~Cluster();
