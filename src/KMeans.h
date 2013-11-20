@@ -10,7 +10,7 @@
 using namespace std;
 #include "Cluster.h"
 #include "Punto.h"
-#include "Distancia.h"
+
 class KMeans {
 private:
 	int numClusters;

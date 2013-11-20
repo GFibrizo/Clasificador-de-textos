@@ -9,13 +9,13 @@
 using namespace std;
 
 Cluster::Cluster() {
-	this->clustroide= new Punto();
+	this->centroide= new Punto();
 
 
 }
 
 Cluster::~Cluster() {
-	delete this->clustroide;
+	delete this->centroide;
 
 
 }
@@ -24,8 +24,8 @@ Cluster::~Cluster() {
 		this->puntos.push_back(elemento);
 
 	}
-	Punto* Cluster::getClustroide(){
-		return this->clustroide;
+	Punto* Cluster::getCentroide(){
+		return this->centroide;
 	}
 	bool Cluster::esSimilar(Cluster cluster){
 		return true;
@@ -33,9 +33,21 @@ Cluster::~Cluster() {
 	double Cluster::gradoCohesion(){
 		return 0;
 	}
-	void Cluster::calcularClustroide(){
-
-
+	void Cluster::calcularCentroide(){
+		Punto temp;
+		int cantPuntos=this->puntos.size();
+		//Acumulo en un punto temporal la suma de todas las componentes de los
+		//puntos de cluster
+		for (int i = 0;  i < cantPuntos-1; i++) {
+			for (int j = 0;  j < this->puntos[i]->vectorDeFrecuencias().size()-1; j++) {
+				temp.vectorDeFrecuencias()[j]+=this->puntos[i]->vectorDeFrecuencias()[j];
+			}
+		}
+		//Ahora divido por el total de puntos para normalizar
+		for (int i = 0;  i < temp.vectorDeFrecuencias().size(); i++) {
+			temp.vectorDeFrecuencias()[i]=temp.vectorDeFrecuencias()[i]/cantPuntos;
+		}
+		this->centroide=temp;
 	}
 	vector<Punto*> Cluster::getPuntos(){
 		return this->puntos;

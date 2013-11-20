@@ -8,18 +8,17 @@
 #ifndef CLUSTER_H_
 #define CLUSTER_H_
 #include "Punto.h"
-#include "Distancia.h"
 using namespace std;
 class Cluster {
 private:
-	Punto* clustroide;
+	Punto* centroide;
 	vector<Punto*> puntos;
-	void calcularClustroide();
+	void calcularCentroide();
 public:
 	Cluster();
 	virtual ~Cluster();
 	void agregarElemento(Punto* elemento);
-	Punto* getClustroide();
+	Punto* getCentroide();
 	bool esSimilar(Cluster cluster);
 	double gradoCohesion();
 	vector<Punto*> getPuntos();
