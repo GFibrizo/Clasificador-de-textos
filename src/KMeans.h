@@ -13,24 +13,26 @@ using namespace std;
 #include "Punto.h"
 #define MAX_ITERACIONES 5 //TODO VER
 #define CANT_CLUSTERS_DEFAULT 3 //TODO VER
+#define CORRIMIENTO_MINIMO 0.8
 class KMeans {
 private:
 	int numClusters;
-	//TODO es necesario tener esto, ya teniendo la lista de clusters donde cada cluster
-	//tiene su centroide no estariamos teniendo una lista de centroides?
-	vector<Punto> centroides;
-	vector<Cluster> clusters;
 	int maxIteraciones;
-	void calcularCentroides();
-	void actualizarCluster();
+	vector<Punto> semillas;
+	vector<Cluster> clusters;
+	vector<Punto>puntos;
+	vector<Punto> centroides;
 
+	void actualizarCentroides();
+	bool cambiosClusters();
+	void inicializarCentroides();
 public:
-	KMeans(vector<Punto> puntos,unsigned int maxIteraciones,unsigned int numClusters);
+	KMeans(vector<Punto> puntos,unsigned int maxIteraciones,unsigned int numClusters,vector<Punto> semillas);
 	virtual ~KMeans();
 	void calcularClusters();
 	void agregarElemento(Punto elemento);
 	vector<Cluster> getClusters();
+
 };
 
 #endif /* KMEANS_H_ */
-
