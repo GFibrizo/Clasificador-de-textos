@@ -31,7 +31,7 @@ void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir)
 
 PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\0";//[CANT_DE_SEPARADORES]
-	LectorDirectorios * lecDirectorio= new LectorDirectorios();
+	LectorDirectorios * lecDirectorio= new LectorDirectorios(); //no olvidar delete.
 	//levanta archivos del directorio:
 	this->vector_archivos = lecDirectorio->leerDir (ruta);
 	this->verifStopWord= new VerificadorStopWords(DIR_STOP_WORDS);

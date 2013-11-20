@@ -7,7 +7,7 @@
 
 #include "KMeans.h"
 using namespace std;
-KMeans::KMeans(vector<Punto>,int maxIteraciones,int numClusters) {
+KMeans::KMeans(vector<Punto>,unsigned int maxIteraciones, unsigned int numClusters) {
 	// TODO Auto-generated constructor stub
 
 }
