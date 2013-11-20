@@ -17,8 +17,10 @@ Cluster::~Cluster() {
 }
 
 void Cluster::agregarElemento(Punto* elemento){
+	//agrego un elemento nuevo
 	this->puntos.push_back(elemento);
-
+	//Cuando agrego un elemento recalculo el centroide
+	this->calcularCentroide();
 }
 Punto* Cluster::getCentroide(){
 	return this->centroide;
