@@ -34,18 +34,18 @@ Cluster::~Cluster() {
 		return 0;
 	}
 	void Cluster::calcularCentroide(){
-		Punto temp;
-		int cantPuntos=this->puntos.size();
+		Punto* temp= new Punto();
+		unsigned int cantPuntos=this->puntos.size();
 		//Acumulo en un punto temporal la suma de todas las componentes de los
 		//puntos de cluster
-		for (int i = 0;  i < cantPuntos-1; i++) {
-			for (int j = 0;  j < this->puntos[i]->vectorDeFrecuencias().size()-1; j++) {
-				temp.vectorDeFrecuencias()[j]+=this->puntos[i]->vectorDeFrecuencias()[j];
+		for (unsigned int i = 0;  i < cantPuntos-1; i++) {
+			for (unsigned int j = 0;  j < this->puntos[i]->vectorDeFrecuencias().size()-1; j++) {
+				temp->vectorDeFrecuencias()[j]+=this->puntos[i]->vectorDeFrecuencias()[j];
 			}
 		}
 		//Ahora divido por el total de puntos para normalizar
-		for (int i = 0;  i < temp.vectorDeFrecuencias().size(); i++) {
-			temp.vectorDeFrecuencias()[i]=temp.vectorDeFrecuencias()[i]/cantPuntos;
+		for (unsigned int i = 0;  i < temp->vectorDeFrecuencias().size(); i++) {
+			temp->vectorDeFrecuencias()[i]=temp->vectorDeFrecuencias()[i]/cantPuntos;
 		}
 		this->centroide=temp;
 	}
