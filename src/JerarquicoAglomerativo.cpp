@@ -68,6 +68,7 @@ Punto Arista::buscar_promedio(){
 		frecPond[i] = (v1[i] + v2[i]) / 2;	
 	}
 	Punto nuevo_punto = Punto(frecPond, -1);
+	cout<<nuevo_punto<<"\n";
 	return nuevo_punto;
 }		
 
