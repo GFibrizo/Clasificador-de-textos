@@ -68,7 +68,6 @@ Punto Arista::buscar_promedio(){
 		frecPond[i] = (v1[i] + v2[i]) / 2;	
 	}
 	Punto nuevo_punto = Punto(frecPond, -1);
-	cout<<nuevo_punto<<"\n";
 	return nuevo_punto;
 }		
 
@@ -110,7 +109,7 @@ vector<Punto> JerarquicoAglomerativo::buckShot(int cantDocs,unsigned int cantSem
 			for (j = i+1; j < lista_puntos.size(); j++){
 				distancia = actual.distanciaCoseno(lista_puntos[j]);
 				arista = Arista(actual, lista_puntos[j],distancia, i,j);
-				lista_puntos.push_back(arista);
+				lista_aristas.push_back(arista);
 			}
 		}
 		menor_arista = arista.buscar_minimo(lista_aristas);
@@ -125,7 +124,5 @@ vector<Punto> JerarquicoAglomerativo::buckShot(int cantDocs,unsigned int cantSem
 }
 
 	
-
-
 
 
