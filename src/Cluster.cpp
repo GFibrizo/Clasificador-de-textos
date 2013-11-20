@@ -39,7 +39,7 @@ Cluster::~Cluster() {
 		//Acumulo en un punto temporal la suma de todas las componentes de los
 		//puntos de cluster
 		for (unsigned int i = 0;  i < cantPuntos-1; i++) {
-			for (unsigned int j = 0;  j < this->puntos[i]->vectorDeFrecuencias().size()-1; j++) {
+			for (unsigned int j = 0;  j < this->puntos[i]->vectorDeFrecuencias().size(); j++) {
 				temp->vectorDeFrecuencias()[j]+=this->puntos[i]->vectorDeFrecuencias()[j];
 			}
 		}
