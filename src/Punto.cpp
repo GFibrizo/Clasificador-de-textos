@@ -36,9 +36,8 @@ double Punto::distanciaCoseno(Punto otroPunto){
 	double suma = 0.0;
 	double coseno;
 
-	for (int i=0; i<this->frecPond.size()-1; i++){
-		suma += (this->frecPond[i] * otroPunto.frecPond()[i]);
-
+	for (unsigned int i=0; i<this->frecPond.size()-1; i++){
+		suma += (this->frecPond[i] * otroPunto.frecPond[i]);
 	}
 
 	coseno = suma / (this->getNorma() * otroPunto.getNorma() );
@@ -52,12 +51,11 @@ Punto  Punto::calcularCercanos(vector<Punto>  puntos){
 	double distancia_coseno;
 	Punto vector_mas_cercano;
 
-
-	for(int i=0; i<puntos.size();i++){
-		distancia_coseno=this->distanciaCoseno(puntos[i]);
+	for(unsigned int i=0; i<puntos.size();i++){
+		distancia_coseno = this->distanciaCoseno(puntos[i]);
 		if (distancia_coseno > distancia_maxima){
 			distancia_maxima = distancia_coseno;
-			vector_mas_cercano = puntos;
+			vector_mas_cercano = puntos[i];
 		}
 	}
 	return vector_mas_cercano;
