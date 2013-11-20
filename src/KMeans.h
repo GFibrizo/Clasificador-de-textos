@@ -7,13 +7,17 @@
 
 #ifndef KMEANS_H_
 #define KMEANS_H_
+
 using namespace std;
 #include "Cluster.h"
 #include "Punto.h"
-
+#define MAX_ITERACIONES 5 //TODO VER
+#define CANT_CLUSTERS_DEFAULT 3 //TODO VER
 class KMeans {
 private:
 	int numClusters;
+	//TODO es necesario tener esto, ya teniendo la lista de clusters donde cada cluster
+	//tiene su centroide no estariamos teniendo una lista de centroides?
 	vector<Punto> centroides;
 	vector<Cluster> clusters;
 	int maxIteraciones;
@@ -21,11 +25,11 @@ private:
 	void actualizarCluster();
 
 public:
-	KMeans(vector<Punto>,int maxIteraciones,int numClusters);
+	KMeans(vector<Punto> puntos,unsigned int maxIteraciones,unsigned int numClusters);
 	virtual ~KMeans();
-	vector<Cluster> calcularClusters();
+	void calcularClusters();
 	void agregarElemento(Punto elemento);
-
+	vector<Cluster> getClusters();
 };
 
 #endif /* KMEANS_H_ */
