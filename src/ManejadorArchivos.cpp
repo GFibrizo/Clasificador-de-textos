@@ -45,11 +45,12 @@ void ManejadorArchivos::abrirLectura(const string &nombre){
 // Retorna true si pudo leer una linea, o false en caso contrario
 bool ManejadorArchivos::leerUnaLinea(string &micadena){
 
-	char linea[256];
+	
+	char linea[512];
 
 	  // lee del archivo a la linea, hasta haber leido
 	  // MAX_LENGTH caracteres(en este caso 100 kbytes
-	  miarchivo.getline( (char*)&linea , 102400);
+	  miarchivo.getline( (char*)&linea , 512);
 	  micadena = linea;
 
 	  if (miarchivo.fail() ) {
@@ -79,6 +80,23 @@ void ManejadorArchivos::terminarLinea() {
 bool ManejadorArchivos::estaAlFinal(){
 	
 	return miarchivo.eof();
+	
+}
+
+char* ManejadorArchivos::leerArchivo(){
+	
+    miarchivo.seekg (0, miarchivo.end);
+    int largo = miarchivo.tellg();
+    miarchivo.seekg (0, miarchivo.beg);
+
+    char * buffer = new char [largo-1];
+
+    miarchivo.read (buffer,largo-1);
+    
+    miarchivo.close();
+
+	return buffer;
+	
 	
 }
 

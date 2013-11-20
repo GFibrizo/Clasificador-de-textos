@@ -30,5 +30,7 @@ public:
 
   bool estaAlFinal();
 
+  char* leerArchivo();
+
 };
 #endif /* MANEJADORARCHIVOS_H_ */

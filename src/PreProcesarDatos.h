@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <cmath>
 #include <map>
 #include <tr1/unordered_map>
 #include <vector>
@@ -32,11 +33,14 @@
 //TODO Tratar de tener separados los directorios donde se utilicen archivos que utiliza el sistema
 #define DIR_STOP_WORDS "sistema/stop_words"
 #define DIR_FILE_HASH_2 "sistema/file_hash2"
+#define DIR_FILE_INDICE_FINAL "sistema/indiceDocumentos"
 
 using namespace std;
 
 
 class PreProcesarDatos {
+
+
 private:
 	typedef struct {
 			int frecuencia;
@@ -44,7 +48,9 @@ private:
 		}t_datosHash;
 		//hashes a utilizar:
 		//typedef tr1::unordered_map<string,t_datosHash> t_hashPrincipal;
-		typedef map<string,int> hash;
+	typedef map<string,int> hash;
+	typedef map<string,float> hash2;	
+		
 	hash hashAux;
 	hash hashPrincipal;
 	hash hashSecundario;
@@ -60,13 +66,17 @@ private:
 
 	void pasarAminusculas(string& str);
 	void escribirArchivoDeHash(hash hash);
+	void escribirArchivoIndice(hash2 hash, ofstream& indiceDocumentos);
 	void agregarElementoAHash(hash& hash, string clave);
 	string numberToString(int number);
+	string numberToString(float number);
 	void generarIndiceDocumentos();
 	string stem_palabra(string palabra);
 	void agregarElementoAHashPrincipal(hash& hash,string palabra, bool cambio_doc);
 	void relative_dir_base_split(const string& path, string& dir);
 	const char* getInvalidos();
+	hash2 generarHashMemoria();
+	float calcular_TF_IDF(string clave, float frecuencia);
 public:
 	PreProcesarDatos(const char* ruta);
 	virtual ~PreProcesarDatos();
