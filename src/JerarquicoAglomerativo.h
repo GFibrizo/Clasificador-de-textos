@@ -18,7 +18,7 @@ public:
 	JerarquicoAglomerativo();
 	//destructor:
 	virtual ~JerarquicoAglomerativo();
-	// recibe una cantidad de puntos K y una cantidad de docs N y devuelve un vector de 
+	// recibe una cantidad de puntos(semillas) K y una cantidad de docs N y devuelve un vector de 
 	// sqrt(N.K) enteros random.
 	vector<int> obtener_puntos_random(int cantidad_de_puntos, int cantidad_docs);
 	// recibe una cantidad de docs, una cantidad de semillas, y un vector con sqrt(N.K) 
