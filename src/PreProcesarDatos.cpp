@@ -11,18 +11,15 @@ typedef map<string,float> hash2;
 
 void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir)
 {
-  std::string::size_type slash_pos = path.rfind("/"); //Find the last slash
-  if (slash_pos != std::string::npos) //If there is a slash
-  {
-    slash_pos++;
-    dir = path.substr(0, slash_pos); //Directory is before slash
-
-  }
-  else //Otherwise, there is no directory present
-  {
-    dir.clear();
-
-  }
+	std::string::size_type slash_pos = path.rfind("/"); //Encuentra la barra
+	
+	if (slash_pos != std::string::npos) { //Si hay una barra
+		slash_pos++;
+		dir = path.substr(0, slash_pos); //Directorio esta antes de la barra
+		
+	} else { //Sino, no hay directorio
+		dir.clear();
+	}
 }
 
 /**********************************************************************/
@@ -82,23 +79,6 @@ void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
 
 
 void PreProcesarDatos::agregarElementoAHashPrincipal(hash& hash,string clave, bool cambio_doc){
-	//Si encuentra la clave en el hash
-
-/*	if (hash.count(clave) > 0){
-
-		//si el documento actual es diferente al documento anterior
-		if(this->verifDocDiferentes!=numDoc){
-
-			hash[clave].documentos=hash[clave].documentos+1;
-			this->verifDocDiferentes=numDoc;
-
-		}
-		hash[clave].frecuencia=hash[clave].frecuencia+1;
-
-		return;
-	}
-	hash[clave].documentos=1;
-	hash[clave].frecuencia=1;*/
 	
 	if (hash.count(clave) == 0) hash[clave] = 1;
 	
@@ -136,17 +116,10 @@ void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 		aux.operator =(it->first);
 		aux.append(",");
 		aux.append(this->numberToString(it->second));
-//<<<<<<< .mine
-		//aux.append("\n");
-//		this->archivoHashSecundario << aux.c_str() << endl;
-//=======
-		
 		aux.append(" ");
-		this->archivoHashSecundario << aux/*.c_str()<<endl*/;
-//>>>>>>> .r42
+		this->archivoHashSecundario << aux;
 	}
-	//this->archivoHashSecundario <<  "\n";
-	//this->archivoHashSecundario << endl;
+
 	this->archivoHashSecundario << ",//,";
 
 }
@@ -156,15 +129,14 @@ void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 
 
 void PreProcesarDatos::escribirArchivoIndice(hash2 hash, ofstream& archivoIndice){
+
 	string aux;
+	archivoIndice.setf( ios::fixed, ios::floatfield );
+	archivoIndice.precision(5);
 	for (hash2::iterator it= hash.begin(); it != hash.end(); it++){
-		aux.operator =(this->numberToString(it->second));
-		aux.append(",");
-		archivoIndice << aux.c_str();
-		//cout<< aux.c_str();
+		archivoIndice << it->second <<",";
 	}
 	archivoIndice << endl;
-	//archivoIndice << "\n";
 
 }
 
@@ -175,7 +147,6 @@ void PreProcesarDatos::escribirArchivoIndice(hash2 hash, ofstream& archivoIndice
 void PreProcesarDatos::preProcesarDatos(){
 	string auxLinea;
 	string palabra;
-	//trabaja con cada archivo:
 	unsigned int i;
 	unsigned int ant_i = -1;
 
@@ -184,67 +155,41 @@ void PreProcesarDatos::preProcesarDatos(){
 		if (this->vector_archivos[i].compare(".svn") == 0) continue;
 		//COUT prueba para ver que archivos se recupero en el directorio
 		cout<<"Archivo: "<<this->vector_archivos[i]<<endl;
-		//TODO ver repositorio donde estaran los archivos
 		this->manejador = new ManejadorArchivos() ;
 		this->manejador->abrirLectura(this->directorio+this->vector_archivos[i]);
 		
-		//char* texto = this->manejador->leerArchivo();
 		while ( this->manejador->leerUnaLinea(auxLinea)){
-			/* ¿Que deberia hacer con la linea? le tiene que sacar los
-			 * simbolos, numeros y espacios e ir devolviendo por palabra.
-			 * Luego comprueba si la palabra es un stopword. Si lo es, la
-			 * descarta, sino la agrega a los hashes correspondientes.
-			 */
-			 //cout<<"fifa\n";
+
 			char *linea = new char[512];
 			strcpy(linea, auxLinea.c_str()); //
 			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
 			char* auxPalabra = strtok(linea,this->invalidos);
-			//char* auxPalabra = strtok(texto,this->invalidos);
 
 			while ( auxPalabra != NULL ) {
 					palabra = auxPalabra;
 					pasarAminusculas(palabra);
+					
 					//veo si es un stopword y sino lo agrego a hashes:
 					if(!this->verifStopWord->verificarPalabra(palabra)){
 						palabra = stem_palabra(palabra);
 						//COUT
 						cout<<palabra<<endl;
-						//TODO Ver que estamos agregando al hash principal, no coincide con lo que esta en el informe
 						agregarElementoAHashPrincipal(this->hashPrincipal, palabra, i != ant_i);
 						agregarElementoAHash(this->hashSecundario, palabra);
 					}
-					auxPalabra = strtok (NULL, this->invalidos);// "siguiente"
+					auxPalabra = strtok (NULL, this->invalidos);
 					ant_i = i;
 			}
 			delete []linea;
 			delete auxPalabra;
 		} //termina de trabajar con ese archivo
-		//CERRAR ESE ARCHIVO
-		delete this->manejador;
-		//guardo la referencia al hash secundario viejo en una cola de hashes
 		
+		delete this->manejador;		
 		escribirArchivoDeHash(this->hashSecundario);
-		
-		//this->colaHashesSecundarios.push(this->hashSecundario);
 		//referencio la variable hash_secundario a un nuevo hash de un nuevo archivo
 		hash nuevoHash;
 		this->hashSecundario = nuevoHash;
-
-		/* Una vez que se llega a la cantidad maxima de hashes secundarios soportados
-		 * en memoria, estos se guardan en un archivo. */
-		//if (this->colaHashesSecundarios.size() >= CANT_MAX){
-		//	while (this->colaHashesSecundarios.size() > 0){
-				//TODO esto es muy dudoso
-
-		//		this->hashAux  = this->colaHashesSecundarios.front();
-		//		this->colaHashesSecundarios.pop();
-		//		escribirArchivoDeHash(this->hashAux);
-		//	}
-		//}
-		//~ManejadorArchivos();
 	}
-	//cout<<"lalal";
 	this->archivoHashSecundario << "!,";
 	this->archivoHashSecundario.close();
 	generarIndiceDocumentos();
@@ -272,7 +217,6 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 	this->manejador->abrirLectura(DIR_FILE_HASH_2);
 	ofstream indiceDocumentos;
 	indiceDocumentos.open(DIR_FILE_INDICE_FINAL, ios_base::out | ios_base::app);
-
 	hash2 hashDocsEnMemoria = generarHashMemoria();
 	string clave;
 	char* aux;
@@ -282,24 +226,18 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 	const char* fin1 = fin.c_str();
 	bool flag = false;
 
-
 	while ( this->manejador->leerUnaLinea(auxLinea)){
-	//char* texto = this->manejador->leerArchivo();
 	
 		char *linea = new char[512];
 		strcpy(linea, auxLinea.c_str());
 		largo = strlen(linea);
 		aux = strtok(linea, ", ");
 
-		//aux = strtok(texto, ",");
 		while ((aux != NULL) and (strcmp(aux,fin1) != 0)) {
 			
-			//if (flag) aux = strtok(NULL, ", ");
 			clave = aux;
-			//cout<<clave;
 			
 			if (clave.compare("//") == 0){
-				//cout<<"a";
 				escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
 				hash2 nuevoHash = generarHashMemoria();
 				hashDocsEnMemoria = nuevoHash;
@@ -315,15 +253,23 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 	indiceDocumentos.close();
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
 
 hash2 PreProcesarDatos::generarHashMemoria() {
 	
 	hash2 hashDocsEnMemoria;
+	
 	for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
 		hashDocsEnMemoria[it->first] = 0;
 	}
 	return hashDocsEnMemoria;
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
 	
