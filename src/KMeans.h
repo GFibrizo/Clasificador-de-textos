@@ -26,6 +26,7 @@ private:
 	void actualizarCentroides();
 	bool cambiosClusters();
 	void inicializarCentroides();
+	Cluster getClusterDistanciaMinima(Punto punto);
 public:
 	KMeans(vector<Punto> puntos,unsigned int maxIteraciones,unsigned int numClusters,vector<Punto> semillas);
 	virtual ~KMeans();

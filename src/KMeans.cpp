@@ -27,8 +27,6 @@ KMeans::~KMeans() {
  */
 void KMeans::calcularClusters(){
 	int cantIteraciones=0;
-	double distancia,distanciaMin;
-
 	//Primero calculo los centroides de los clusters con las semillas
 	inicializarCentroides();
 	Cluster temp;
@@ -37,17 +35,7 @@ void KMeans::calcularClusters(){
 		this->actualizarCentroides();
 		//itero sobre todos los puntos
 		for (unsigned int j = 0; j < this->puntos.size(); j++) {
-
-			distanciaMin=2;
-			//Calculo la distancia de este punto contra cada centroide
-			for (unsigned int i = 0; i < this->getClusters().size(); i++) {
-				distancia=this->puntos[j].distanciaCoseno(*(this->getClusters()[i].getCentroide()));
-				if(distancia<distanciaMin){
-					distanciaMin=distancia;
-					temp= this->getClusters()[i];
-				}
-
-			}
+			temp=this->getClusterDistanciaMinima(this->puntos[j]);
 			//Una vez obtenido el cluster al cual el punto esta a menor distancia
 			//Agrego este punto al cluster y se actualiza su centroide
 			temp.agregarElemento(&this->puntos[j]);
@@ -56,6 +44,21 @@ void KMeans::calcularClusters(){
 		cantIteraciones++;
 	}
 
+}
+Cluster KMeans::getClusterDistanciaMinima(Punto punto){
+	Cluster temp;
+	double distancia,distanciaMin;
+	distanciaMin=2;
+	//Calculo la distancia de este punto contra cada centroide
+	for (unsigned int i = 0; i < this->getClusters().size(); i++) {
+		distancia=punto.distanciaCoseno(*(this->getClusters()[i].getCentroide()));
+		if(distancia<distanciaMin){
+			distanciaMin=distancia;
+			temp= this->getClusters()[i];
+		}
+
+	}
+	return temp;
 }
 
 /*
@@ -110,6 +113,7 @@ void KMeans::inicializarCentroides(){
  */
 void KMeans::agregarElemento(Punto elemento){
 
-
+	Cluster temp= this->getClusterDistanciaMinima(elemento);
+	temp.agregarElemento(&elemento);
 
 }
