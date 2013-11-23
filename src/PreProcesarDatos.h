@@ -75,6 +75,7 @@ private:
 	void agregarElementoAHashPrincipal(hash& hash,string palabra, bool cambio_doc);
 	void relative_dir_base_split(const string& path, string& dir);
 	const char* getInvalidos();
+	//Genera un hash con las claves del hash principal y frecuencia 0.
 	hash2 generarHashMemoria();
 	float calcular_TF_IDF(string clave, float frecuencia);
 public:

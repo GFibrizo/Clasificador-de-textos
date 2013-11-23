@@ -213,11 +213,11 @@ const char* PreProcesarDatos::getInvalidos(){
 void PreProcesarDatos::generarIndiceDocumentos(){
 	
 	string auxLinea;
-	this->manejador = new ManejadorArchivos();
+	this->manejador = new ManejadorArchivos(); //posible perdida de memoria.
 	this->manejador->abrirLectura(DIR_FILE_HASH_2);
 	ofstream indiceDocumentos;
 	indiceDocumentos.open(DIR_FILE_INDICE_FINAL, ios_base::out | ios_base::app);
-	hash2 hashDocsEnMemoria = generarHashMemoria();
+	hash2 hashDocsEnMemoria = generarHashMemoria();//posible perdida de memoria
 	string clave;
 	char* aux;
 	float frecuencia = 0;
@@ -239,8 +239,8 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 			
 			if (clave.compare("//") == 0){
 				escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
-				hash2 nuevoHash = generarHashMemoria();
-				hashDocsEnMemoria = nuevoHash;
+				hash2 nuevoHash = generarHashMemoria();//posible perdida de memoria.
+				hashDocsEnMemoria = nuevoHash;//hay que borrar el anterior primero.
 				aux = strtok(NULL, ", ");
 				continue;
 			}
@@ -249,6 +249,7 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 			hashDocsEnMemoria[clave] = calcular_TF_IDF(clave, frecuencia);
 			aux = strtok(NULL, ", ");
 		}
+		//delete []linea; //SEGURO FALTA ESTO
 	}
 	indiceDocumentos.close();
 }
