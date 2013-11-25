@@ -51,7 +51,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	vector<Punto> lista_no_muestreados = manejador->LevantarListaDePuntos(indices_no_muestreados);
 	//Clasifico cada uno de esos puntos:
 	for (unsigned int j = 0; j < indices_no_muestreados.size(); j++){
-		Clustering::Clasificar(this->lista_de_clusters, lista_no_muestreados[j]);
+		Clustering::Clasificar(lista_no_muestreados[j]);
 	}
 	
 	//ya tengo todos los clusters armados.
@@ -81,9 +81,9 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 
 // (*) UNA VEZ QUE YA TENGO EL NUEVO PUNTO:
 // Recibe la lista_de_clusters del Clustering y el nuevo punto ya creado.
-void Clustering::Clasificar( vector<Cluster*> lista_de_clusters, Punto nuevo_punto){
+void Clustering::Clasificar(Punto nuevo_punto){
 	vector<Cluster*> cluster_destino; //lista de los clusters donde se va a agregar el nuevo punto.
-	
+	vector<Cluster*> lista_de_clusters = this->lista_de_clusters;
 	// Primero busco cual es la minima distancia.
 	double minima_distancia = (*(((*(lista_de_clusters[0])).getCentroide()))).distanciaCoseno(nuevo_punto);
 	for (unsigned int i = 1; i < lista_de_clusters.size() ; i++){
@@ -103,3 +103,10 @@ void Clustering::Clasificar( vector<Cluster*> lista_de_clusters, Punto nuevo_pun
 	}
 	
 }
+
+
+
+
+vector<Cluster*> Clustering::getListaClusters(){
+	return this->lista_de_clusters;
+}	
