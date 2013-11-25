@@ -7,11 +7,17 @@
 
 #include "KMeans.h"
 using namespace std;
-KMeans::KMeans(vector<Punto*> puntos,unsigned int maxIteraciones,vector<Punto*> semillas) {
-	//Si no se define un numero de clusters, se usa el por defecto
-	if(numClusters==0){
-		this->numClusters=CANT_CLUSTERS_DEFAULT;
+KMeans::KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,
+		vector<Punto> *semillas,bool multiPertenencia) {
+
+	this->numClusters = semillas->size();
+
+	if (maxIteraciones == 0) {
+		this->maxIteraciones = MAX_ITERACIONES;
+	} else {
+		this->maxIteraciones = maxIteraciones;
 	}
+	this->multiPertenencia=multiPertenencia;
 	this->semillas = *semillas;
 	this->puntos = *puntos;
 }
@@ -27,22 +33,27 @@ void KMeans::calcularClusters() {
 	int cantIteraciones = 0;
 	//Primero calculo los centroides de los clusters con las semillas
 	inicializarCentroides();
-	Cluster* temp;
+	//Cluster* temp;
+	vector<Cluster> temps;
 	//imprimirClusters();
 
 	//dejo de iterar cuando llego al maximo de iteraciones y no se registran cambios en los clusters
 	while ((cantIteraciones < this->maxIteraciones)
 			&& (!this->cambiosClusters())) {
-		//cout << "iteracion: " << cantIteraciones << endl;
+		cout << "iteracion: " << cantIteraciones << endl;
 		this->actualizarCentroides();
 
 		//itero sobre todos los puntos
 
 		for (unsigned int j = 0; j < this->puntos.size(); j++) {
-			temp = this->getClusterDistanciaMinima(puntos[j]);
+			//temp = this->getClusterDistanciaMinima(puntos[j]);
+			temps=this->getClustersDistanciaMinima(puntos[j]);
 			//Una vez obtenido el cluster al cual el punto esta a menor distancia
 			//Agrego este punto al cluster
-			temp->agregarElemento(&this->puntos[j]);
+			for (unsigned int k = 0; k < temps.size(); ++k) {
+				temps[k].agregarElemento(&this->puntos[j]);
+			}
+			//temp->agregarElemento(&this->puntos[j]);
 
 		}
 		//imprimirClusters();
@@ -50,22 +61,56 @@ void KMeans::calcularClusters() {
 	}
 
 }
+void KMeans::imprimirClusters() {
 
-Cluster* KMeans::getClusterDistanciaMinima(Punto punto) {
-	Cluster* temp;
+	for (unsigned int i = 0; i < clusters.size(); ++i) {
+		cout << "Cluster: " << endl;
+		cout << "tamaño del cluster: " << clusters[i].getPuntos().size()
+				<< endl;
+		for (unsigned int j = 0; j < clusters[i].getPuntos().size(); ++j) {
+
+			cout << clusters[i].getPuntos()[j]->getDocumento() << endl;
+		}
+	}
+}
+
+vector<Cluster> KMeans::getClustersDistanciaMinima(Punto punto) {
+
+	vector<Cluster> temps;
 	double distancia = 0;
 	double distanciaMin = 2;
 	//Calculo la distancia de este punto contra cada centroide
+	cout<<"Punto "<<punto.getDocumento()<<endl;
+
 	for (unsigned int i = 0; i < this->clusters.size(); i++) {
+
+		//prueba
+//		cout<<"num cluster: "<<i<<endl;
+//		cout<<"cantidad de elementos: "<<this->clusters[i].getPuntos().size()<<endl;
+//		cout<<"Centroide:"<<endl;
+//		for (unsigned int j = 0; j < this->clusters[i].getCentroide()->vectorDeFrecuencias().size(); ++j) {
+//			cout<<this->clusters[i].getCentroide()->vectorDeFrecuencias()[j]<<endl;
+//		}
+		//prueba
 		distancia = punto.distanciaCoseno(*(this->clusters[i].getCentroide()));
+		cout<<"Distancia "<<distancia<<endl;
+		//Si la distancia es minima y nueva-> limpio el vector de clusters,la seteo como distancia minima y agrego este cluster como cercano
 		if (distancia < distanciaMin) {
+			temps.clear();
 			distanciaMin = distancia;
-			temp = &this->clusters[i];
+			cout<<"nueva distancia minima"<<endl;
+			temps.push_back(this->clusters[i]);
+
+		}
+		//si la distancia es igual a la distancia minima, solo lo agrego a la lista de clusters cercanos
+		if((distancia==distanciaMin)&&(this->multiPertenencia)){
+			cout<<"distancia minima repetida"<<endl;
+			temps.push_back(this->clusters[i]);
 		}
 
 	}
 
-	return temp;
+	return temps;
 }
 
 /*
@@ -127,9 +172,15 @@ void KMeans::inicializarCentroides() {
  * Debe buscar el centroide mas cercano y agregarlo al cluster correspondiente
  */
 void KMeans::agregarElemento(Punto elemento) {
+	vector<Cluster> temp = this->getClustersDistanciaMinima(elemento);
+	//Una vez obtenido el cluster al cual el punto esta a menor distancia
+			//Agrego este punto al cluster
+			for (unsigned int k = 0; k < temp.size(); ++k) {
+				temp[k].agregarElemento(&elemento);
+			}
 
-	Cluster* temp = this->getClusterDistanciaMinima(elemento);
-	temp->agregarElemento(&elemento);
+
+
 
 }
 vector<Punto> KMeans::getPuntos() {
