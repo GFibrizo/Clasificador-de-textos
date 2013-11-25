@@ -23,23 +23,24 @@ private:
 	vector<Cluster> clusters;
 	vector<Punto>puntos;
 	vector<Punto> centroides;
-
+	bool multiPertenencia;
 	void actualizarCentroides();
 	bool cambiosClusters();
 	//TODO PRUEBA
 	void inicializarCentroides();
-	Cluster* getClusterDistanciaMinima(Punto punto);
+//	Cluster* getClusterDistanciaMinima(Punto punto);
+	vector<Cluster> getClustersDistanciaMinima(Punto punto);
 	void imprimirClusters();
 	vector<Punto> getPuntos();
 	vector<Punto> getSemillas();
 	vector<Punto> getCentroides();
 public:
-	KMeans(vector<Punto*> puntos,unsigned int maxIteraciones,vector<Punto*> semillas);
+	KMeans(vector<Punto> *puntos,unsigned int maxIteraciones,vector<Punto> *semillas,bool multiPertenencia);
 	virtual ~KMeans();
 
 	void calcularClusters();
 	void agregarElemento(Punto elemento);
-	vector<Cluster*> getClusters();
+	vector<Cluster> getClusters();
 
 };
 
