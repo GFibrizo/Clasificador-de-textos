@@ -14,7 +14,6 @@ private:
 	Punto* centroide;
 	vector<Punto*> puntos;
 	void calcularCentroide();
-	
 public:
 	Cluster();
 	virtual ~Cluster();
@@ -23,6 +22,8 @@ public:
 	bool esSimilar(Cluster cluster);
 	double gradoCohesion();
 	vector<Punto*> getPuntos();
+	void vaciarPuntos();
+
 };
 
 #endif /* CLUSTER_H_ */

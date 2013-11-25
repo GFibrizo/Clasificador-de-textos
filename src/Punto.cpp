@@ -33,14 +33,15 @@ double Punto::getNorma(){
 
 
 double Punto::distanciaCoseno(Punto otroPunto){
+
 	double suma = 0.0;
 	double coseno;
 
 	for (unsigned int i=0; i<this->frecPond.size()-1; i++){
 		suma += (this->frecPond[i] * otroPunto.frecPond[i]);
 	}
-
 	coseno = suma / (this->getNorma() * otroPunto.getNorma() );
+
 	return coseno;
 }
 // Recibe un vector v1 y una lista de vectores.
@@ -61,6 +62,9 @@ Punto  Punto::calcularCercanos(vector<Punto>  puntos){
 	return vector_mas_cercano;
 }
 
+int Punto::getDocumento(){
+	return this->doc;
+}
 
 
 vector<double> Punto::vectorDeFrecuencias(){

@@ -9,6 +9,7 @@
 #define PUNTO_H_
 #include <vector>
 #include<math.h>
+
 using namespace std;
 
 class Punto {
