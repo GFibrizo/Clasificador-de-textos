@@ -27,9 +27,9 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	vector<int> indices_random = jerarquico->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
 
 	//lista de puntos random:
-	vector<Punto*> puntos_iniciales= manejador->GenerarListaDePuntos(indices_random);
+	vector<Punto> puntos_iniciales= manejador->LevantarListaDePuntos(indices_random);
 	//lista de puntos muestra:
-	this->puntos_muestra = manejador->GenerarListaDePuntos(indices_muestra);
+	this->puntos_muestra = manejador->LevantarListaDePuntos(indices_muestra);
 	//obtiene semillas:
 	this->semillas = jerarquico->buckShot(cantidad_de_semillas, puntos_iniciales);
 
@@ -48,7 +48,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 		indice++;
 	}		
 	//Genero lista de puntos no muestreados:		
-	vector<Punto*> lista_no_muestreados = manejador->GenerarListaDePuntos(indices_no_muestreados);
+	vector<Punto> lista_no_muestreados = manejador->LevantarListaDePuntos(indices_no_muestreados);
 	//Clasifico cada uno de esos puntos:
 	for (unsigned int j = 0; j < indices_no_muestreados.size(); j++){
 		Clustering::Clasificar(this->lista_de_clusters, lista_no_muestreados[j]);
@@ -81,7 +81,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 
 // (*) UNA VEZ QUE YA TENGO EL NUEVO PUNTO:
 // Recibe la lista_de_clusters del Clustering y el nuevo punto ya creado.
-void Clustering::Clasificar( vector<Cluster*> lista_de_clusters, Punto* nuevo_punto){
+void Clustering::Clasificar( vector<Cluster*> lista_de_clusters, Punto nuevo_punto){
 	vector<Cluster*> cluster_destino; //lista de los clusters donde se va a agregar el nuevo punto.
 	
 	// Primero busco cual es la minima distancia.
@@ -99,7 +99,7 @@ void Clustering::Clasificar( vector<Cluster*> lista_de_clusters, Punto* nuevo_pu
 	}
 	// Agrego el punto a los clusters de la lista:
 	for (unsigned int x = 0; x < cluster_destino.size() ; x++){
-		(*(cluster_destino[x])).agregarElemento(nuevo_punto);
+		(*(cluster_destino[x])).agregarElemento(nuevo_punto); //agregar Clasificacion
 	}
 	
 }

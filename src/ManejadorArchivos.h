@@ -5,7 +5,7 @@
 #ifndef MANEJADORARCHIVOS_H_
 #define MANEJADORARCHIVOS_H_
 
-#define DIR_FILE_HASH_2 "sistema/file_hash2"
+#define DIR_FILE_INDICE_FINAL "sistema/indice_final" //VERIFICAR.
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
 #include <fstream>
@@ -42,7 +42,7 @@ public:
 
   char* leerArchivo();
   //Recibe un vector con numeros de docs, lee el archivo del hash secundario y crea y devuelve la lista de puntos correspondiente.
-  vector<Punto*> GenerarListaDePuntos(vector<int> numero_doc);
+  vector<Punto> LevantarListaDePuntos(vector<int> numero_doc);
 
 };
 #endif /* MANEJADORARCHIVOS_H_ */

@@ -128,61 +128,49 @@ char* ManejadorArchivos::leerArchivo(){
  *Crea y devuelve la lista de puntos correspondiente. */
 
 //Recibe una lista de numeros de docs NO ORDENADA
-vector<Punto*> ManejadorArchivos::GenerarListaDePuntos(vector<int> numero_doc){
+vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc){
 	//ordena la lista:
 	std::sort (numero_doc.begin(), numero_doc.end());
 	string auxLinea;
-	const char* barra = "//";
-	vector<double> vector_frec;
-	vector<Punto*> lista_de_puntos;
 	
-	this->abrirLectura(DIR_FILE_HASH_2);
+	vector<Punto> lista_de_puntos;
+	
+	this->abrirLectura(DIR_FILE_INDICE_FINAL);//
 
 	int indice = 0;
 	unsigned int j = 0;
-	int i = 0;
 	char *linea = new char[512];
 				
 	while ( (this->leerUnaLinea(auxLinea)) && (j<numero_doc.size())){
 		int doc = numero_doc[j];
-
-		strcpy(linea, auxLinea.c_str()); 
-		//auxPalabra va a ir conteniendo cada palabra sacando los tokens
-		char* auxPalabra = strtok(linea," ,  \n");
 		
-		while(auxPalabra != NULL){
-	
-			while ((indice != doc) && (auxPalabra != NULL)){
-				if (strcmp(auxPalabra,barra) == 0)	indice++; //buscar fin de vector "//"	.
-				auxPalabra = strtok (NULL, " ,  \n");
+		if (indice != doc) { //no es el doc que busco:
+			indice++;
+			continue;
+		}else { //para un doc que busco:
+			vector<double> vector_frec;
+			strcpy(linea, auxLinea.c_str()); 
+			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
+			char* auxPalabra = strtok(linea," ,  ");
+
+			while(auxPalabra != NULL){
+				std::string::size_type sz;     // alias of size_t
+				long double frec = std::stold (auxPalabra,&sz);
+				vector_frec.push_back(frec);	
+				auxPalabra = strtok(NULL," ,  ");
 			}
-			if (auxPalabra == NULL) break;
+			//termina la linea:	
+			indice++;
+			Punto punto =  Punto(vector_frec, doc);
+			lista_de_puntos.push_back(&punto);
+			j++; //pasa al siguiente doc
 			
-			//indice = numero_doc
-			if (strcmp(auxPalabra,barra) == 0){ //termino el doc.
-				i = 0;
-				indice++;
-				Punto punto =  Punto(vector_frec, doc);
-				lista_de_puntos.push_back(&punto);
-				j++; //pasa al siguiente doc
-				if (j < numero_doc.size()) doc = numero_doc[j];
-				//resetea el vector:
-				vector_frec.erase(vector_frec.begin(), vector_frec.end());
-
-			}else{ 	//los impares son frecuencias.
-				if (i%2 != 0){
-					std::string::size_type sz;     // alias of size_t
-					long double frec = std::stold (auxPalabra,&sz);
-					vector_frec.push_back(frec);	
-				}
-			}	
-			if (strcmp(auxPalabra,barra) != 0) 	i++;
-			auxPalabra = strtok (NULL," ,  \n");
 		}
+	}	
 		
-	} 
 	delete []linea;
 	return lista_de_puntos;
 	
 }
+
 

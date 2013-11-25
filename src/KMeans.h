@@ -15,8 +15,8 @@ using namespace std;
 
 class KMeans {
 private:
-	static const unsigned int MAX_ITERACIONES=5;
-	static const  double CORRIMIENTO_MINIMO=0.8;
+	static const unsigned int MAX_ITERACIONES = 5;
+	static const  double CORRIMIENTO_MINIMO = 0.8;
 	int numClusters;
 	int maxIteraciones;
 	vector<Punto> semillas;

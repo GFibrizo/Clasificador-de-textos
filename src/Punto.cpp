@@ -32,13 +32,13 @@ double Punto::getNorma(){
 }
 
 
-double Punto::distanciaCoseno(Punto* otroPunto){
+double Punto::distanciaCoseno(Punto otroPunto){
 
 	double suma = 0.0;
 	double coseno;
 
 	for (unsigned int i=0; i<this->frecPond.size()-1; i++){
-		suma += (this->frecPond[i] * (&otroPunto).frecPond[i]);
+		suma += (this->frecPond[i] * otroPunto.frecPond[i]);
 	}
 	coseno = suma / (this->getNorma() * otroPunto.getNorma() );
 
@@ -47,10 +47,10 @@ double Punto::distanciaCoseno(Punto* otroPunto){
 // Recibe un vector v1 y una lista de vectores.
 // Devuelve el vector de la lista de vectores que este mas cerca de v1.
 // No estoy segura de "double* lista_de_vectores "
-Punto*  Punto::calcularCercanos(vector<Punto*>  puntos){
+Punto  Punto::calcularCercanos(vector<Punto>  puntos){
 	double distancia_maxima = 0;
 	double distancia_coseno;
-	Punto* vector_mas_cercano;
+	Punto vector_mas_cercano;
 
 	for(unsigned int i=0; i<puntos.size();i++){
 		distancia_coseno = this->distanciaCoseno(puntos[i]);
