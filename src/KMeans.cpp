@@ -55,18 +55,7 @@ void KMeans::calcularClusters() {
 	}
 
 }
-void KMeans::imprimirClusters() {
 
-	for (unsigned int i = 0; i < clusters.size(); ++i) {
-		cout << "Cluster: " << endl;
-		cout << "tamaño del cluster: " << clusters[i].getPuntos().size()
-				<< endl;
-		for (unsigned int j = 0; j < clusters[i].getPuntos().size(); ++j) {
-
-			cout << clusters[i].getPuntos()[j]->getDocumento() << endl;
-		}
-	}
-}
 Cluster* KMeans::getClusterDistanciaMinima(Punto punto) {
 	Cluster* temp;
 	double distancia = 0;
