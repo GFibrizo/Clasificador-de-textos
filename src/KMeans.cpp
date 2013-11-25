@@ -7,8 +7,7 @@
 
 #include "KMeans.h"
 using namespace std;
-KMeans::KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,
-		vector<Punto> *semillas,bool multiPertenencia) {
+KMeans::KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,vector<Punto> *semillas,bool multiPertenencia) {
 
 	this->numClusters = semillas->size();
 
@@ -92,7 +91,7 @@ vector<Cluster> KMeans::getClustersDistanciaMinima(Punto punto) {
 //			cout<<this->clusters[i].getCentroide()->vectorDeFrecuencias()[j]<<endl;
 //		}
 		//prueba
-		distancia = punto.distanciaCoseno(*(this->clusters[i].getCentroide()));
+		distancia = punto.distanciaCoseno(this->clusters[i].getCentroide());
 		cout<<"Distancia "<<distancia<<endl;
 		//Si la distancia es minima y nueva-> limpio el vector de clusters,la seteo como distancia minima y agrego este cluster como cercano
 		if (distancia < distanciaMin) {
@@ -123,7 +122,7 @@ bool KMeans::cambiosClusters() {
 	for (unsigned int i = 0; i < this->getClusters().size(); i++) {
 		oldCentroid = this->centroides[i];
 		newCentroid = *(this->getClusters()[i].getCentroide());
-		difCentroides = oldCentroid.distanciaCoseno(newCentroid);
+		difCentroides = oldCentroid.distanciaCoseno(&newCentroid);
 		if (difCentroides >= CORRIMIENTO_MINIMO) {
 			cantDiferentes++;
 		}
