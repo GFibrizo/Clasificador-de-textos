@@ -75,24 +75,24 @@ Punto Arista::buscar_promedio(){
 
 /* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
  * agarraron de manera aleatoria para agrupar con el clustering jerarquico aglomerativo  */
-vector<int> JerarquicoAglomerativo::obtener_puntos_random(int cantidad_de_puntos, int cantidad_docs){
-	int i, numero;
+vector<int> JerarquicoAglomerativo::obtener_puntos_random(int cantidad_de_semillas, vector<int> docs_muestra){
+	int numero;
 	vector<int> lista_de_punteros;
-	for (i = 0; i < cantidad_de_puntos; i++) {	
+	for (unsigned int i = 0; i < sqrt(cantidad_de_semillas * docs_muestra.size()); i++) {	
 		// obtain a seed from the system clock:
 		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 		mt19937 generator (seed);
 		numero = generator();
-		lista_de_punteros.push_back(abs(numero % cantidad_docs));
+		lista_de_punteros.push_back(abs(numero % (docs_muestra.size())));
 	}
 	return lista_de_punteros;	
 }
 
 /* CON LA LISTA DE PUNTEROS, SE CARGAN ESOS PUNTOS A MEMORIA Y SE GUARDAN EN UNA LISTA QUE RECIBE BUCKSHOT*/
 
-/* Recibe cantidad de documentos, cantidad de semillas que se quiere y lista de los raiz(K.N) puntos a procesar.
+/* Recibe cantidad de semillas que se quiere y lista de los raiz(K.N) puntos a procesar.
  * Devuelve las K semillas que se usaran en el K-Means. */
-vector<Punto> JerarquicoAglomerativo::buckShot(int cantDocs,unsigned int cantSemillas,  vector<Punto> lista_puntos){
+vector<Punto> JerarquicoAglomerativo::buckShot(unsigned int cantSemillas,  vector<Punto> lista_puntos){
 /* comparar cada uno de los puntos de de la lista con los demas para ver cual es el mas cercano.
  * de a uno por vez, en cada paso del for comparo solo apartir de i+1 para no repetir comparaciones.
  * Guardo en una arista (v1,v2,distancia,i1,i2) y comparo las distancias. siendo i1, i2 indices.
@@ -124,5 +124,19 @@ vector<Punto> JerarquicoAglomerativo::buckShot(int cantDocs,unsigned int cantSem
 }
 
 	
+/* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
+ * tomaron como muestra para hacer el clutering*/
+vector<int> JerarquicoAglomerativo::obtener_muestra(int cantidad_de_puntos, int cantidad_docs){
+	int numero;
+	vector<int> lista_de_punteros;
+	for (unsigned int i = 0; i < cantidad_de_puntos; i++) {	
+		// obtain a seed from the system clock:
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		mt19937 generator (seed);
+		numero = generator();
+		lista_de_punteros.push_back(abs(numero % cantidad_docs));
+	}
+	return lista_de_punteros;	
+}
 
 

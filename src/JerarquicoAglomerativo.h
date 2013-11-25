@@ -18,12 +18,15 @@ public:
 	JerarquicoAglomerativo();
 	//destructor:
 	virtual ~JerarquicoAglomerativo();
-	// recibe una cantidad de puntos(semillas) K y una cantidad de docs N y devuelve un vector de 
-	// sqrt(N.K) enteros random.
-	vector<int> obtener_puntos_random(int cantidad_de_puntos, int cantidad_docs);
+	/* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
+	* tomaron como muestra para hacer el clutering*/
+	vector<int> obtener_muestra(int cantidad_de_puntos, int cantidad_docs);
+	/* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
+	* agarraron de manera aleatoria de la muestra tomada para agrupar con el clustering jerarquico aglomerativo  */
+	vector<int> obtener_puntos_random(int cantidad_de_semillas, vector<int> docs_muestra);
 	// recibe una cantidad de docs, una cantidad de semillas, y un vector con sqrt(N.K) 
 	// instancias de la clase Punto. Devuelve un vector con K semillas de tipo Punto.
-	vector<Punto> buckShot (int cantDocs,unsigned int cantSemillas, vector<Punto> lista_puntos);
+	vector<Punto> buckShot (unsigned int cantSemillas, vector<Punto> lista_puntos);
 };
 
 class Arista{

@@ -1,3 +1,5 @@
+#include "Clustering.h"
+
 /* IDEA GENERAL
  * 1) Se construye instancia de Jerarquico Aglomerativo, y se piden los indices de los puntos randoms con:
  * vector<int> obtener_puntos_random(int cantidad_de_puntos, int cantidad_docs); 
@@ -14,18 +16,48 @@
  */
 
 
-Clustering::Clustering(int cantidad_de_semillas, int cantidad_docs){
-	JerarquicoAglomerativo* Jerarquico = new JerarquicoAglomerativo();
-	vector<int> indices_random = Jerarquico.obtener_puntos_random(cantidad_de_semillas, cantidad_docs);
-	/*NECESITO FUNCION: vector<Punto> cargarIndicesEnMemoria(vector<int> indices);*/
-	vector<Punto> puntos_iniciales = cargarIndicesEnMemoria(indices_random);
-	this->semillas = JerarquicoAglomerativo::buckShot(cantidad_docs, cantidad_de_semillas, puntos_iniciales);
-	//this->puntos = VECTOR DE PUNTOS DE TODOS LOS DOCUMENTOS O MUESTRA.
-	KMeans* KMeans = new KMeans(this->puntos_docs,MAX_ITERACIONES, 0 ,this->semillas); //numero de clusters??
-	Kmeans.calcularClusters();
-	this->lista_de_clusters = KMeans.getClusters();
-	//CLASIFICAR LOS DEMAS PUNTOS
+Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra){
 	
+	JerarquicoAglomerativo* jerarquico = new JerarquicoAglomerativo();
+	ManejadorArchivos* manejador = new ManejadorArchivos();
+	
+	//muestra de M documentos:
+	vector<int> indices_muestra = jerarquico->obtener_muestra(tam_muestra, cantidad_docs_total);
+	//indices de puntos random
+	vector<int> indices_random = jerarquico->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
+
+	//lista de puntos random:
+	vector<Punto*> puntos_iniciales= manejador->GenerarListaDePuntos(indices_random);
+	//lista de puntos muestra:
+	this->puntos_muestra = manejador->GenerarListaDePuntos(indices_muestra);
+	//obtiene semillas:
+	this->semillas = jerarquico->buckShot(cantidad_de_semillas, puntos_iniciales);
+
+	//K-Means:
+	KMeans* KMeans = KMeans(this->puntos_muestra, 0 , this->semillas); //MAX_ITERACIONES = 0, DEFINIR.
+	KMeans->calcularClusters();
+	this->lista_de_clusters = KMeans.getClusters();
+
+	//CLASIFICAR LOS DEMAS PUNTOS:
+	//creo lista de indices de los puntos que no estan en la muestra
+	vector<int> indices_no_muestreados;
+	int indice = 0;
+	for (unsigned int i = 0; i < cantidad_docs_total; i++){
+		unsigned int numero_doc_muestra = indices_muestra[indice];
+		if (i != numero_doc_muestra) indices_no_muestreados.push_back(i);
+		indice++;
+	}		
+	//Genero lista de puntos no muestreados:		
+	vector<Punto*> lista_no_muestreados = manejador->GenerarListaDePuntos(indices_no_muestreados);
+	//Clasifico cada uno de esos puntos:
+	for (unsigned int j = 0; j < indices_no_muestreados.size(); j++){
+		Clustering::Clasificar(this->lista_de_clusters, indices_no_muestreados[j]);
+	}
+	
+	//ya tengo todos los clusters armados.
+		
+	delete jerarquico;
+	delete manejador;
 }
 
 
@@ -33,11 +65,12 @@ Clustering::Clustering(int cantidad_de_semillas, int cantidad_docs){
 
 
 /* CLASIFICACION: IDEA GENERAL
- * Cuando se ingresa un nuevo documento, se preprocesa creando su propio hash secundario.
+ * 1) [FALTA HACER] Cuando se ingresa un nuevo documento, se preprocesa creando su propio hash secundario.
  * Para generar su vector de frecuencias, se buscan las claves del hash principal ya usado para los 
  * demas documentos en el hash secundario de este nuevo documento. Luego se pondera con TFxIDF.
  * Luego se crea el Punto. (*)
- * Para Clasificarlo: se toma la lista_de_clusters del Clustering y se comparan los centroides de cada cluster
+ * 
+ * 2)Para Clasificarlo: se toma la lista_de_clusters del Clustering y se comparan los centroides de cada cluster
  * con el nuevo punto en busca de la minima distancia. Una vez que se tiene la minima distancia hay que comparar
  * otra vez buscando otros centroides a la misma minima distancia porque si esta en el medio de ambos se agrega
  * a ambos clusters.
