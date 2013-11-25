@@ -50,7 +50,7 @@ void KMeans::calcularClusters() {
 			//Una vez obtenido el cluster al cual el punto esta a menor distancia
 			//Agrego este punto al cluster
 			for (unsigned int k = 0; k < temps.size(); ++k) {
-				temps[k].agregarElemento(&this->puntos[j]);
+				temps[k].agregarElemento(this->puntos[j]);
 			}
 			//temp->agregarElemento(&this->puntos[j]);
 
@@ -68,7 +68,7 @@ void KMeans::imprimirClusters() {
 				<< endl;
 		for (unsigned int j = 0; j < clusters[i].getPuntos().size(); ++j) {
 
-			cout << clusters[i].getPuntos()[j]->getDocumento() << endl;
+			cout << clusters[i].getPuntos()[j].getDocumento() << endl;
 		}
 	}
 }
@@ -91,7 +91,7 @@ vector<Cluster> KMeans::getClustersDistanciaMinima(Punto punto) {
 //			cout<<this->clusters[i].getCentroide()->vectorDeFrecuencias()[j]<<endl;
 //		}
 		//prueba
-		distancia = punto.distanciaCoseno(this->clusters[i].getCentroide());
+		distancia = punto.distanciaCoseno(*this->clusters[i].getCentroide());
 		cout<<"Distancia "<<distancia<<endl;
 		//Si la distancia es minima y nueva-> limpio el vector de clusters,la seteo como distancia minima y agrego este cluster como cercano
 		if (distancia < distanciaMin) {
@@ -122,7 +122,7 @@ bool KMeans::cambiosClusters() {
 	for (unsigned int i = 0; i < this->getClusters().size(); i++) {
 		oldCentroid = this->centroides[i];
 		newCentroid = *(this->getClusters()[i].getCentroide());
-		difCentroides = oldCentroid.distanciaCoseno(&newCentroid);
+		difCentroides = oldCentroid.distanciaCoseno(newCentroid);
 		if (difCentroides >= CORRIMIENTO_MINIMO) {
 			cantDiferentes++;
 		}
@@ -158,7 +158,7 @@ void KMeans::inicializarCentroides() {
 		cluster = new Cluster();
 		//Cada vez que agrego el elemento al cluster estoy actualizando su centroide
 		//Como en este caso tengo un solo elemento, este es su centroide
-		cluster->agregarElemento(&this->semillas[i]);
+		cluster->agregarElemento(this->semillas[i]);
 		this->clusters.push_back(*cluster);
 		//Agrego a la lista de centroides que luego se usa para verificar cambios
 		this->centroides.push_back(this->semillas[i]);
@@ -175,7 +175,7 @@ void KMeans::agregarElemento(Punto elemento) {
 	//Una vez obtenido el cluster al cual el punto esta a menor distancia
 			//Agrego este punto al cluster
 			for (unsigned int k = 0; k < temp.size(); ++k) {
-				temp[k].agregarElemento(&elemento);
+				temp[k].agregarElemento(elemento);
 			}
 
 

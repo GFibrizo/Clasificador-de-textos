@@ -33,7 +33,7 @@ private:
 	vector<Punto> getSemillas();
 	vector<Punto> getCentroides();
 public:
-	KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,vector<Punto> *semillas,bool multiPertenencia);
+	KMeans(vector<Punto>* puntos, unsigned int maxIteraciones,vector<Punto>* semillas,bool multiPertenencia);
 	virtual ~KMeans();
 
 	void calcularClusters();
