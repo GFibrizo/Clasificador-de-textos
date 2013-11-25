@@ -34,6 +34,8 @@ public:
 
   bool leerUnaLinea(string& micadena);
 
+  bool leerUnaLineaIndice(string& micadena);
+
   void terminarLinea();
 
   bool estaAlFinal();

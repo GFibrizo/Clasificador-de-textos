@@ -3,7 +3,7 @@ EXEC=main
 SRC=$(wildcard src/*.cpp)
 OBJ1=$(SRC:.cpp=.o)
 OBJ = ManejadorArchivos.o LectorDirectorios.o PreProcesarDatos.o VerificadorStopWords.o Porter.o
-CC=g++
+CC=g++-4.5
 CC2=gcc
 
 
@@ -18,5 +18,6 @@ src/%.o: src/%.cpp src/%.h
 $(EXEC): $(OBJ1) src/Porter.o main.cpp
 	$(CC) $(CFLAGS) $(OBJ) main.cpp -o $(EXEC)
 
-clean: rm src/*.o
-	   rm *.o
+clean: 
+		rm -f *.o  $(EXEC)
+

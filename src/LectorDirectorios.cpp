@@ -33,7 +33,8 @@ vector<string>& LectorDirectorios::leerDir(const char* ruta){
 
 		while((drnt = readdir(dir))){
 
-			if((strcmp(drnt->d_name,puntos)==0)||((strcmp(drnt->d_name,puntos2)==0))) continue;
+			if((strcmp(drnt->d_name,puntos)==0) ||
+			((strcmp(drnt->d_name,puntos2)==0))) continue;
 
 			stringstream ss;
 			ss<<drnt->d_name;

@@ -2,7 +2,7 @@
  * PreProcesarDatos.cpp
  *
  *  Created on: 03/11/2013
- *      Author: agu
+ *      Author: agu, fabri
  */
 
 #include "PreProcesarDatos.h"
@@ -27,7 +27,7 @@ void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir)
 
 
 PreProcesarDatos::PreProcesarDatos(const char* ruta) {
-	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\0";//[CANT_DE_SEPARADORES]
+	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r";//[CANT_DE_SEPARADORES]
 	LectorDirectorios * lecDirectorio= new LectorDirectorios(); //no olvidar delete.
 	//levanta archivos del directorio:
 	this->vector_archivos = lecDirectorio->leerDir (ruta);
@@ -120,7 +120,7 @@ void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 		this->archivoHashSecundario << aux;
 	}
 
-	this->archivoHashSecundario << ",//,";
+	this->archivoHashSecundario << ",/";
 
 }
 
@@ -149,21 +149,33 @@ void PreProcesarDatos::preProcesarDatos(){
 	string palabra;
 	unsigned int i;
 	unsigned int ant_i = -1;
+	int o = 0;
+	
+	int* p = (int*)malloc(sizeof(int));
+	*p = 0;
 
 	for (i = 0; i < this->vector_archivos.size(); i++){
-		
+			//int a = 0;
 		if (this->vector_archivos[i].compare(".svn") == 0) continue;
 		//COUT prueba para ver que archivos se recupero en el directorio
-		cout<<"Archivo: "<<this->vector_archivos[i]<<endl;
+		//cout<<"Archivo: "<<this->vector_archivos[i]<<endl;
+		//cout<<i;
 		this->manejador = new ManejadorArchivos() ;
 		this->manejador->abrirLectura(this->directorio+this->vector_archivos[i]);
+		o++;
+		//char* linea = this->manejador->leerArchivo();
+		while (this->manejador->leerUnaLinea(auxLinea)){
 		
-		while ( this->manejador->leerUnaLinea(auxLinea)){
+		//while ( !this->manejador->estaAlFinal() ) {	
+			//cout<<a++<<"\n";
 
-			char *linea = new char[512];
-			strcpy(linea, auxLinea.c_str()); //
+			char *linea = new char[102400];
+			strcpy(linea, auxLinea.c_str());
 			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
 			char* auxPalabra = strtok(linea,this->invalidos);
+		//	char* auxPalabra1 = tokenizar(linea, p);
+			//cout<<auxPalabra<<"\n";
+
 
 			while ( auxPalabra != NULL ) {
 					palabra = auxPalabra;
@@ -173,15 +185,19 @@ void PreProcesarDatos::preProcesarDatos(){
 					if(!this->verifStopWord->verificarPalabra(palabra)){
 						palabra = stem_palabra(palabra);
 						//COUT
-						cout<<palabra<<endl;
+						//cout<<palabra<<endl;
 						agregarElementoAHashPrincipal(this->hashPrincipal, palabra, i != ant_i);
 						agregarElementoAHash(this->hashSecundario, palabra);
 					}
 					auxPalabra = strtok (NULL, this->invalidos);
+					//auxPalabra1 = tokenizar(linea, p);
+					//cout<<auxPalabra<<"\n";
 					ant_i = i;
 			}
+			*p = 0;
 			delete []linea;
 			delete auxPalabra;
+			//this->manejador->leerUnaLinea(auxLinea);
 		} //termina de trabajar con ese archivo
 		
 		delete this->manejador;		
@@ -190,16 +206,38 @@ void PreProcesarDatos::preProcesarDatos(){
 		hash nuevoHash;
 		this->hashSecundario = nuevoHash;
 	}
-	this->archivoHashSecundario << "!,";
+	//this->archivoHashSecundario << "!,";
 	this->archivoHashSecundario.close();
+	
+	//for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
+	//	cout<<it->first<<","<<it->second<<endl;
+	//}
+	cout<<o;
 	generarIndiceDocumentos();
 	
 	//CERRAR ARCHIVO DE HASH SECUNDARIO
-
+	free(p);
 }
 
 /**********************************************************************/
 /**********************************************************************/
+
+char* PreProcesarDatos::tokenizar(char* linea, int* p){
+	
+	char* palabra= "";
+	int i = *p;
+	int valor = linea[i];
+	
+	while ( ((valor > 64) && (valor < 91)) || ((valor > 96) && (valor < 123)) ){
+		strncat(palabra, (linea+i), 1);
+		*p = *p + 1;
+		i = *p;
+		 valor = linea[i];
+	}
+	return palabra;
+}
+
+
 
 
 const char* PreProcesarDatos::getInvalidos(){
@@ -224,34 +262,45 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 	int largo;
 	string fin = "!";
 	const char* fin1 = fin.c_str();
-	bool flag = false;
+	int i = 0;
 
-	while ( this->manejador->leerUnaLinea(auxLinea)){
+	while ( this->manejador->leerUnaLineaIndice(auxLinea)){
 	
-		char *linea = new char[512];
+		char *linea = new char[102400];
 		strcpy(linea, auxLinea.c_str());
-		largo = strlen(linea);
+		//largo = strlen(linea);
 		aux = strtok(linea, ", ");
-
-		while ((aux != NULL) and (strcmp(aux,fin1) != 0)) {
+		i++;
+		cout<<i;
+		while ((aux != NULL) /*and (strcmp(aux,fin1) != 0)*/) {
 			
 			clave = aux;
 			
-			if (clave.compare("//") == 0){
+			/*if (clave.compare("/") == 0){
+
 				escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
 				hash2 nuevoHash = generarHashMemoria();//posible perdida de memoria.
 				hashDocsEnMemoria = nuevoHash;//hay que borrar el anterior primero.
 				aux = strtok(NULL, ", ");
 				continue;
-			}
+			}*/
 			
-			frecuencia = atof(strtok(NULL, ", "));
+			frecuencia = atof(strtok(NULL, ", "));//Se rompe porque hace atof de algo
+													//que no es una cadena numerica
+													//tipo NULL o una letra
 			hashDocsEnMemoria[clave] = calcular_TF_IDF(clave, frecuencia);
 			aux = strtok(NULL, ", ");
 		}
+		escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
+		hash2 nuevoHash = generarHashMemoria();
+		hashDocsEnMemoria = nuevoHash;
+		//aux = strtok(NULL, ", ");
+		delete []linea;
+			cout<<i;
 		//delete []linea; //SEGURO FALTA ESTO
 	}
 	indiceDocumentos.close();
+	cout<<i;
 }
 
 /**********************************************************************/
@@ -274,7 +323,7 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 
 float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
 	
-	return (frecuencia * log10f( (vector_archivos.size()-1)) / (hashPrincipal[clave]));
+	return (frecuencia * log10f(( (vector_archivos.size()-1)) / (1+hashPrincipal[clave])));
 	
 }
 
