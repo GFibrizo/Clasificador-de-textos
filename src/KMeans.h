@@ -11,12 +11,12 @@
 using namespace std;
 #include "Cluster.h"
 #include "Punto.h"
-
+#include <iostream>
 
 class KMeans {
 private:
-	static const unsigned int MAX_ITERACIONES = 5;
-	static const  double CORRIMIENTO_MINIMO = 0.8;
+	static const unsigned int MAX_ITERACIONES=5;
+	static const  double CORRIMIENTO_MINIMO=0.8;
 	int numClusters;
 	int maxIteraciones;
 	vector<Punto> semillas;
@@ -26,16 +26,14 @@ private:
 	bool multiPertenencia;
 	void actualizarCentroides();
 	bool cambiosClusters();
-	//TODO PRUEBA
 	void inicializarCentroides();
-//	Cluster* getClusterDistanciaMinima(Punto punto);
 	vector<Cluster> getClustersDistanciaMinima(Punto punto);
 	void imprimirClusters();
 	vector<Punto> getPuntos();
 	vector<Punto> getSemillas();
 	vector<Punto> getCentroides();
 public:
-	KMeans(vector<Punto> *puntos,unsigned int maxIteraciones,vector<Punto> *semillas,bool multiPertenencia);
+	KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,vector<Punto> *semillas,bool multiPertenencia);
 	virtual ~KMeans();
 
 	void calcularClusters();
