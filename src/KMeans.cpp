@@ -7,15 +7,10 @@
 
 #include "KMeans.h"
 using namespace std;
-KMeans::KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,
-		vector<Punto> *semillas) {
-
-	this->numClusters = semillas->size();
-
-	if (maxIteraciones == 0) {
-		this->maxIteraciones = MAX_ITERACIONES;
-	} else {
-		this->maxIteraciones = maxIteraciones;
+KMeans::KMeans(vector<Punto*> puntos,unsigned int maxIteraciones,vector<Punto*> semillas) {
+	//Si no se define un numero de clusters, se usa el por defecto
+	if(numClusters==0){
+		this->numClusters=CANT_CLUSTERS_DEFAULT;
 	}
 	this->semillas = *semillas;
 	this->puntos = *puntos;

@@ -34,9 +34,9 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	this->semillas = jerarquico->buckShot(cantidad_de_semillas, puntos_iniciales);
 
 	//K-Means:
-	KMeans* KMeans = KMeans(this->puntos_muestra, 0 , this->semillas); //MAX_ITERACIONES = 0, DEFINIR.
-	KMeans->calcularClusters();
-	this->lista_de_clusters = KMeans.getClusters();
+	KMeans instancia_KMeans = KMeans(this->puntos_muestra, 0 , this->semillas); //MAX_ITERACIONES = 0, DEFINIR.
+	(&instancia_KMeans)->calcularClusters();
+	this->lista_de_clusters = instancia_KMeans.getClusters();
 
 	//CLASIFICAR LOS DEMAS PUNTOS:
 	//creo lista de indices de los puntos que no estan en la muestra
@@ -51,7 +51,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	vector<Punto*> lista_no_muestreados = manejador->GenerarListaDePuntos(indices_no_muestreados);
 	//Clasifico cada uno de esos puntos:
 	for (unsigned int j = 0; j < indices_no_muestreados.size(); j++){
-		Clustering::Clasificar(this->lista_de_clusters, indices_no_muestreados[j]);
+		Clustering::Clasificar(this->lista_de_clusters, lista_no_muestreados[j]);
 	}
 	
 	//ya tengo todos los clusters armados.
@@ -81,25 +81,25 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 
 // (*) UNA VEZ QUE YA TENGO EL NUEVO PUNTO:
 // Recibe la lista_de_clusters del Clustering y el nuevo punto ya creado.
-void Clustering::Clasificar( vector<Cluster> lista_de_clusters, Punto* nuevo_punto){
-	vector<Cluster> cluster_destino; //lista de los clusters donde se va a agregar el nuevo punto.
+void Clustering::Clasificar( vector<Cluster*> lista_de_clusters, Punto* nuevo_punto){
+	vector<Cluster*> cluster_destino; //lista de los clusters donde se va a agregar el nuevo punto.
 	
 	// Primero busco cual es la minima distancia.
-	double minima_distancia = (lista_de_clusters[0].getCentroide()).distanciaCoseno(nuevo_punto);
+	double minima_distancia = (*(((*(lista_de_clusters[0])).getCentroide()))).distanciaCoseno(nuevo_punto);
 	for (unsigned int i = 1; i < lista_de_clusters.size() ; i++){
-		if ( (lista_de_clusters[i].getCentroide()).distanciaCoseno(nuevo_punto) < minima_distancia){
-			minima_distancia = (lista_de_clusters[i].getCentroide()).distanciaCoseno(nuevo_punto);
+		if ( (*(((*(lista_de_clusters[i])).getCentroide()))).distanciaCoseno(nuevo_punto) < minima_distancia){
+			minima_distancia = (*(((*(lista_de_clusters[i])).getCentroide()))).distanciaCoseno(nuevo_punto);
 		}
 	}
 	// Despues busco cuales son los clusters que tienen esa minima distancia:
 	for (unsigned int j = 0; j < lista_de_clusters.size() ; j++){
-		if ( (lista_de_clusters[j].getCentroide()).distanciaCoseno(nuevo_punto) = minima_distancia){
+		if ( (*(((*(lista_de_clusters[j])).getCentroide()))).distanciaCoseno(nuevo_punto) == minima_distancia){
 			cluster_destino.push_back(lista_de_clusters[j]);
 		}
 	}
 	// Agrego el punto a los clusters de la lista:
 	for (unsigned int x = 0; x < cluster_destino.size() ; x++){
-		cluster_destino[x].agregarElemento(nuevo_punto);
+		(*(cluster_destino[x])).agregarElemento(nuevo_punto);
 	}
 	
 }
