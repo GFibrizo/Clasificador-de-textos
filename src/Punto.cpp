@@ -23,24 +23,22 @@ Punto::~Punto() {
 double Punto::getNorma(){
 	double acum=0;
 
-
 	for (unsigned int i = 0; i < this->frecPond.size(); i++) {
-		acum=this->frecPond[i]*this->frecPond[i];
-
+		acum+=pow(this->frecPond[i],2.0);
 	}
 	return sqrt(acum);
 }
 
 
+
 double Punto::distanciaCoseno(Punto otroPunto){
 
-	double suma = 0.0;
-	double coseno;
+	double suma =0.0;
+	double coseno=0.0;
 
-	for (unsigned int i=0; i<this->frecPond.size()-1; i++){
-		suma += (this->frecPond[i] * otroPunto.frecPond[i]);
-	}
-	coseno = suma / (this->getNorma() * otroPunto.getNorma() );
+	for (unsigned int i=0; i<this->frecPond.size(); i++){
+		suma=suma+(this->frecPond[i] * otroPunto.frecPond[i]);
+	}	coseno = suma / (this->getNorma() * otroPunto.getNorma() );
 
 	return coseno;
 }

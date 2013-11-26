@@ -17,7 +17,7 @@ Cluster::~Cluster() {
 	//delete this->centroide;
 }
 
-void Cluster::agregarElemento(Punto elemento){
+void Cluster::agregarElemento(Punto* elemento){
 	//agrego un elemento nuevo
 	this->puntos.push_back(elemento);
 	//Cuando agrego un elemento recalculo el centroide
@@ -39,12 +39,12 @@ void Cluster::calcularCentroide(){
 	unsigned int cantPuntos = this->puntos.size();
 
 	//obtengo el tamaño que va a tener el vector de frecuencias
-	vector<double> frecTemp((&(this->puntos[0]))->vectorDeFrecuencias().size());
+	vector<double> frecTemp(this->puntos[0]->vectorDeFrecuencias().size());
 	//Acumulo en un punto temporal la suma de todas las componentes de los
 	//puntos de cluster. Divido cada termino por el total de puntos para normalizar.
 	for (unsigned int i = 0;  i < cantPuntos; i++) {
-		for (unsigned int j = 0;  j < (&(this->puntos[i]))->vectorDeFrecuencias().size(); j++) {
-			frecTemp[j] =frecTemp[j] + ((&(this->puntos[i]))->vectorDeFrecuencias()[j])/cantPuntos;
+		for (unsigned int j = 0;  j < this->puntos[i]->vectorDeFrecuencias().size(); j++) {
+			frecTemp[j] =frecTemp[j] + (this->puntos[i]->vectorDeFrecuencias()[j])/cantPuntos;
 		}
 	}
 	//Se crea un nuevo punto con el promedio de las frecuencias ponderadas de los puntos del cluster
@@ -54,8 +54,7 @@ void Cluster::calcularCentroide(){
 	this->centroide = temp;
 
 }
-
-vector<Punto> Cluster::getPuntos(){
+vector<Punto*> Cluster::getPuntos(){
 	return this->puntos;
 }
 void Cluster::vaciarPuntos(){

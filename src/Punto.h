@@ -22,8 +22,6 @@ public:
 	Punto(vector<double> frecPond,int doc);
 	virtual ~Punto();
 	double getNorma();
-
-
 	int getDocumento();
 	Punto  calcularCercanos(vector<Punto>  puntos);
 	double distanciaCoseno(Punto otroPunto);
