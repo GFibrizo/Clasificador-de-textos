@@ -93,7 +93,7 @@ int main1 (int argc, char **argv) {
 		PreProcesarDatos* preDatos = new PreProcesarDatos(d_value);
 		/*lee los archivos, arma el hash principal y lo guarda como atributo. Arma los hash secundarios y los guarda en archivos.*/
 		preDatos->preProcesarDatos();
-		//cantidad_docs_total = preDatos->getCantDocs();
+		cantidad_docs_total = preDatos->getCantDocs();
 		
 		if (c_value == NULL) 
 			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
