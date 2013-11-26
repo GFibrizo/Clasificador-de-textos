@@ -10,6 +10,12 @@
 typedef map<string,int> hash;
 typedef map<string,float> hash2;
 
+
+/**********************************************************************/
+/**********************************************************************/
+
+
+//Devuelve en dir el directorio indicado en la ruta
 void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir)
 {
 	std::string::size_type slash_pos = path.rfind("/"); //Encuentra la barra
@@ -27,8 +33,10 @@ void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir)
 /**********************************************************************/
 
 
+//Constructor de la clase PreProcesarDatos
 PreProcesarDatos::PreProcesarDatos(const char* ruta) {
-	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r";//[CANT_DE_SEPARADORES]
+	
+	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r \t \\ \r\n";//[CANT_DE_SEPARADORES]
 	LectorDirectorios * lecDirectorio= new LectorDirectorios(); //no olvidar delete.
 	//levanta archivos del directorio:
 	this->vector_archivos = lecDirectorio->leerDir (ruta);
@@ -46,6 +54,7 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 /**********************************************************************/
 
 
+//Destructor de la clase PreProcesarDatos
 PreProcesarDatos::~PreProcesarDatos() {
 
 	delete this->verifStopWord;
@@ -56,13 +65,14 @@ PreProcesarDatos::~PreProcesarDatos() {
 /**********************************************************************/
 /**********************************************************************/
 
-
+//Pasa a minusculas los caracteres del string str
 void PreProcesarDatos::pasarAminusculas(string& str){
      transform(str.begin(), str.end(), str.begin(), ::tolower);
 }
 
 /**********************************************************************/
 /**********************************************************************/
+
 
 //Si la clave no esta en el hash, la agrega asociada a un valor 0.
 //Si la clave esta en el hash, aumenta en 1 el valor asociado.
@@ -79,6 +89,9 @@ void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
 /**********************************************************************/
 
 
+//Agrega una palabra como clave al hash. Si la palabra estaba entre el conjunto
+//de claves, entonces aumenta su correspondiente valor en 1. Sino, agrega la clave
+//al conjunto de claves y setea en 1 su valor correspondiente
 void PreProcesarDatos::agregarElementoAHashPrincipal(hash& hash,string clave, bool cambio_doc){
 	
 	if (hash.count(clave) == 0) hash[clave] = 1;
@@ -93,6 +106,7 @@ void PreProcesarDatos::agregarElementoAHashPrincipal(hash& hash,string clave, bo
 /**********************************************************************/
 
 
+//Conviente un int a string
 string PreProcesarDatos::numberToString(int number){
 	stringstream ss;
 	ss << number;
@@ -100,6 +114,7 @@ string PreProcesarDatos::numberToString(int number){
 	return str;
 }
 
+//Convierte un float a string
 string PreProcesarDatos::numberToString(float number){
 	stringstream ss;
 	ss << number;
@@ -111,6 +126,8 @@ string PreProcesarDatos::numberToString(float number){
 /**********************************************************************/
 
 
+//Escribe el archivo secuencial intermedio que contiene los pares palabra,frecuencia
+//de todas las palabras en un documento, a partir de un hash en memoria
 void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 	string aux;
 	for (hash::iterator it= hash.begin(); it != hash.end(); it++){
@@ -129,6 +146,8 @@ void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 /**********************************************************************/
 
 
+//Escribe el archivo que debe contener los vectores de frecuencias ponderadas
+//de palabras de cada documento a partir de un hash en memoria
 void PreProcesarDatos::escribirArchivoIndice(hash2 hash, ofstream& archivoIndice){
 
 	string aux;
@@ -145,60 +164,49 @@ void PreProcesarDatos::escribirArchivoIndice(hash2 hash, ofstream& archivoIndice
 /**********************************************************************/
 
 
+//Genera, a partir de un conjunto de documentos el archivo final que 
+//contiene los vectores de frecuencias ponderadas correspondientes a cada
+//documento
 void PreProcesarDatos::preProcesarDatos(){
 	string auxLinea;
 	string palabra;
 	unsigned int i;
 	unsigned int ant_i = -1;
-	int o = 0;
-	
-	int* p = (int*)malloc(sizeof(int));
-	*p = 0;
 
 	for (i = 0; i < this->vector_archivos.size(); i++){
-			//int a = 0;
+
 		if (this->vector_archivos[i].compare(".svn") == 0) continue;
-		//COUT prueba para ver que archivos se recupero en el directorio
-		//cout<<"Archivo: "<<this->vector_archivos[i]<<endl;
-		//cout<<i;
+
 		this->manejador = new ManejadorArchivos() ;
 		this->manejador->abrirLectura(this->directorio+this->vector_archivos[i]);
-		o++;
-		//char* linea = this->manejador->leerArchivo();
+
 		while (this->manejador->leerUnaLinea(auxLinea)){
 		
-		//while ( !this->manejador->estaAlFinal() ) {	
-			//cout<<a++<<"\n";
-
 			char *linea = new char[102400];
 			strcpy(linea, auxLinea.c_str());
 			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
+			tokenizar(linea);
 			char* auxPalabra = strtok(linea,this->invalidos);
-		//	char* auxPalabra1 = tokenizar(linea, p);
-			//cout<<auxPalabra<<"\n";
-
 
 			while ( auxPalabra != NULL ) {
+				
 					palabra = auxPalabra;
 					pasarAminusculas(palabra);
 					
 					//veo si es un stopword y sino lo agrego a hashes:
 					if(!this->verifStopWord->verificarPalabra(palabra)){
 						palabra = stem_palabra(palabra);
-						//COUT
-						//cout<<palabra<<endl;
-						agregarElementoAHashPrincipal(this->hashPrincipal, palabra, i != ant_i);
-						agregarElementoAHash(this->hashSecundario, palabra);
+						
+						if (palabra.length() > 1){
+							agregarElementoAHashPrincipal(this->hashPrincipal, palabra, i != ant_i);
+							agregarElementoAHash(this->hashSecundario, palabra);
+						}
 					}
 					auxPalabra = strtok (NULL, this->invalidos);
-					//auxPalabra1 = tokenizar(linea, p);
-					//cout<<auxPalabra<<"\n";
 					ant_i = i;
 			}
-			*p = 0;
 			delete []linea;
 			delete auxPalabra;
-			//this->manejador->leerUnaLinea(auxLinea);
 		} //termina de trabajar con ese archivo
 		
 		delete this->manejador;		
@@ -207,40 +215,36 @@ void PreProcesarDatos::preProcesarDatos(){
 		hash nuevoHash;
 		this->hashSecundario = nuevoHash;
 	}
-	//this->archivoHashSecundario << "!,";
+
 	this->archivoHashSecundario.close();
-	
-	//for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
-	//	cout<<it->first<<","<<it->second<<endl;
-	//}
-	cout<<o;
 	generarIndiceDocumentos();
-	
 	//CERRAR ARCHIVO DE HASH SECUNDARIO
-	free(p);
 }
 
 /**********************************************************************/
 /**********************************************************************/
 
-char* PreProcesarDatos::tokenizar(char* linea, int* p){
-	
-	char* palabra= "";
-	int i = *p;
+
+//Reemplaza todos los caracteres de la linea que no sean letras por un espacio
+void PreProcesarDatos::tokenizar(char* linea){
+
+	int i = 0;
 	int valor = linea[i];
-	
-	while ( ((valor > 64) && (valor < 91)) || ((valor > 96) && (valor < 123)) ){
-		strncat(palabra, (linea+i), 1);
-		*p = *p + 1;
-		i = *p;
-		 valor = linea[i];
+	int largo = strlen(linea);
+
+	while (i<largo){
+		if (!( ((valor > 64) && (valor < 91)) || ((valor > 96) && (valor < 123)) ))
+			linea[i] = ' ';
+		i++;
+		valor = (int) linea[i];
 	}
-	return palabra;
 }
 
+/**********************************************************************/
+/**********************************************************************/
 
 
-
+//Devuelve la cadena de caracteres invalidos
 const char* PreProcesarDatos::getInvalidos(){
 	return this->invalidos;
 }
@@ -249,6 +253,9 @@ const char* PreProcesarDatos::getInvalidos(){
 /**********************************************************************/
 
 
+//Lee los pares palabra,frecuencia del archivo file_hash2, los procesa y
+//genera como salida el archivo indiceDocumentos que contiene los vectores
+//de frecuencias poderadas de cada documento
 void PreProcesarDatos::generarIndiceDocumentos(){
 	
 	string auxLinea;
@@ -260,54 +267,34 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 	string clave;
 	char* aux;
 	float frecuencia = 0;
-	int largo;
-	string fin = "!";
-	const char* fin1 = fin.c_str();
-	int i = 0;
+
 
 	while ( this->manejador->leerUnaLineaIndice(auxLinea)){
 	
 		char *linea = new char[102400];
 		strcpy(linea, auxLinea.c_str());
-		//largo = strlen(linea);
 		aux = strtok(linea, ", ");
 		i++;
-		cout<<i;
-		while ((aux != NULL) /*and (strcmp(aux,fin1) != 0)*/) {
+		while (aux != NULL) {
 			
 			clave = aux;
-			
-			/*if (clave.compare("/") == 0){
-
-				escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
-				hash2 nuevoHash = generarHashMemoria();//posible perdida de memoria.
-				hashDocsEnMemoria = nuevoHash;//hay que borrar el anterior primero.
-				aux = strtok(NULL, ", ");
-				continue;
-			}*/
-			
-			frecuencia = atof(strtok(NULL, ", "));//Se rompe porque hace atof de algo
-													//que no es una cadena numerica
-													//tipo NULL o una letra
+			frecuencia = atof(strtok(NULL, ", "));
 			hashDocsEnMemoria[clave] = calcular_TF_IDF(clave, frecuencia);
 			aux = strtok(NULL, ", ");
 		}
 		escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
 		hash2 nuevoHash = generarHashMemoria();
 		hashDocsEnMemoria = nuevoHash;
-		//aux = strtok(NULL, ", ");
 		delete []linea;
-			cout<<i;
-		//delete []linea; //SEGURO FALTA ESTO
 	}
 	indiceDocumentos.close();
-	cout<<i;
 }
 
 /**********************************************************************/
 /**********************************************************************/
 
 
+//Genera un nuevo hash en memoria con el vocabulario de palabras completo
 hash2 PreProcesarDatos::generarHashMemoria() {
 	
 	hash2 hashDocsEnMemoria;
@@ -322,6 +309,7 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 /**********************************************************************/
 
 
+//Calcula el peso total mediante TFxIDF
 float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
 	
 	return (frecuencia * log10f(( (vector_archivos.size()-1)) / (1+hashPrincipal[clave])));
@@ -332,6 +320,7 @@ float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
 /**********************************************************************/
 
 
+//Aplica Stemming a palabras mediante el Algoritmo de Porter
 string PreProcesarDatos::stem_palabra(string palabra){
 	
 	char *palabra_c = new char[palabra.length() + 1];

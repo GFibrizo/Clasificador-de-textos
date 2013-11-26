@@ -2,7 +2,7 @@ CFLAGS= -g -Wall --pedantic -std=c++0x
 EXEC=main
 SRC=$(wildcard src/*.cpp)
 OBJ1=$(SRC:.cpp=.o)
-OBJ = ManejadorArchivos.o LectorDirectorios.o PreProcesarDatos.o VerificadorStopWords.o Porter.o
+OBJ = ManejadorArchivos.o LectorDirectorios.o PreProcesarDatos.o VerificadorStopWords.o Porter.o Punto.o
 CC=g++
 CC2=gcc
 
