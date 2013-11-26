@@ -16,7 +16,8 @@
  */
 
 
-Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra){
+Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra, bool enMasDeUnCluster){
+	
 	
 	JerarquicoAglomerativo* jerarquico = new JerarquicoAglomerativo();
 	ManejadorArchivos* manejador = new ManejadorArchivos();
@@ -97,11 +98,14 @@ void Clustering::Clasificar(Punto nuevo_punto){
 			cluster_destino.push_back(lista_de_clusters[j]);
 		}
 	}
-	// Agrego el punto a los clusters de la lista:
-	for (unsigned int x = 0; x < cluster_destino.size() ; x++){
-		(*(cluster_destino[x])).agregarElemento(nuevo_punto); //agregar Clasificacion
-	}
-	
+	// Agrego el punto a los clusters de la lista si puede estar en mas de un cluster
+	// o solo al primer cluster de la lista si solo puede esta en un cluster
+	if (this->enMasDeUnCluster == true) {
+		for (unsigned int x = 0; x < cluster_destino.size() ; x++){
+			(*(cluster_destino[x])).agregarElemento(nuevo_punto); //agregar Clasificacion
+		}
+	} else (*(cluster_destino[0])).agregarElemento(nuevo_punto);
+
 }
 
 

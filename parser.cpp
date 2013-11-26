@@ -26,7 +26,7 @@ int main1 (int argc, char **argv) {
 	
 	char *d_value = NULL; //Path de donde tiene guardados los docs.
 	char *c_value = NULL; //cantidad de categorias a crear, si es NULL decide solo.
-	char *o_value = NULL; // Y/N indica si un documento puede estar en mas de una cateoria.
+	char *o_value = NULL; // Y/N indica si un documento puede estar en mas de una categoria.
 	int index;
 	int c;
 
@@ -87,11 +87,14 @@ int main1 (int argc, char **argv) {
 		printf ("Non-option argument %s\n", argv[index]);
 		
 		
-		
+	//PROBLEMAAAAA: COMO HACEMOS SI EL CLUSTERING YA ESTA HECHO, PARA QUE NO LO VUELVA A CREAR?
 		
 	/* LOGICA */
+	bool masDeUno;
+	int cantidad_docs_total;
+	if ((strcmp (o_value, "Y") == 0) || (strcmp (o_value, "y") == 0) ) masDeUno = true;
+	if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) masDeUno = false;
 	
-	char* masDeUno = o_value;
 	int valor_K; //funcion
 	if (d_value != NULL) { 
 		PreProcesarDatos* preDatos = new PreProcesarDatos(d_value);
@@ -103,7 +106,7 @@ int main1 (int argc, char **argv) {
 			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
 		else
 			valor_K = atoi(c_value);
-		clustering =  Clustering::Clustering(valor_K, cantidad_docs_total, 0.10 * cantidad_docs_total, masDeUno);//TDV NO MODIFICADO
+		Clustering clustering =  Clustering(valor_K, cantidad_docs_total, 0.10 * cantidad_docs_total, masDeUno);//TDV NO MODIFICADO
 		
 	}else{
 		if (a_value != NULL){
