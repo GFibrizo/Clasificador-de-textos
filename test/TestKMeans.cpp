@@ -12,10 +12,10 @@ TestKMeans::TestKMeans() {
 
 	//this->generarPuntos();
 	//this->generarSemillas();
-	double nums1[] = { 1, 2};//, 3 };
-	double nums2[] = { 1, 4};//, 6 };
-	double nums3[] = { 3, 6};//, 9 };
-	double nums4[] = { 3, 8};//, 12 };
+	double nums1[] = { 1, 2, 3 };
+	double nums2[] = { 1, 3, 6 };
+	double nums3[] = { 6, 15, 9 };
+	double nums4[] = { 6, 16, 12 };
 	vector<double> frecPond1(nums1, nums1 + sizeof(nums1) / sizeof(double));
 	vector<double> frecPond2(nums2, nums2 + sizeof(nums2) / sizeof(double));
 	vector<double> frecPond3(nums3, nums3 + sizeof(nums3) / sizeof(double));
@@ -24,7 +24,7 @@ TestKMeans::TestKMeans() {
 	Punto* punto2=new Punto(frecPond2, 2);
 	Punto* punto3=new Punto(frecPond3, 3);
 	Punto* punto4=new Punto(frecPond4, 4);
-	Punto* semilla1=new Punto(frecPond2, 1);
+	Punto* semilla1=new Punto(frecPond2, 2);
 	Punto* semilla2=new Punto(frecPond3, 3);
 	this->puntos.push_back(*punto1);
 	this->puntos.push_back(*punto2);
@@ -70,7 +70,7 @@ void TestKMeans::generarSemillas() {
 		}
 
 }
-vector<Cluster> TestKMeans::getResultadoKMeans(){
+vector<Cluster*> TestKMeans::getResultadoKMeans(){
 	this->kMeans=new KMeans(&this->puntos,3,&this->semillas,true);
 	this->kMeans->calcularClusters();
 	return this->kMeans->getClusters();

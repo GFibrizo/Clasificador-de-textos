@@ -27,7 +27,7 @@ private:
 public:
 	TestKMeans();
 	virtual ~TestKMeans();
-	vector<Cluster> getResultadoKMeans();
+	vector<Cluster*> getResultadoKMeans();
 	vector<Punto> getSemillas();
 	vector<Punto> getPuntos();
 	unsigned int getCantSemillas();
