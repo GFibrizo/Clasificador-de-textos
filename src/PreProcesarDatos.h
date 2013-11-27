@@ -83,7 +83,8 @@ public:
 	PreProcesarDatos(const char* ruta);
 	virtual ~PreProcesarDatos();
 	void preProcesarDatos();
-
+	Punto procesarNuevoDocumento(char* ruta);
+	hash obtenerHashVocabulario ();
 
 };
 

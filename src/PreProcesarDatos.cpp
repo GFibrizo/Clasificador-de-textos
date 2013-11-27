@@ -33,7 +33,7 @@ void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir)
 /**********************************************************************/
 
 
-//Constructor de la clase PreProcesarDatos
+//Primer Constructor de la Clase PreProcesarDatos
 PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 	
 	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r \t \\ \r\n";//[CANT_DE_SEPARADORES]
@@ -49,6 +49,21 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 		}
 	this->relative_dir_base_split(ruta,this->directorio);
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+//Segundo Constructor de la Clase PreProcesarDatos
+PreProcesarDatos::PreProcesarDatos(hash hashPorParametro) {
+	
+	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r \t \\ \r\n";
+	this->vector_archivos = NULL;
+	this->verifStopWord= new VerificadorStopWords(DIR_STOP_WORDS);
+	this->archivoHashSecundario = NULL;
+	this->verifDocDiferentes=0;
+	this->hashPrincipal = hashPorParametro;	
+}
+
 
 /**********************************************************************/
 /**********************************************************************/
@@ -331,4 +346,63 @@ string PreProcesarDatos::stem_palabra(string palabra){
 	
 	return palabra.substr(0,final);
 		
+}
+
+
+/**********************************************************************/
+/**********************************************************************/
+
+//A partir de la ruta donde se encuentra el documento genera su vector de
+//frecuencias ponderadas.
+Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
+
+	hash2 hashNuevoDoc = generarHashMemoria();
+	this->manejador = new ManejadorArchivos();
+	this->manejador->abrirLectura(ruta);
+	
+	while (this->manejador->leerUnaLinea(auxLinea)){
+		
+		char *linea = new char[102400];
+		strcpy(linea, auxLinea.c_str());
+		//auxPalabra va a ir conteniendo cada palabra sacando los tokens
+		tokenizar(linea);
+		char* auxPalabra = strtok(linea,this->invalidos);
+
+		while ( auxPalabra != NULL ) {
+			
+			palabra = auxPalabra;
+			pasarAminusculas(palabra);
+			
+			//veo si es un stopword y sino lo agrego a hashes:
+			if(!this->verifStopWord->verificarPalabra(palabra)){
+				palabra = stem_palabra(palabra);
+				if (palabra.length() > 1) agregarElementoAHash(hashNuevoDoc);
+			}
+			auxPalabra = strtok (NULL, this->invalidos);
+		}
+		delete []linea;
+		delete auxPalabra;
+	}
+	delete this->manejador;		
+	
+	
+	int i = 0;
+	Punto puntoNuevoDoc;
+	for (hash::iterator it= hashNuevoDoc.begin(); it != hashNuevoDoc.end(); it++){
+		
+		puntoNuevoDoc[i] = calcular_TF_IDF(hashNuevoDoc[it->first], hashNuevoDoc[it->first] );
+		i++;
+	}
+	
+	return puntoNuevoDoc;
+
+}
+
+/**********************************************************************/
+/**********************************************************************/
+
+//Devuelve el hashPrincipal
+hash PreProcesarDatos::obtenerHashVocabulario (){
+	
+	return hashPrincipal;
 }
