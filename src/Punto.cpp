@@ -41,7 +41,7 @@ float Punto::getNorma(){
 }
 
 string Punto::getNombreDoc(){
-	return ->nombreDoc;	
+	return this->nombreDoc;	
 }	
 
 double Punto::distanciaCoseno(Punto otroPunto){
