@@ -15,8 +15,9 @@
  * Ahora se supone que tenemos los clusteres hechos. 
  */
 
+Clustering::Clustering () {}
 
-Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra, bool multiPertenencia){
+Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra, bool multiPertenencia, vector<string> vectorArchivos){
 	
 	this->manejador = new ManejadorArchivos();
 	
@@ -26,9 +27,9 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	vector<int> indices_random = this->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
 
 	//lista de puntos random:
-	vector<Punto> puntos_iniciales= this->manejador->LevantarListaDePuntos(indices_random);
+	vector<Punto> puntos_iniciales= this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
 	//lista de puntos muestra:
-	this->puntos_muestra = this->manejador->LevantarListaDePuntos(indices_muestra);
+	this->puntos_muestra = this->manejador->LevantarListaDePuntos(indices_muestra, vectorArchivos);
 	//obtiene semillas:
 	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
 

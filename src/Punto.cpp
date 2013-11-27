@@ -30,7 +30,9 @@ float Punto::getNorma(){
 	return sqrt(acum);
 }
 
-
+string Punto::getNombreDoc(){
+	return ->nombreDoc;	
+}	
 
 double Punto::distanciaCoseno(Punto otroPunto){
 

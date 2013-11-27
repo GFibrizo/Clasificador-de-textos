@@ -16,6 +16,7 @@ class Punto {
 private:
 	vector<float> frecPond;
 	int doc;
+	string nombreDoc;
 
 public:
 	Punto();
@@ -26,7 +27,7 @@ public:
 	Punto  calcularCercanos(vector<Punto>  puntos);
 	double distanciaCoseno(Punto otroPunto);
 	void setVector(vector<float> vectorDoc);
-
+	string getNombreDoc();
 	vector<float> vectorDeFrecuencias();
 
 };

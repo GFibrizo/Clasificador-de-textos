@@ -55,3 +55,6 @@ vector<string>& LectorDirectorios::leerDir(const char* ruta){
 
 	return *archivos;
 }
+
+
+

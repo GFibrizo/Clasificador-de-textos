@@ -12,6 +12,7 @@
 #include "src/Clustering.h"
 #include "src/Punto.h"
 #include "src/Cluster.h"
+#include "src/Clasificador.h"
 
 using namespace std;
 
@@ -88,10 +89,15 @@ int main1 (int argc, char **argv) {
 		
 		
 	//PROBLEMAAAAA: COMO HACEMOS SI EL CLUSTERING YA ESTA HECHO, PARA QUE NO LO VUELVA A CREAR?
-		
+
 	/* LOGICA */
 	bool multiPertenencia;
 	int cantidad_docs_total;
+	string ruta;
+	hash hashPrincipal;
+	Clustering clustering;
+	vector<Clusters*> clusters;
+	vector<string> vectorArchivos;
 	if ((strcmp (o_value, "Y") == 0) || (strcmp (o_value, "y") == 0) ) multiPertenencia = true;
 	if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) multiPertenencia = false;
 	
@@ -100,27 +106,29 @@ int main1 (int argc, char **argv) {
 		PreProcesarDatos* preDatos = new PreProcesarDatos(d_value);
 		//lee los archivos, arma el hash principal y lo guarda como atributo. Arma los hash secundarios y los guarda en archivos.
 		preDatos->preProcesarDatos();
-		cantidad_docs_total = preDatos->getCantDocs(); //TDV NO EXISTE
+		hashPrincipal = preDatos->obtenerHashVocabulario(); 
+		vectorArchivos = preDatos->getVectorArchivos();
+		cantidad_docs_total = vectorArchivos.size();
 		
 		if (c_value == NULL) 
 			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
 		else
 			valor_K = atoi(c_value);
-		Clustering clustering =  Clustering(valor_K, cantidad_docs_total, 0.10 * cantidad_docs_total, multiPertenencia);//TDV NO MODIFICADO
-		
+		clustering =  Clustering(valor_K, cantidad_docs_total, 0.10 * cantidad_docs_total, multiPertenencia,vectorArchivos);
+		clusters = clustering.getListaClusters();
 	}else{
 		if (a_value != NULL){
-			Punto nuevo_punto = PreProcesarDatos::AgregarElemento(a_value); //TDV NO EXISTE
-			clustering->Clasificar(nuevo_punto);
+			Clasificador clasificador = Clasificador(clusters, hashPrincipal);
+			strcpy(ruta, a_value.c_str());
+			clasificador->clasificarNuevoPunto(ruta);
 		}
 		if (l_flag != false){
 			// Lista todos los documentos del repositorio y la categoría a la cual pertenece cada uno.
-			vector<Cluster*> lista_de_clusters = clustering.getListaClusters();
+			vector<Cluster*> lista_de_clusters = clustering.getListaClusters(); //puede ser con persistencia o no .
 			for (unsigned int i = 0; i < lista_de_clusters.size() ; i++){
 				vector<Punto> puntos_cluster = (*(lista_de_clusters[i])).getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
-					int numeroDoc = puntos_cluster[j]->getDocumento();
-					char* nombreDoc = ManejadorArchivos::ObtenerNombreDoc(numeroDoc);//TDV NO EXISTE
+					char* nombreDoc = puntos_cluster[j]->getNombreDoc();//TDV NO EXISTE
 					cout<<nombreDoc<<" , categoria:"<<i<<"\n";
 				}	
 			}	
@@ -132,8 +140,7 @@ int main1 (int argc, char **argv) {
 				cout<<"CATEGORIA: "<<i<<"\n";
 				vector<Punto> puntos_cluster = (*(lista_de_clusters[i])).getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
-					int numeroDoc = puntos_cluster[j]->getDocumento();
-					char* nombreDoc = ManejadorArchivos::ObtenerNombreDoc(numeroDoc);//Esta funcion no existe TDV
+					char* nombreDoc = puntos_cluster[j]->getNombreDoc();
 					cout<<nombreDoc<<"\n";
 				}
 			}	

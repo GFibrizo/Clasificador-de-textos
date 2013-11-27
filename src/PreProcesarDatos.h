@@ -84,6 +84,7 @@ public:
 	void preProcesarDatos();
 	Punto procesarNuevoDocumento(string ruta);
 	map<string, int> obtenerHashVocabulario();
+	vector<string> getVectorArchivos();
 
 };
 

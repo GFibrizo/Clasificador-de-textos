@@ -429,3 +429,8 @@ map<string, int> PreProcesarDatos::obtenerHashVocabulario (){
 	
 	return hashPrincipal;
 }
+
+
+vector<string> PreProcesarDatos::getVectorArchivos(){
+	return this->vector_archivos;	
+}	

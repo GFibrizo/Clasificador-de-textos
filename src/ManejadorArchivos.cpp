@@ -127,7 +127,7 @@ char* ManejadorArchivos::leerArchivo(){
  *Crea y devuelve la lista de puntos correspondiente. */
 
 //Recibe una lista de numeros de docs NO ORDENADA
-vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc){
+vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos){
 	//ordena la lista:
 	std::sort (numero_doc.begin(), numero_doc.end());
 	string auxLinea;
