@@ -20,7 +20,7 @@ private:
 	ManejadorArchivos* manejador;
 public:
 	//constructor vacio para persistencia
-	Clustering::Clustering();
+	Clustering();
 	//constructor para realizar proceso de clustering
 	Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra, bool multiPertenencia, vector<string> vectorArchivos );
 	void Clasificar(Punto nuevo_punto);

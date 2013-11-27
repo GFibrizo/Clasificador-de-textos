@@ -7,10 +7,20 @@
 
 #include "Punto.h"
 
+
+
 Punto::Punto(vector<float> frecPond,int doc) {
 
 	this->frecPond = frecPond;
 	this->doc=doc;
+	this->nombreDoc = "";
+}
+
+Punto::Punto(vector<float> frecPond,int doc, string nombreDoc) {
+
+	this->frecPond = frecPond;
+	this->doc=doc;
+	this->nombreDoc = nombreDoc;
 }
 Punto::Punto(){
 	

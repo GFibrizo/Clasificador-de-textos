@@ -47,7 +47,7 @@ public:
 
   char* leerArchivo();
   //Recibe un vector con numeros de docs, lee el archivo del hash secundario y crea y devuelve la lista de puntos correspondiente.
-  vector<Punto> LevantarListaDePuntos(vector<int> numero_doc);
+  vector<Punto> LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos);
 
 };
 #endif /* MANEJADORARCHIVOS_H_ */

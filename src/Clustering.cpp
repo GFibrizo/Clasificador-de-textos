@@ -48,7 +48,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 		indice++;
 	}		
 	//Genero lista de puntos no muestreados:		
-	vector<Punto> lista_no_muestreados = this->manejador->LevantarListaDePuntos(indices_no_muestreados);
+	vector<Punto> lista_no_muestreados = this->manejador->LevantarListaDePuntos(indices_no_muestreados, vectorArchivos);
 	//Clasifico cada uno de esos puntos:
 	for (unsigned int j = 0; j < indices_no_muestreados.size(); j++){
 		this->Clasificar(lista_no_muestreados[j]);

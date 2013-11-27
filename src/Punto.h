@@ -8,6 +8,7 @@
 #ifndef PUNTO_H_
 #define PUNTO_H_
 #include <vector>
+#include <string>
 #include<math.h>
 
 using namespace std;
@@ -21,6 +22,7 @@ private:
 public:
 	Punto();
 	Punto(vector<float> frecPond,int doc);
+	Punto(vector<float> frecPond,int doc, string nombreDoc);
 	virtual ~Punto();
 	float getNorma();
 	int getDocumento();
