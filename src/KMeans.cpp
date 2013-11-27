@@ -7,6 +7,11 @@
 
 #include "KMeans.h"
 using namespace std;
+
+unsigned int const KMeans::MAX_ITERACIONES=5;
+double const KMeans::CORRIMIENTO_MINIMO=0.8;
+unsigned int const KMeans::PORCENTAJE_CENTROIDES=0.75;
+
 KMeans::KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,
 		vector<Punto> *semillas, bool multiPertenencia) {
 

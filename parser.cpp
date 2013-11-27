@@ -90,10 +90,10 @@ int main1 (int argc, char **argv) {
 	//PROBLEMAAAAA: COMO HACEMOS SI EL CLUSTERING YA ESTA HECHO, PARA QUE NO LO VUELVA A CREAR?
 		
 	/* LOGICA */
-	bool masDeUno;
+	bool multiPertenencia;
 	int cantidad_docs_total;
-	if ((strcmp (o_value, "Y") == 0) || (strcmp (o_value, "y") == 0) ) masDeUno = true;
-	if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) masDeUno = false;
+	if ((strcmp (o_value, "Y") == 0) || (strcmp (o_value, "y") == 0) ) multiPertenencia = true;
+	if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) multiPertenencia = false;
 	
 	int valor_K; //funcion
 	if (d_value != NULL) { 
@@ -106,7 +106,7 @@ int main1 (int argc, char **argv) {
 			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
 		else
 			valor_K = atoi(c_value);
-		Clustering clustering =  Clustering(valor_K, cantidad_docs_total, 0.10 * cantidad_docs_total, masDeUno);//TDV NO MODIFICADO
+		Clustering clustering =  Clustering(valor_K, cantidad_docs_total, 0.10 * cantidad_docs_total, multiPertenencia);//TDV NO MODIFICADO
 		
 	}else{
 		if (a_value != NULL){
