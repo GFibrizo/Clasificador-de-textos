@@ -23,8 +23,8 @@ void Cluster::agregarElemento(Punto* elemento){
 	//Cuando agrego un elemento recalculo el centroide
 	this->calcularCentroide();
 }
-Punto* Cluster::getCentroide(){
-	return this->centroide;
+Punto Cluster::getCentroide(){
+	return *this->centroide;
 }
 bool Cluster::esSimilar(Cluster cluster){
 	return true;
@@ -54,6 +54,7 @@ void Cluster::calcularCentroide(){
 	this->centroide = temp;
 
 }
+
 vector<Punto*> Cluster::getPuntos(){
 	return this->puntos;
 }

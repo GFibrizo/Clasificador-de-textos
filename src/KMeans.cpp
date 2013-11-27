@@ -59,7 +59,7 @@ vector<Cluster*> KMeans::getClustersDistanciaMinima(Punto punto) {
 	double distanciaMin = 0;
 	//Calculo la distancia de este punto contra cada centroide
 	for (unsigned int i = 0; i < this->clusters.size(); i++) {
-		distancia = punto.distanciaCoseno(*(this->clusters[i]->getCentroide()));
+		distancia = punto.distanciaCoseno(this->clusters[i]->getCentroide());
 		//si la distancia es igual a la distancia minima, solo lo agrego a la lista de clusters cercanos
 		if ((distancia == distanciaMin) && (this->multiPertenencia)) {
 			temps.push_back(this->clusters[i]);
@@ -84,9 +84,9 @@ bool KMeans::cambiosClusters() {
 	int cantDiferentes = 0;
 	double difCentroides;
 	Punto oldCentroid, newCentroid;
-	for (unsigned int i = 0; i < this->getClusters().size(); i++) {
+	for (unsigned int i = 0; i < this->clusters.size(); i++) {
 		oldCentroid = this->centroides[i];
-		newCentroid = *(this->getClusters()[i]->getCentroide());
+		newCentroid = this->getClusters()[i]->getCentroide();
 		difCentroides = oldCentroid.distanciaCoseno(newCentroid);
 		if (difCentroides >= CORRIMIENTO_MINIMO) {
 			cantDiferentes++;
@@ -94,7 +94,7 @@ bool KMeans::cambiosClusters() {
 	}
 	//Utilizo el criterio que si menos del 75% de los centroides no variaron, entonces llegue
 	//a una convergencia ya que "no tuve cambios"
-	if (cantDiferentes < (this->semillas.size() * 0.75)) {
+	if (cantDiferentes < (this->semillas.size() * PORCENTAJE_CENTROIDES)) {
 		return false;
 	}
 	return true;
@@ -104,7 +104,7 @@ bool KMeans::cambiosClusters() {
  */
 void KMeans::actualizarCentroides() {
 	for (unsigned int i = 0; i < this->clusters.size(); i++) {
-		this->centroides[i] = *(this->clusters[i]->getCentroide());
+		this->centroides[i] = this->clusters[i]->getCentroide();
 	}
 	//vacio los clusters
 	for (unsigned int i = 0; i < this->clusters.size(); i++) {
