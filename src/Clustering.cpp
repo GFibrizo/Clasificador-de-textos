@@ -189,7 +189,7 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos, int cantidad_doc
 }
 
 
-
+/*
 void persistirClusters(){
 	
 	string aux;
@@ -219,3 +219,4 @@ void levantarClusters(){
 	
 	
 }
+*/

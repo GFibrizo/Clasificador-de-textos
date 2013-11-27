@@ -16,7 +16,7 @@
 
 using namespace std;
 
-int main1 (int argc, char **argv) {
+int main (int argc, char **argv) {
 
 	typedef map<string,int> hash;
 
@@ -93,15 +93,17 @@ int main1 (int argc, char **argv) {
 	//PROBLEMAAAAA: COMO HACEMOS SI EL CLUSTERING YA ESTA HECHO, PARA QUE NO LO VUELVA A CREAR?
 
 	/* LOGICA */
-	bool multiPertenencia;
+	bool multiPertenencia = false;
 	int cantidad_docs_total;
 	string ruta;
 	hash hashPrincipal;
 	Clustering clustering;
 	vector<Cluster*> clusters;
 	vector<string> vectorArchivos;
-	if ((strcmp (o_value, "Y") == 0) || (strcmp (o_value, "y") == 0) ) multiPertenencia = true;
-	if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) multiPertenencia = false;
+	if (o_value != NULL) {
+		if ((strcmp (o_value, "Y") == 0) || (strcmp (o_value, "y") == 0) ) multiPertenencia = true;
+		if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) multiPertenencia = false;
+	}	
 	
 	int valor_K; //funcion
 	if (d_value != NULL) { 
@@ -113,12 +115,13 @@ int main1 (int argc, char **argv) {
 		cantidad_docs_total = vectorArchivos.size();
 		
 		if (c_value == NULL) 
-			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
+			valor_K = 4;//obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
 		else
 			valor_K = atoi(c_value);
-		clustering =  Clustering(valor_K, cantidad_docs_total, 0.10 * cantidad_docs_total, multiPertenencia,vectorArchivos);
-		clusters = clustering.getListaClusters();
-	}else{
+		//clustering =  Clustering(valor_K, cantidad_docs_total, 0.10 * cantidad_docs_total, multiPertenencia,vectorArchivos);
+		//clusters = clustering.getListaClusters();
+	}
+	/*else{
 		if (a_value != NULL){
 			Clasificador clasificador = Clasificador(clusters, hashPrincipal);
 			clasificador.clasificarNuevoPunto(string(a_value));
@@ -129,7 +132,7 @@ int main1 (int argc, char **argv) {
 			for (unsigned int i = 0; i < lista_de_clusters.size() ; i++){
 				vector<Punto*> puntos_cluster = (*(lista_de_clusters[i])).getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
-					string nombreDoc = puntos_cluster[j]->getNombreDoc();//TDV NO EXISTE
+					string nombreDoc = puntos_cluster[j]->getNombreDoc();
 					cout<<nombreDoc<<" , categoria:"<<i<<"\n";
 				}	
 			}	
@@ -149,7 +152,7 @@ int main1 (int argc, char **argv) {
 	}		
 	
 	
-	
+	*/
 		
 		
 	return 0;
