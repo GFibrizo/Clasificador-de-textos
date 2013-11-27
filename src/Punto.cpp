@@ -7,7 +7,7 @@
 
 #include "Punto.h"
 
-Punto::Punto(vector<double> frecPond,int doc) {
+Punto::Punto(vector<float> frecPond,int doc) {
 
 	this->frecPond = frecPond;
 	this->doc=doc;
@@ -21,8 +21,8 @@ Punto::~Punto() {
 	// TODO Auto-generated destructor stub
 }
 
-double Punto::getNorma(){
-	double acum=0;
+float Punto::getNorma(){
+	float acum=0;
 
 	for (unsigned int i = 0; i < this->frecPond.size(); i++) {
 		acum+=pow(this->frecPond[i],2.0);
@@ -66,12 +66,12 @@ int Punto::getDocumento(){
 }
 
 
-vector<double> Punto::vectorDeFrecuencias(){
+vector<float> Punto::vectorDeFrecuencias(){
 	return this->frecPond;
 }	
 
 
-void Punto::setVector(vector<double> vectorDoc){
+void Punto::setVector(vector<float> vectorDoc){
 	
 	this->frecPond = vectorDoc;
 }

@@ -14,20 +14,20 @@ using namespace std;
 
 class Punto {
 private:
-	vector<double> frecPond;
+	vector<float> frecPond;
 	int doc;
 
 public:
 	Punto();
-	Punto(vector<double> frecPond,int doc);
+	Punto(vector<float> frecPond,int doc);
 	virtual ~Punto();
-	double getNorma();
+	float getNorma();
 	int getDocumento();
 	Punto  calcularCercanos(vector<Punto>  puntos);
 	double distanciaCoseno(Punto otroPunto);
-	void setVector(vector<double> vectorDoc);
+	void setVector(vector<float> vectorDoc);
 
-	vector<double> vectorDeFrecuencias();
+	vector<float> vectorDeFrecuencias();
 
 };
 

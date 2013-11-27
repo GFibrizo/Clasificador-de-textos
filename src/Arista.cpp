@@ -53,9 +53,9 @@ Arista* Arista::buscar_minimo(vector<Arista*> lista_aristas){
 
 /*Extraigo v1 y v2 de la arista, calculo el vector promedio y creo un nuevo punto que devuelvo.*/
 Punto Arista::buscar_promedio(){
-	vector<double> v1 = this->getV1().vectorDeFrecuencias();
-	vector<double> v2 = this->getV2().vectorDeFrecuencias();
-	vector<double> frecPond;
+	vector<float> v1 = this->getV1().vectorDeFrecuencias();
+	vector<float> v2 = this->getV2().vectorDeFrecuencias();
+	vector<float> frecPond;
 	unsigned int i;
 	for (i = 0; i < v1.size(); i++){
 		frecPond[i] = (v1[i] + v2[i]) / 2;	

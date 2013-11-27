@@ -147,14 +147,15 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc){
 			indice++;
 			continue;
 		}else { //para un doc que busco:
-			vector<double> vector_frec;
+			vector<float> vector_frec;
 			strcpy(linea, auxLinea.c_str()); 
 			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
 			char* auxPalabra = strtok(linea," ,  ");
 
 			while(auxPalabra != NULL){
-				std::string::size_type sz;     // alias of size_t
-				long double frec = std::stold (auxPalabra,&sz);
+				//std::string::size_type sz;     // alias of size_t
+				float frec = atof(auxPalabra);
+				//long float frec = std::stold (auxPalabra,&sz);
 				vector_frec.push_back(frec);	
 				auxPalabra = strtok(NULL," ,  ");
 			}

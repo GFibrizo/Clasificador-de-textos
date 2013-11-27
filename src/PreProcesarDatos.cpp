@@ -405,7 +405,7 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 	//float frecuencia=0;
 	int i = 0;
 
-	vector<double> vectorDoc;
+	vector<float> vectorDoc;
 	
 	for (hash2::iterator it= hashNuevoDoc.begin(); it != hashNuevoDoc.end(); it++){
 		

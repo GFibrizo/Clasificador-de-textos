@@ -29,7 +29,8 @@ Punto Cluster::getCentroide(){
 bool Cluster::esSimilar(Cluster cluster){
 	return true;
 }
-double Cluster::gradoCohesion(){
+float Cluster::gradoCohesion(){
+	//TODO
 	return 0;
 }
 
@@ -39,7 +40,7 @@ void Cluster::calcularCentroide(){
 	unsigned int cantPuntos = this->puntos.size();
 
 	//obtengo el tamaño que va a tener el vector de frecuencias
-	vector<double> frecTemp(this->puntos[0]->vectorDeFrecuencias().size());
+	vector<float> frecTemp(this->puntos[0]->vectorDeFrecuencias().size());
 	//Acumulo en un punto temporal la suma de todas las componentes de los
 	//puntos de cluster. Divido cada termino por el total de puntos para normalizar.
 	for (unsigned int i = 0;  i < cantPuntos; i++) {
