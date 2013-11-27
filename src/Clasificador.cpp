@@ -25,10 +25,8 @@ Clasificador::Clasificador(vector<Cluster*> clusters, hash hashPrincipal){
 
 void Clasificador::clasificarNuevoPunto(string ruta){
 	unsigned int i;
-	char *auxRuta = new char[256];
-	strcpy(auxRuta, ruta.c_str());
 	
-	Punto nuevoPunto =  this->PreProcesador->procesarNuevoDocumento(auxRuta); 
+	Punto nuevoPunto =  this->PreProcesador->procesarNuevoDocumento(ruta); 
 	vector<Punto> centroides;
 	
 	for (i = 0; i < clusters.size(); i++) 
@@ -40,7 +38,7 @@ void Clasificador::clasificarNuevoPunto(string ruta){
 	while ((CompararCentroides(centroideCercano, centroides[i]) == false) && ( i < centroides.size() )) i++;
 
 	(*(clusters[i])).agregarElemento(&nuevoPunto);
-	delete []auxRuta;
+
 }
 
 /**********************************************************************/
@@ -60,7 +58,7 @@ Clasificador::~Clasificador() {
 bool Clasificador::CompararCentroides(Punto p1, Punto p2){
 	
 	for (unsigned int i = 0; i < p1.vectorDeFrecuencias().size() ; i++){
-		if	(p1.vectorDeFrecuencias()[i] == p2.vectorDeFrecuencias()[i]) return false;
+		if	(p1.vectorDeFrecuencias()[i] != p2.vectorDeFrecuencias()[i]) return false;
 	}	
 	
 	if (p1.getDocumento() == p2.getDocumento()) return true;
