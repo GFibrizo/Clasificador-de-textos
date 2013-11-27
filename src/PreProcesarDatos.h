@@ -65,6 +65,7 @@ private:
 	void escribirArchivoDeHash(hash hash);
 	void escribirArchivoIndice(hash2 hash, ofstream& indiceDocumentos);
 	void agregarElementoAHash(hash& hash, string clave);
+	void agregarElementoAHash(hash2& hash, string clave);
 	string numberToString(int number);
 	string numberToString(float number);
 	void generarIndiceDocumentos();
@@ -81,8 +82,8 @@ public:
 	PreProcesarDatos(hash hashPorParametro);
 	virtual ~PreProcesarDatos();
 	void preProcesarDatos();
-	Punto procesarNuevoDocumento(char* ruta);
-	hash obtenerHashVocabulario ();
+	Punto procesarNuevoDocumento(string ruta);
+	map<string, int> obtenerHashVocabulario();
 
 };
 

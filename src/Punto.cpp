@@ -13,6 +13,7 @@ Punto::Punto(vector<double> frecPond,int doc) {
 	this->doc=doc;
 }
 Punto::Punto(){
+	
 
 }
 
@@ -69,3 +70,8 @@ vector<double> Punto::vectorDeFrecuencias(){
 	return this->frecPond;
 }	
 
+
+void Punto::setVector(vector<double> vectorDoc){
+	
+	this->frecPond = vectorDoc;
+}

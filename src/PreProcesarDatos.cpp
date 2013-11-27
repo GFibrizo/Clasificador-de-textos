@@ -57,9 +57,9 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 PreProcesarDatos::PreProcesarDatos(hash hashPorParametro) {
 	
 	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r \t \\ \r\n";
-	this->vector_archivos = NULL;
+	//this->vector_archivos = NULL;
 	this->verifStopWord= new VerificadorStopWords(DIR_STOP_WORDS);
-	this->archivoHashSecundario = NULL;
+	//this->archivoHashSecundario = NULL;
 	this->verifDocDiferentes=0;
 	this->hashPrincipal = hashPorParametro;	
 }
@@ -89,9 +89,23 @@ void PreProcesarDatos::pasarAminusculas(string& str){
 /**********************************************************************/
 
 
+//Recibe un hash con valores del tipo int.
 //Si la clave no esta en el hash, la agrega asociada a un valor 0.
 //Si la clave esta en el hash, aumenta en 1 el valor asociado.
 void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
+
+	if (hash.count(clave) > 0){
+		 hash[clave]=hash[clave]+ 1;
+		 return;
+	}
+	hash[clave] = 1;
+}
+
+
+//Recibe un hash con valores del tipo float
+//Si la clave no esta en el hash, la agrega asociada a un valor 0.
+//Si la clave esta en el hash, aumenta en 1 el valor asociado.
+void PreProcesarDatos::agregarElementoAHash(hash2& hash, string clave){
 
 	if (hash.count(clave) > 0){
 		 hash[clave]=hash[clave]+ 1;
@@ -315,7 +329,7 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 	hash2 hashDocsEnMemoria;
 	
 	for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
-		hashDocsEnMemoria[it->first] = 0;
+		hashDocsEnMemoria[it->first] = 0;//Linea dudosa
 	}
 	return hashDocsEnMemoria;
 }
@@ -356,6 +370,8 @@ string PreProcesarDatos::stem_palabra(string palabra){
 //frecuencias ponderadas.
 Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 
+	string auxLinea;
+	string palabra;
 	hash2 hashNuevoDoc = generarHashMemoria();
 	this->manejador = new ManejadorArchivos();
 	this->manejador->abrirLectura(ruta);
@@ -376,7 +392,7 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 			//veo si es un stopword y sino lo agrego a hashes:
 			if(!this->verifStopWord->verificarPalabra(palabra)){
 				palabra = stem_palabra(palabra);
-				if (palabra.length() > 1) agregarElementoAHash(hashNuevoDoc);
+				if (palabra.length() > 1) agregarElementoAHash(hashNuevoDoc, palabra);
 			}
 			auxPalabra = strtok (NULL, this->invalidos);
 		}
@@ -385,15 +401,22 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 	}
 	delete this->manejador;		
 	
-	
+	//string clave;
+	//float frecuencia=0;
 	int i = 0;
-	Punto puntoNuevoDoc;
-	for (hash::iterator it= hashNuevoDoc.begin(); it != hashNuevoDoc.end(); it++){
+
+	vector<double> vectorDoc;
+	
+	for (hash2::iterator it= hashNuevoDoc.begin(); it != hashNuevoDoc.end(); it++){
 		
-		puntoNuevoDoc[i] = calcular_TF_IDF(hashNuevoDoc[it->first], hashNuevoDoc[it->first] );
+		//clave = hashNuevoDoc[it->first];
+		//frecuencia = hashNuevoDoc[it->second];
+		vectorDoc[i] = calcular_TF_IDF(it->first, it->second);
 		i++;
 	}
 	
+	Punto puntoNuevoDoc (vectorDoc, 10000000);
+	//Falta ver como setear el numero del doc en la instancia de Punto
 	return puntoNuevoDoc;
 
 }
@@ -402,7 +425,7 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 /**********************************************************************/
 
 //Devuelve el hashPrincipal
-hash PreProcesarDatos::obtenerHashVocabulario (){
+map<string, int> PreProcesarDatos::obtenerHashVocabulario (){
 	
 	return hashPrincipal;
 }

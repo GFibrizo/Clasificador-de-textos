@@ -25,6 +25,7 @@ public:
 	int getDocumento();
 	Punto  calcularCercanos(vector<Punto>  puntos);
 	double distanciaCoseno(Punto otroPunto);
+	void setVector(vector<double> vectorDoc);
 
 	vector<double> vectorDeFrecuencias();
 
