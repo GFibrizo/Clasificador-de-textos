@@ -162,7 +162,7 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc){
 			//termina la linea:	
 			indice++;
 			Punto punto =  Punto(vector_frec, doc);
-			lista_de_puntos.push_back(&punto);
+			lista_de_puntos.push_back(punto);
 			j++; //pasa al siguiente doc
 			
 		}

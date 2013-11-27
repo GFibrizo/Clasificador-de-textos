@@ -2,13 +2,13 @@
 #ifndef CLUSTERING_H_
 #define CLUSTERING_H_
 #include <stdbool.h>
+#include <chrono>
+#include <vector>
 #include "Punto.h"
 #include "Cluster.h"
-#include "JerarquicoAglomerativo.h"
 #include "ManejadorArchivos.h"
 #include "KMeans.h"
-
-
+#include "Arista.h"
 using namespace std;
 
 class Clustering {
@@ -16,13 +16,23 @@ private:
 	vector<Cluster*> lista_de_clusters;
 	vector<Punto> semillas;
 	vector<Punto> puntos_muestra;
-	bool enMasDeUnCluster;
+	bool multiPertenencia;
+	ManejadorArchivos* manejador;
 public:
  
-	Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra, bool enMasDeUnCluster);
+	Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra, bool multiPertenencia);
 	void Clasificar(Punto nuevo_punto);
 	vector<Cluster*> getListaClusters();
-	
+	/* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
+	* tomaron como muestra para hacer el clutering*/
+	vector<int> obtener_muestra(int cantidad_de_puntos, int cantidad_docs);
+	/* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
+	* agarraron de manera aleatoria de la muestra tomada para agrupar con el clustering jerarquico aglomerativo  */
+	vector<int> obtener_puntos_random(int cantidad_de_semillas, vector<int> docs_muestra);
+	// recibe una cantidad de docs, una cantidad de semillas, y un vector con sqrt(N.K) 
+	// instancias de la clase Punto. Devuelve un vector con K semillas de tipo Punto.
+	vector<Punto> buckShot (unsigned int cantSemillas, vector<Punto> lista_puntos);
+
 	
 };
 
