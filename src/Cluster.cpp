@@ -49,9 +49,9 @@ void Cluster::calcularCentroide(){
 		}
 	}
 	//Se crea un nuevo punto con el promedio de las frecuencias ponderadas de los puntos del cluster
-	//y que tiene como documento al 0 (ya que es un punto que puede ser ficticio)
+	//y que tiene como documento al -1 (ya que es un punto que puede ser ficticio)
 
-	Punto* temp= new Punto(frecTemp,0);
+	Punto* temp= new Punto(frecTemp,-1);
 	this->centroide = temp;
 
 }
