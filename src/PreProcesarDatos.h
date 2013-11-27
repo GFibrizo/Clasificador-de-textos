@@ -81,6 +81,7 @@ private:
 	float calcular_TF_IDF(string clave, float frecuencia);
 public:
 	PreProcesarDatos(const char* ruta);
+	PreProcesarDatos(hash hashPorParametro);
 	virtual ~PreProcesarDatos();
 	void preProcesarDatos();
 	Punto procesarNuevoDocumento(char* ruta);
