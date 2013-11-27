@@ -189,3 +189,33 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos, int cantidad_doc
 }
 
 
+
+void persistirClusters(){
+	
+	string aux;
+	archivoIndice.setf( ios::fixed, ios::floatfield );
+	archivoIndice.precision(5);
+	vector<float> centroide;
+	
+	for (int i = 0; i< lista_de_clusters.size(); i++) {
+		
+		centroide = (lista_de_clusters[i]).getCentroide();
+		
+		for(int j = 0; j < centroide.size(); j++)
+			archivoCentroides << centroide[j] <<",";
+	}
+	archivoIndice << endl;
+		
+		
+		(lista_de_clusters[i]).getPuntos();
+		
+	} 
+	
+	
+	
+}
+
+void levantarClusters(){
+	
+	
+}
