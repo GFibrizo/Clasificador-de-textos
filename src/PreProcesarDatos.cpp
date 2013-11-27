@@ -282,7 +282,7 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 	string clave;
 	char* aux;
 	float frecuencia = 0;
-
+	int i; //aunque creo que no se usa.
 
 	while ( this->manejador->leerUnaLineaIndice(auxLinea)){
 	

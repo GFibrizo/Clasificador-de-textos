@@ -6,13 +6,13 @@
  *      Author: fabri
  */
 
-include "Clasificador.h"
+#include "Clasificador.h"
 
 /**********************************************************************/
 /**********************************************************************/
 
 
-Clasificador::Clasificador(vector<Cluster> clusters, hash hashPrincipal){
+Clasificador::Clasificador(vector<Cluster*> clusters, hash hashPrincipal){
 	
 	this->PreProcesador =  new PreProcesarDatos(hashPrincipal);
 	this->clusters = clusters;
@@ -24,21 +24,23 @@ Clasificador::Clasificador(vector<Cluster> clusters, hash hashPrincipal){
 
 
 void Clasificador::clasificarNuevoPunto(string ruta){
+	unsigned int i;
+	char *auxRuta = new char[256];
+	strcpy(auxRuta, ruta.c_str());
 	
-	Punto nuevoPunto =  this->PreProcesador->procesarNuevoDocumento(ruta); 
+	Punto nuevoPunto =  this->PreProcesador->procesarNuevoDocumento(auxRuta); 
 	vector<Punto> centroides;
 	
-	for (int i = 0; i < clusters.size(); i++) 
-		centroides[i] = clusters[i].getCentroide();
+	for (i = 0; i < clusters.size(); i++) 
+		centroides[i] = (*(clusters[i])).getCentroide();
 	
 	Punto centroideCercano = nuevoPunto.calcularCercanos(centroides);
 	i = 0;
 	
-	//Puede llegar a fallar porque no esta definido un cmp para Punto
-	while (centroideCercano != centroide[i]) i++;
-	
-	clusters[i].agregarElemento(nuevoPunto);
-	
+	while ((CompararCentroides(centroideCercano, centroides[i]) == false) && ( i < centroides.size() )) i++;
+
+	(*(clusters[i])).agregarElemento(&nuevoPunto);
+	delete []auxRuta;
 }
 
 /**********************************************************************/
@@ -48,6 +50,21 @@ void Clasificador::clasificarNuevoPunto(string ruta){
 //Destructor de la clase Clasificador
 Clasificador::~Clasificador() {
 
-	delete this->PreProcesarDatos;
-	delete this->clusters;
+	delete this->PreProcesador;
+	for (unsigned int i = 0 ; i < this->clusters.size() ; i++){
+		delete this->clusters[i];
+	}
+	
+}
+
+bool Clasificador::CompararCentroides(Punto p1, Punto p2){
+	
+	for (unsigned int i = 0; i < p1.vectorDeFrecuencias().size() ; i++){
+		if	(p1.vectorDeFrecuencias()[i] == p2.vectorDeFrecuencias()[i]) return false;
+	}	
+	
+	if (p1.getDocumento() == p2.getDocumento()) return true;
+		
+	return false;	
+	
 }

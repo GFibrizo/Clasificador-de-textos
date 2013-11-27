@@ -31,9 +31,6 @@
 #define CANT_MAX 3//1000
 #define CANT_DE_SEPARADORES 61
 //TODO Tratar de tener separados los directorios donde se utilicen archivos que utiliza el sistema
-#define DIR_STOP_WORDS "sistema/stop_words"
-#define DIR_FILE_HASH_2 "sistema/file_hash2"
-#define DIR_FILE_INDICE_FINAL "sistema/indiceDocumentos"
 
 using namespace std;
 

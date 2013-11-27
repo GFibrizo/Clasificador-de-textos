@@ -20,7 +20,8 @@
 #include "VerificadorStopWords.h"
 #include "LectorDirectorios.h"
 #include "Porter.h"
-
+#include "PreProcesarDatos.h"
+#include "Cluster.h"
 
 using namespace std;
 
@@ -31,14 +32,14 @@ class Clasificador{
 private:
 
 	PreProcesarDatos* PreProcesador;
-	vector<Clusters> clusters;
-
-
+	vector<Cluster*> clusters;
+	typedef map<string,int> hash;
+	bool CompararCentroides(Punto p1, Punto p2);
 public:
-
-	void clasificarNuevoPunto(vector<Punto> vectorDocumento);
+	Clasificador(vector<Cluster*> clusters, hash hashPrincipal);
+	void clasificarNuevoPunto(string ruta);
 	virtual ~Clasificador();
-
+	
 };
 
 

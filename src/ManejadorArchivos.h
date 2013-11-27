@@ -5,7 +5,7 @@
 #ifndef MANEJADORARCHIVOS_H_
 #define MANEJADORARCHIVOS_H_
 
-#define DIR_FILE_INDICE_FINAL "sistema/indice_final" //VERIFICAR.
+
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
 #include <fstream>
@@ -15,6 +15,11 @@
 #include <cstring>
 #include <ios>
 #include "Punto.h"
+#define DIR_STOP_WORDS "sistema/stop_words"
+#define DIR_FILE_HASH_2 "sistema/file_hash2"
+#define DIR_FILE_INDICE_FINAL "sistema/indiceDocumentos"
+
+//#include "PreProcesarDatos.h"
 
 using namespace std;
 
