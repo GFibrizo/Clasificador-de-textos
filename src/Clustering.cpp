@@ -25,6 +25,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	vector<int> indices_muestra = this->obtener_muestra(tam_muestra, cantidad_docs_total);
 	//indices de puntos random
 	vector<int> indices_random = this->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
+	cout<<"\n tam indices muestra:"<<indices_muestra.size()<<"\n\n tam indices random"<<indices_random.size()<<"\n";
 
 	//lista de puntos random:
 	vector<Punto> puntos_iniciales= this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
@@ -33,6 +34,9 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	//obtiene semillas:
 	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
 
+	cout<<"cantidad de puntos para la muestra "<<puntos_muestra.size()<<endl;
+	cout<<"cantidad de puntos para x "<<puntos_iniciales.size()<<endl;
+	cout<<"cantidad de semillas para la muestra "<<semillas.size()<<endl;
 	//K-Means:
 	KMeans instancia_KMeans = KMeans(&(this->puntos_muestra), 0 , &(this->semillas) , multiPertenencia); //MAX_ITERACIONES = 0, DEFINIR.
 	(&instancia_KMeans)->calcularClusters();
@@ -47,10 +51,12 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 		if (i != numero_doc_muestra) indices_no_muestreados.push_back(i);
 		indice++;
 	}		
+
 	//Genero lista de puntos no muestreados:		
 	vector<Punto> lista_no_muestreados = this->manejador->LevantarListaDePuntos(indices_no_muestreados, vectorArchivos);
+
 	//Clasifico cada uno de esos puntos:
-	for (unsigned int j = 0; j < indices_no_muestreados.size(); j++){
+	for (unsigned int j = 0; j < lista_no_muestreados.size(); j++){
 		this->Clasificar(lista_no_muestreados[j]);
 	}
 	
@@ -126,7 +132,7 @@ vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas, vector<i
 	vector<int> lista_de_punteros;
 	for (unsigned int i = 0; i < sqrt(cantidad_de_semillas * docs_muestra.size()); i++) {	
 		// obtain a seed from the system clock:
-		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
 		mt19937 generator (seed);
 		numero = generator();
 		lista_de_punteros.push_back(abs(numero % (docs_muestra.size())));
@@ -189,29 +195,29 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos, int cantidad_doc
 }
 
 
-/*
+
 void persistirClusters(){
 	
-	string aux;
-	archivoIndice.setf( ios::fixed, ios::floatfield );
-	archivoIndice.precision(5);
-	vector<float> centroide;
-	
-	for (int i = 0; i< lista_de_clusters.size(); i++) {
-		
-		centroide = (lista_de_clusters[i]).getCentroide();
-		
-		for(int j = 0; j < centroide.size(); j++)
-			archivoCentroides << centroide[j] <<",";
-	}
-	archivoIndice << endl;
-		
-		
-		(lista_de_clusters[i]).getPuntos();
-		
-	} 
-	
-	
+//	string aux;
+//	archivoIndice.setf( ios::fixed, ios::floatfield );
+//	archivoIndice.precision(5);
+//	vector<float> centroide;
+//
+//	for (int i = 0; i< lista_de_clusters.size(); i++) {
+//
+//		centroide = (lista_de_clusters[i]).getCentroide();
+//
+//		for(int j = 0; j < centroide.size(); j++)
+//			archivoCentroides << centroide[j] <<",";
+//	}
+//	archivoIndice << endl;
+//
+//
+//		(lista_de_clusters[i]).getPuntos();
+//
+//	}
+//
+//
 	
 }
 
@@ -219,4 +225,3 @@ void levantarClusters(){
 	
 	
 }
-*/
