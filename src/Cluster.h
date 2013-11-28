@@ -16,6 +16,7 @@ private:
 	void calcularCentroide();
 public:
 	Cluster();
+	Cluster(Punto* centroide, vector<Punto*> puntos);
 	virtual ~Cluster();
 	void agregarElemento(Punto* elemento);
 	Punto getCentroide();

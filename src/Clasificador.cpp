@@ -51,9 +51,12 @@ Clasificador::~Clasificador() {
 	delete this->PreProcesador;
 	for (unsigned int i = 0 ; i < this->clusters.size() ; i++){
 		delete this->clusters[i];
-	}
-	
+	}	
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 bool Clasificador::CompararCentroides(Punto p1, Punto p2){
 	

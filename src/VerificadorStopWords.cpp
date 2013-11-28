@@ -7,6 +7,9 @@
 
 #include "VerificadorStopWords.h"
 
+/**********************************************************************/
+/**********************************************************************/
+
 
 //constructor: levanta el archivo de stopwords
 VerificadorStopWords::VerificadorStopWords(std::string ruta) {
@@ -18,8 +21,11 @@ VerificadorStopWords::VerificadorStopWords(std::string ruta) {
 		while(archivo.leerUnaLinea(lineaaux)){
 			this->tabla.insert(lineaaux);
 		}
-
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 bool VerificadorStopWords::verificarPalabra(std::string palabra){
 
@@ -28,6 +34,10 @@ bool VerificadorStopWords::verificarPalabra(std::string palabra){
 	}
 	return true;
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 VerificadorStopWords::~VerificadorStopWords() {
 	// TODO Auto-generated destructor stub

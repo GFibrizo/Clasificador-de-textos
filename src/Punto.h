@@ -23,6 +23,7 @@ public:
 	Punto();
 	Punto(vector<float> frecPond,int doc);
 	Punto(vector<float> frecPond,int doc, string nombreDoc);
+	Punto(int doc, string nombreDoc);
 	virtual ~Punto();
 	float getNorma();
 	int getDocumento();

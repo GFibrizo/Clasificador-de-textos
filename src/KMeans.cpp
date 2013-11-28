@@ -8,9 +8,15 @@
 #include "KMeans.h"
 using namespace std;
 
+/**********************************************************************/
+/**********************************************************************/
+
 unsigned int const KMeans::MAX_ITERACIONES=5;
 double const KMeans::CORRIMIENTO_MINIMO=0.8;
 unsigned int const KMeans::PORCENTAJE_CENTROIDES=0.75;
+
+/**********************************************************************/
+/**********************************************************************/
 
 KMeans::KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,
 		vector<Punto> *semillas, bool multiPertenencia) {
@@ -27,12 +33,20 @@ KMeans::KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,
 	this->puntos = *puntos;
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 KMeans::~KMeans() {
 	// TODO Auto-generated destructor stub
 }
-/*
- * Aca es donde va la magia
- */
+
+/**********************************************************************/
+/**********************************************************************/
+
+
+
+//Aca es donde va la magia
 void KMeans::calcularClusters() {
 
 	int cantIteraciones = 0;
@@ -56,6 +70,10 @@ void KMeans::calcularClusters() {
 		cantIteraciones++;
 	}
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 vector<Cluster*> KMeans::getClustersDistanciaMinima(Punto punto) {
 
@@ -82,9 +100,11 @@ vector<Cluster*> KMeans::getClustersDistanciaMinima(Punto punto) {
 	return temps;
 }
 
-/*
- * Verifica si en la iteracion se realizo un cambio significativo de cada centroide
- */
+/**********************************************************************/
+/**********************************************************************/
+
+
+//Verifica si en la iteracion se realizo un cambio significativo de cada centroide
 bool KMeans::cambiosClusters() {
 	int cantDiferentes = 0;
 	double difCentroides;
@@ -104,28 +124,43 @@ bool KMeans::cambiosClusters() {
 	}
 	return true;
 }
-/*
- * Guardo los centroides antes de calcular las nuevas distancias
- */
+
+/**********************************************************************/
+/**********************************************************************/
+
+
+//Guardo los centroides antes de calcular las nuevas distancias
 void KMeans::actualizarCentroides() {
+	
 	for (unsigned int i = 0; i < this->clusters.size(); i++) {
 		this->centroides[i] = this->clusters[i]->getCentroide();
 	}
+	
 	//vacio los clusters
 	for (unsigned int i = 0; i < this->clusters.size(); i++) {
 		this->clusters[i]->vaciarPuntos();
 	}
-
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+
 vector<Cluster*> KMeans::getClusters() {
+	
 	return this->clusters;
 }
-/*
- * Inicializa los centroides de los clusters con las semillas obtenidas del jerarquico
- */
+
+/**********************************************************************/
+/**********************************************************************/
+
+
+
+//Inicializa los centroides de los clusters con las semillas obtenidas del jerarquico
 void KMeans::inicializarCentroides() {
 
 	Cluster* cluster;
+	
 	for (unsigned int i = 0; i < this->semillas.size(); i++) {
 		cluster = new Cluster();
 		//Cada vez que agrego el elemento al cluster estoy actualizando su centroide
@@ -134,29 +169,46 @@ void KMeans::inicializarCentroides() {
 		this->clusters.push_back(cluster);
 		//Agrego a la lista de centroides que luego se usa para verificar cambios
 		this->centroides.push_back(this->semillas[i]);
-
 	}
 
 }
 
-/*
- * Debe buscar el centroide mas cercano y agregarlo al cluster correspondiente
- */
+/**********************************************************************/
+/**********************************************************************/
+
+
+
+//Debe buscar el centroide mas cercano y agregarlo al cluster correspondiente
 void KMeans::agregarElemento(Punto elemento) {
+	
 	vector<Cluster*> temp = this->getClustersDistanciaMinima(elemento);
 	//Una vez obtenido el cluster al cual el punto esta a menor distancia
 	//Agrego este punto al cluster
 	for (unsigned int k = 0; k < temp.size(); ++k) {
 		temp[k]->agregarElemento(&elemento);
 	}
-
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+
 vector<Punto> KMeans::getPuntos() {
 	return this->puntos;
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+
 vector<Punto> KMeans::getSemillas() {
 	return this->semillas;
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+
 vector<Punto> KMeans::getCentroides() {
 	return this->centroides;
 }

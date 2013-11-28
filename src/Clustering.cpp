@@ -1,4 +1,16 @@
+/*
+ * Clustering.cpp
+ *
+ *  Created on: 18/11/2013
+ *      Author: jas, fabri
+ */
+
+
 #include "Clustering.h"
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 /* IDEA GENERAL
  * 1) Se construye instancia de Jerarquico Aglomerativo, y se piden los indices de los puntos randoms con:
@@ -15,7 +27,11 @@
  * Ahora se supone que tenemos los clusteres hechos. 
  */
 
-Clustering::Clustering () {}
+Clustering::Clustering () {};
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra, bool multiPertenencia, vector<string> vectorArchivos){
 	
@@ -59,15 +75,13 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	for (unsigned int j = 0; j < lista_no_muestreados.size(); j++){
 		this->Clasificar(lista_no_muestreados[j]);
 	}
-	
 	//ya tengo todos los clusters armados.
-		
-	
 	delete this->manejador;
 }
 
 
-
+/**********************************************************************/
+/**********************************************************************/
 
 
 
@@ -84,6 +98,9 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
  * Una vez que se tiene la lista de clusters donde se debe agregar el nuevo punto, se agrega el punto a cada uno
  * de esos clusters (los centroides se actualizan automaticamente al agregar cada punto).
  */
+
+/**********************************************************************/
+/**********************************************************************/
 
 
 // (*) UNA VEZ QUE YA TENGO EL NUEVO PUNTO:
@@ -114,15 +131,16 @@ void Clustering::Clasificar(Punto nuevo_punto){
 
 }
 
-
+/**********************************************************************/
+/**********************************************************************/
 
 
 vector<Cluster*> Clustering::getListaClusters(){
 	return this->lista_de_clusters;
 }	
 
-
-
+/**********************************************************************/
+/**********************************************************************/
 
 
 /* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
@@ -164,6 +182,9 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos, int cantidad_doc
 	
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
 
 /* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
  * agarraron de manera aleatoria para agrupar con el clustering jerarquico aglomerativo  */
@@ -204,7 +225,8 @@ vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas, vector<i
 	
 }
 
-
+/**********************************************************************/
+/**********************************************************************/
 
 
 /* CON LA LISTA DE PUNTEROS, SE CARGAN ESOS PUNTOS A MEMORIA Y SE GUARDAN EN UNA LISTA QUE RECIBE BUCKSHOT*/
@@ -212,11 +234,13 @@ vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas, vector<i
 /* Recibe cantidad de semillas que se quiere y lista de los raiz(K.N) puntos a procesar.
  * Devuelve las K semillas que se usaran en el K-Means. */
 vector<Punto> Clustering::buckShot(unsigned int cantSemillas,  vector<Punto> lista_puntos){
+	
 /* comparar cada uno de los puntos de de la lista con los demas para ver cual es el mas cercano.
  * de a uno por vez, en cada paso del for comparo solo apartir de i+1 para no repetir comparaciones.
  * Guardo en una arista (v1,v2,distancia,i1,i2) y comparo las distancias. siendo i1, i2 indices.
  * Tomo los v1 y v2 con menor distancia, los saco de la lista de puntos y agrego un nuevo punto 
  * que es el promedio de ambos. Vuelvo a empezar con largo -1 y asi hasta tener largo = cantSemillas*/
+	
 	unsigned int i,j;
 	vector<Arista*> lista_aristas;
 	Arista arista, menor_arista;
@@ -244,6 +268,9 @@ vector<Punto> Clustering::buckShot(unsigned int cantSemillas,  vector<Punto> lis
 	return lista_puntos;
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
 	
 vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total, vector<int> indices_muestra){
 	vector<int> indices_no_muestreados;
@@ -264,9 +291,14 @@ vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total, vector<i
 	return indices_no_muestreados;
 }
 
-/*
-void persistirClusters(){
+/**********************************************************************/
+/**********************************************************************/
+
+
+void Clustering::persistirClusters(){
 	
+	ofstream archivoClusters;
+	archivoClusters.open(DIR_FILE_CLUSTERS, ios_base::out | ios_base::app);
 	vector<Punto> puntosDelCluster;
 	string nombreDoc;
 	int nroDoc;
@@ -292,9 +324,14 @@ void persistirClusters(){
 		archivoClusters << "/"; //Caracter separador de clusters
 	 }
 	
+	archivoClusters.close();
 }
 
-void levantarClusters(){
+/**********************************************************************/
+/**********************************************************************/
+
+
+void Clustering::levantarClusters(){
 	
 	vector<float> centroide;
 	vector<Punto> puntosDelCluster;
@@ -303,9 +340,12 @@ void levantarClusters(){
 	char* aux;
 	string nombreDoc;
 	int nroDoc;
-	int i; //aunque creo que no se usa.
+	Punto nuevoPunto;
+	Cluster nuevoCluster;
+	int i, j, n;
 	ManejadorArchivos* manejador = new ManejadorArchivos(); //posible perdida de memoria.
 	manejador->abrirLectura(DIR_FILE_CLUSTERS);
+	n = 0;
 
 	//Cada iteracion es un cluster distinto
 	while ( this->manejador->leerUnaLineaIndice(auxLinea)){
@@ -317,32 +357,27 @@ void levantarClusters(){
 		//Leo la longitud del centroide para saber hasta donde leer
 		longitud = strtok(linea, ", ");
 
-		
 		//Recupero el centroide del cluster actual
 		while (i < longitud) {
-		
 			valor = strtok(NULL, ", ");
 			centroide[i] = atof(valor);
 			i++;
 		}
 		
-		
-		while (valor != NULL) {
-				
+		j = 0;
+		while (aux != NULL) {
 			aux = strtok(NULL, ", ");		 
 			nombreDoc = aux;
 			nroDoc = strtol(strtok(NULL, ", "));
-
+			if (aux != NULL) puntosDelCluster[j] = Punto(nroDoc, nombreDoc); 
+			j++;
 		}
-
-		puntosDelCluster[i] = 
 		
-		escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
-		hash2 nuevoHash = generarHashMemoria();
-		hashDocsEnMemoria = nuevoHash;
+		nuevoCluster = Cluster(centroide, puntosDelCluster);
+		this->lista_de_clusters[n] = nuevoCluster;
+		n++;
 		delete []linea;
 	}
-	indiceDocumentos.close();
+	delete manejador;
 	
 }
-*/

@@ -9,6 +9,9 @@
 #include "ManejadorArchivos.h"
 #include "KMeans.h"
 #include "Arista.h"
+
+#define DIR_FILE_CLUSTERS "sistema/file_hash2"
+
 using namespace std;
 
 class Clustering {
@@ -35,6 +38,8 @@ public:
 	// instancias de la clase Punto. Devuelve un vector con K semillas de tipo Punto.
 	vector<Punto> buckShot (unsigned int cantSemillas, vector<Punto> lista_puntos);
 	vector<int> indices_no_muestreados(int cantidad_docs_total, vector<int> indices_muestra);
+	void persistirClusters();
+	void levantarClusters();
 
 	
 };

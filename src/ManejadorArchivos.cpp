@@ -4,19 +4,26 @@
 
 #include "ManejadorArchivos.h"
 
-
 using namespace std;
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 ManejadorArchivos::ManejadorArchivos(){}
 
+/**********************************************************************/
+/**********************************************************************/
 
-/**
-  * Destructor del ManejadorArchivos:
-  * Cierra el archivo unicamente, no lo destruye
-  */
+//Destructor del ManejadorArchivos:
+//Cierra el archivo unicamente, no lo destruye
 ManejadorArchivos::~ManejadorArchivos() {
   if (miarchivo != NULL) miarchivo.close();
 }
+
+<<<<<<< .mine
+/**********************************************************************/
+/**********************************************************************/
 
 
 //ojo: usar solo si hay que abrir y cerrar muchos archivos, sino el destructor cierra el archivo.
@@ -25,9 +32,8 @@ void ManejadorArchivos::cerrarArchivo(){
 	miarchivo.close();
 }	
 
-/*Abre el archivo pasado por parametro
- * en modo LECTURA
- */
+//Abre el archivo pasado por parametro
+//en modo LECTURA
 void ManejadorArchivos::abrirLectura(const string &nombre){
 
 
@@ -40,11 +46,17 @@ void ManejadorArchivos::abrirLectura(const string &nombre){
 
 	}
 
+/**********************************************************************/
+/**********************************************************************/
+
 
 //void ManejadorArchivos::abrirEscritura(const std::string& miruta){
 
 //	miarchivo.open(miruta.c_str(), std::fstream::in);
 //}
+
+/**********************************************************************/
+/**********************************************************************/
 
 
 // Lo que lee lo guardo en micadena
@@ -68,6 +80,10 @@ bool ManejadorArchivos::leerUnaLinea(string &micadena){
 
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 // Lo que lee lo guardo en micadena
 // Retorna true si pudo leer una linea, o false en caso contrario
 bool ManejadorArchivos::leerUnaLineaIndice(string &micadena){
@@ -86,17 +102,17 @@ bool ManejadorArchivos::leerUnaLineaIndice(string &micadena){
 	    return false;
 	  }
 	  return true;
-
-
-
 }
 
-/**
- * Posiciona el cursor en una nueva linea debajo de la actual
- *
- */
+/**********************************************************************/
+/**********************************************************************/
+
+
+
+//Posiciona el cursor en una nueva linea debajo de la actual
 void ManejadorArchivos::terminarLinea() {
-  // intenta escribir en el archivo
+	
+  //intenta escribir en el archivo
   miarchivo << endl;
 
   if (miarchivo.fail())
@@ -104,11 +120,19 @@ void ManejadorArchivos::terminarLinea() {
     throw ios_base::failure("No se pudo terminar la linea");
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 bool ManejadorArchivos::estaAlFinal(){
 	
 	return miarchivo.eof();
 	
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 char* ManejadorArchivos::leerArchivo(){
 	
@@ -125,9 +149,10 @@ char* ManejadorArchivos::leerArchivo(){
 
 	return buffer;
 	
-	
 }
 
+/**********************************************************************/
+/**********************************************************************/
 
 
 /*Recibe un vector con numeros de docs, lee el archivo del hash secundario 
@@ -135,6 +160,7 @@ char* ManejadorArchivos::leerArchivo(){
 
 //Recibe una lista de numeros de docs NO ORDENADA
 vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos){
+	
 	//ordena la lista:
 	
 	std::sort (numero_doc.begin(), numero_doc.end());
@@ -183,14 +209,9 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 			
 			
 		}
-		
-	}	
-		
+	}		
 	delete []linea;
 	this->cerrarArchivo();
 	cout<<"MANEJADOR LISTA DE PUNTOS SIZE: "<<lista_de_puntos.size()<<endl;
 	return lista_de_puntos;
-	
 }
-
-

@@ -101,6 +101,9 @@ void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
 	hash[clave] = 1;
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
 
 //Recibe un hash con valores del tipo float
 //Si la clave no esta en el hash, la agrega asociada a un valor 0.
@@ -142,6 +145,10 @@ string PreProcesarDatos::numberToString(int number){
 	string str = ss.str();
 	return str;
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 //Convierte un float a string
 string PreProcesarDatos::numberToString(float number){
@@ -344,7 +351,7 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 //Calcula el peso total mediante TFxIDF
 float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
 	
-	return (frecuencia * log10f(( (vector_archivos.size())) / (1+hashPrincipal[clave])));
+	return (frecuencia * log10f(( (vector_archivos.size())) / (hashPrincipal[clave])));
 	
 }
 
@@ -432,6 +439,9 @@ map<string, int> PreProcesarDatos::obtenerHashVocabulario (){
 	
 	return hashPrincipal;
 }
+
+/**********************************************************************/
+/**********************************************************************/
 
 
 vector<string> PreProcesarDatos::getVectorArchivos(){

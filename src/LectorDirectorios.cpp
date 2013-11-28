@@ -7,14 +7,25 @@
 
 #include "LectorDirectorios.h"
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 LectorDirectorios::LectorDirectorios() {
 	// TODO Auto-generated constructor stub
-
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 LectorDirectorios::~LectorDirectorios() {
 	// TODO Auto-generated destructor stub
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 vector<string>& LectorDirectorios::leerDir(const char* ruta){
 
@@ -55,6 +66,3 @@ vector<string>& LectorDirectorios::leerDir(const char* ruta){
 
 	return *archivos;
 }
-
-
-
