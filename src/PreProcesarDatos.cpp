@@ -173,7 +173,6 @@ void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 		aux.append(" ");
 		this->archivoHashSecundario << aux;
 	}
-
 	this->archivoHashSecundario << ",/";
 
 }
@@ -218,7 +217,7 @@ void PreProcesarDatos::preProcesarDatos(){
 
 		while (this->manejador->leerUnaLinea(auxLinea)){
 		
-			char *linea = new char[102400];
+			char *linea = new char[1024000];
 			strcpy(linea, auxLinea.c_str());
 			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
 			tokenizar(linea);
@@ -303,11 +302,11 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 	string clave;
 	char* aux;
 	float frecuencia = 0;
-	int i; //aunque creo que no se usa.
+	int i=0; //aunque creo que no se usa.
 
 	while ( this->manejador->leerUnaLineaIndice(auxLinea)){
-	
-		char *linea = new char[102400];
+
+		char *linea = new char[1024000];
 		strcpy(linea, auxLinea.c_str());
 		aux = strtok(linea, ", ");
 		i++;
@@ -316,7 +315,7 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 			clave = aux;
 			frecuencia = atof(strtok(NULL, ", "));
 			float frecPond = calcular_TF_IDF(clave, frecuencia);
-			cout<<frecPond<<endl;
+			//cout<<frecPond<<endl;
 			hashDocsEnMemoria[clave] = frecPond;
 			aux = strtok(NULL, ", ");
 		}
@@ -388,7 +387,7 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 	
 	while (this->manejador->leerUnaLinea(auxLinea)){
 		
-		char *linea = new char[102400];
+		char *linea = new char[1024000];
 		strcpy(linea, auxLinea.c_str());
 		//auxPalabra va a ir conteniendo cada palabra sacando los tokens
 		tokenizar(linea);

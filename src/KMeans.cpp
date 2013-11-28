@@ -11,7 +11,7 @@ using namespace std;
 /**********************************************************************/
 /**********************************************************************/
 
-unsigned int const KMeans::MAX_ITERACIONES=5;
+unsigned int const KMeans::MAX_ITERACIONES=3;
 double const KMeans::CORRIMIENTO_MINIMO=0.8;
 unsigned int const KMeans::PORCENTAJE_CENTROIDES=0.75;
 
@@ -56,6 +56,7 @@ void KMeans::calcularClusters() {
 
 	//dejo de iterar cuando llego al maximo de iteraciones y no se registran cambios en los clusters
 	while ((cantIteraciones < this->maxIteraciones)) { //&& (!this->cambiosClusters())) {
+		cout<<"ite "<<cantIteraciones<<endl;
 		this->actualizarCentroides();
 		//itero sobre todos los puntos
 		for (unsigned int j = 0; j < this->puntos.size(); j++) {

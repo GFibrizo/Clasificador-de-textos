@@ -21,7 +21,6 @@ ManejadorArchivos::~ManejadorArchivos() {
   if (miarchivo != NULL) miarchivo.close();
 }
 
-<<<<<<< .mine
 /**********************************************************************/
 /**********************************************************************/
 
@@ -64,11 +63,11 @@ void ManejadorArchivos::abrirLectura(const string &nombre){
 bool ManejadorArchivos::leerUnaLinea(string &micadena){
 
 	
-	char linea[102400];
+	char linea[1024000];
 
 	  // lee del archivo a la linea, hasta haber leido
 	  // MAX_LENGTH caracteres(en este caso 100 kbytes
-	  miarchivo.getline( (char*)&linea , 102400);
+	  miarchivo.getline( (char*)&linea , 1024000);
 	  micadena = linea;
 
 	  if (miarchivo.fail() ) {
@@ -89,11 +88,11 @@ bool ManejadorArchivos::leerUnaLinea(string &micadena){
 bool ManejadorArchivos::leerUnaLineaIndice(string &micadena){
 
 	
-	char linea[102400];
+	char linea[1024000];
 
 	  // lee del archivo a la linea, hasta haber leido
 	  // MAX_LENGTH caracteres(en este caso 100 kbytes
-	  miarchivo.getline( (char*)&linea , 102400, '/');
+	  miarchivo.getline( (char*)&linea , 1024000, '/');
 	  micadena = linea;
 
 	  if (miarchivo.fail() ) {
@@ -160,7 +159,7 @@ char* ManejadorArchivos::leerArchivo(){
 
 //Recibe una lista de numeros de docs NO ORDENADA
 vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos){
-	
+
 	//ordena la lista:
 	
 	std::sort (numero_doc.begin(), numero_doc.end());
@@ -175,11 +174,11 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 
 	int indice = 0;
 	unsigned int j = 0;
-	char *linea = new char[512];
+	char *linea = new char[1024000];
 
 	while ( (this->leerUnaLinea(auxLinea) == true) && (j<numero_doc.size())){
 		int doc = numero_doc[j];
-			
+
 		if (indice != doc) { //no es el doc que busco:
 			indice++;
 			continue;

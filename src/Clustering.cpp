@@ -41,7 +41,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	vector<int> indices_muestra = this->obtener_muestra(tam_muestra, cantidad_docs_total);
 	//indices de puntos random
 	vector<int> indices_random = this->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
-	//cout<<"\n tam indices muestra:"<<indices_muestra.size()<<"\n tam indices random: "<<indices_random.size()<<"\n";
+	cout<<"\n tam indices muestra:"<<indices_muestra.size()<<"\n tam indices random: "<<indices_random.size()<<"\n";
 
 	//lista de puntos random:
 	vector<Punto> puntos_iniciales= this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
@@ -54,7 +54,8 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	
 	
 	//obtiene semillas:
-	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
+	//this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
+	this->semillas=puntos_iniciales;
 	cout<<"cantidad de semillas para la muestra "<<cantidad_de_semillas<<" size: "<<semillas.size()<<endl;
 	
 	//K-Means:
@@ -276,10 +277,10 @@ vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total, vector<i
 	vector<int> indices_no_muestreados;
 	std::sort (indices_muestra.begin(), indices_muestra.end());
 
-	int i = 0,indice = 0;		
+	int i = 0,indice = 0;
 	
 	while (i < cantidad_docs_total){
-		unsigned int numero_doc_muestra = indices_muestra[indice];
+		 int numero_doc_muestra = indices_muestra[indice];
 		if (i == numero_doc_muestra){
 			indice++;
 		} else {
@@ -297,34 +298,34 @@ vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total, vector<i
 
 void Clustering::persistirClusters(){
 	
-	ofstream archivoClusters;
-	archivoClusters.open(DIR_FILE_CLUSTERS, ios_base::out | ios_base::app);
-	vector<Punto> puntosDelCluster;
-	string nombreDoc;
-	int nroDoc;
-	
-	//Cada iteracion es un cluster distinto
-	for (int i = 0; i< lista_de_clusters.size(); i++) {
-		
-		//Tamanio del vector, lo indico para saber hasta donde leer despues
-		archivoClusters << centroide.size() << ",";
-		centroide = (lista_de_clusters[i]).getCentroide();
-		
-		//Escribo las componentes del centroide del cluster nro i
-		for(int j = 0; j < centroide.size(); j++)
-			archivoClusters << centroide[j] <<",";
-	
-		//Escribo los nombres y nros de documentos correspondiente a los
-		//puntos contenidos en el cluster
-		puntosDelCluster = (lista_de_clusters[i]).getPuntos();
-		for (int k = 0; k < puntosDelCluster.size(); k++) {
-			archivoClusters << getNombreDoc(puntosDelCluster[k]) << ",";
-			archivoClusters << getDocumento() << ",";
-		}	
-		archivoClusters << "/"; //Caracter separador de clusters
-	 }
-	
-	archivoClusters.close();
+//	ofstream archivoClusters;
+//	archivoClusters.open(DIR_FILE_CLUSTERS, ios_base::out | ios_base::app);
+//	vector<Punto> puntosDelCluster;
+//	string nombreDoc;
+//	int nroDoc;
+//
+//	//Cada iteracion es un cluster distinto
+//	for (int i = 0; i< lista_de_clusters.size(); i++) {
+//
+//		//Tamanio del vector, lo indico para saber hasta donde leer despues
+//		archivoClusters << centroide.size() << ",";
+//		centroide = (lista_de_clusters[i]).getCentroide();
+//
+//		//Escribo las componentes del centroide del cluster nro i
+//		for(int j = 0; j < centroide.size(); j++)
+//			archivoClusters << centroide[j] <<",";
+//
+//		//Escribo los nombres y nros de documentos correspondiente a los
+//		//puntos contenidos en el cluster
+//		puntosDelCluster = (lista_de_clusters[i]).getPuntos();
+//		for (int k = 0; k < puntosDelCluster.size(); k++) {
+//			archivoClusters << getNombreDoc(puntosDelCluster[k]) << ",";
+//			archivoClusters << getDocumento() << ",";
+//		}
+//		archivoClusters << "/"; //Caracter separador de clusters
+//	 }
+//
+//	archivoClusters.close();
 }
 
 /**********************************************************************/
@@ -333,51 +334,51 @@ void Clustering::persistirClusters(){
 
 void Clustering::levantarClusters(){
 	
-	vector<float> centroide;
-	vector<Punto> puntosDelCluster;
-	string auxLinea;
-	char* valor;
-	char* aux;
-	string nombreDoc;
-	int nroDoc;
-	Punto nuevoPunto;
-	Cluster nuevoCluster;
-	int i, j, n;
-	ManejadorArchivos* manejador = new ManejadorArchivos(); //posible perdida de memoria.
-	manejador->abrirLectura(DIR_FILE_CLUSTERS);
-	n = 0;
-
-	//Cada iteracion es un cluster distinto
-	while ( this->manejador->leerUnaLineaIndice(auxLinea)){
-	
-		char *linea = new char[102400];
-		strcpy(linea, auxLinea.c_str());
-		i = 0;		
-		
-		//Leo la longitud del centroide para saber hasta donde leer
-		longitud = strtok(linea, ", ");
-
-		//Recupero el centroide del cluster actual
-		while (i < longitud) {
-			valor = strtok(NULL, ", ");
-			centroide[i] = atof(valor);
-			i++;
-		}
-		
-		j = 0;
-		while (aux != NULL) {
-			aux = strtok(NULL, ", ");		 
-			nombreDoc = aux;
-			nroDoc = strtol(strtok(NULL, ", "));
-			if (aux != NULL) puntosDelCluster[j] = Punto(nroDoc, nombreDoc); 
-			j++;
-		}
-		
-		nuevoCluster = Cluster(centroide, puntosDelCluster);
-		this->lista_de_clusters[n] = nuevoCluster;
-		n++;
-		delete []linea;
-	}
-	delete manejador;
+//	vector<float> centroide;
+//	vector<Punto> puntosDelCluster;
+//	string auxLinea;
+//	char* valor;
+//	char* aux;
+//	string nombreDoc;
+//	int nroDoc;
+//	Punto nuevoPunto;
+//	Cluster nuevoCluster;
+//	int i, j, n;
+//	ManejadorArchivos* manejador = new ManejadorArchivos(); //posible perdida de memoria.
+//	manejador->abrirLectura(DIR_FILE_CLUSTERS);
+//	n = 0;
+//
+//	//Cada iteracion es un cluster distinto
+//	while ( this->manejador->leerUnaLineaIndice(auxLinea)){
+//
+//		char *linea = new char[102400];
+//		strcpy(linea, auxLinea.c_str());
+//		i = 0;
+//
+//		//Leo la longitud del centroide para saber hasta donde leer
+//		longitud = strtok(linea, ", ");
+//
+//		//Recupero el centroide del cluster actual
+//		while (i < longitud) {
+//			valor = strtok(NULL, ", ");
+//			centroide[i] = atof(valor);
+//			i++;
+//		}
+//
+//		j = 0;
+//		while (aux != NULL) {
+//			aux = strtok(NULL, ", ");
+//			nombreDoc = aux;
+//			nroDoc = strtol(strtok(NULL, ", "));
+//			if (aux != NULL) puntosDelCluster[j] = Punto(nroDoc, nombreDoc);
+//			j++;
+//		}
+//
+//		nuevoCluster = Cluster(centroide, puntosDelCluster);
+//		this->lista_de_clusters[n] = nuevoCluster;
+//		n++;
+//		delete []linea;
+//	}
+//	delete manejador;
 	
 }

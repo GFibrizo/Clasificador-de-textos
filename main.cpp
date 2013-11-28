@@ -22,16 +22,16 @@ void mostrarClusters(vector<Cluster*> clusters){
 	cout << "Clusters" << endl;
 		for (unsigned int i = 0; i < clusters.size(); ++i) {
 			cout<<"Cluster: "<<endl;
-			cout<<"Centroide "<<endl;
-			for (unsigned int k = 0; k < clusters[i]->getCentroide().vectorDeFrecuencias().size(); ++k) {
-				cout<<clusters[i]->getCentroide().vectorDeFrecuencias()[k]<<endl;
-			}
+//			cout<<"Centroide "<<endl;
+//			for (unsigned int k = 0; k < clusters[i]->getCentroide().vectorDeFrecuencias().size(); ++k) {
+//				cout<<clusters[i]->getCentroide().vectorDeFrecuencias()[k]<<endl;
+//			}
 			cout<<endl;
 			cout<<"tamaño del cluster: "<<clusters[i]->getPuntos().size()<<endl;
 			cout<<"Puntos"<<endl;
 			for (unsigned int j = 0; j < clusters[i]->getPuntos().size(); ++j) {
 
-				cout<<clusters[i]->getPuntos()[j]->getDocumento()<<endl;
+				cout<<clusters[i]->getPuntos()[j]->getNombreDoc()<<endl;
 			}
 		}
 
@@ -98,7 +98,7 @@ int main (int argc, char **argv) {
 				return 1;
 			
 			default:
-				abort ();
+				//abort ();
 				break;
 		}
 	}
@@ -126,14 +126,14 @@ int main (int argc, char **argv) {
 		if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) multiPertenencia = false;
 
 	}
-
+	d_value ="files/";
 	
 	int valor_K=0; //funcion
 	if (d_value != NULL) { 
 		cout<<d_value<<endl;
 		PreProcesarDatos* preDatos = new PreProcesarDatos(d_value);
 		//lee los archivos, arma el hash principal y lo guarda como atributo. Arma los hash secundarios y los guarda en archivos.
-		//preDatos->preProcesarDatos();
+		preDatos->preProcesarDatos();
 		hashPrincipal = preDatos->obtenerHashVocabulario();
 		vectorArchivos = preDatos->getVectorArchivos();
 		cantidad_docs_total = vectorArchivos.size();
