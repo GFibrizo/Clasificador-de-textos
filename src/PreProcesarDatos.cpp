@@ -73,7 +73,7 @@ PreProcesarDatos::PreProcesarDatos(hash hashPorParametro) {
 PreProcesarDatos::~PreProcesarDatos() {
 
 	delete this->verifStopWord;
-	//delete this->manejador;
+	delete this->manejador;
 	archivoHashSecundario.close();
 }
 
@@ -286,7 +286,7 @@ const char* PreProcesarDatos::getInvalidos(){
 //genera como salida el archivo indiceDocumentos que contiene los vectores
 //de frecuencias poderadas de cada documento
 void PreProcesarDatos::generarIndiceDocumentos(){
-	
+
 	string auxLinea;
 	this->manejador = new ManejadorArchivos(); //posible perdida de memoria.
 	this->manejador->abrirLectura(DIR_FILE_HASH_2);
@@ -308,13 +308,16 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 			
 			clave = aux;
 			frecuencia = atof(strtok(NULL, ", "));
-			hashDocsEnMemoria[clave] = calcular_TF_IDF(clave, frecuencia);
+			float frecPond = calcular_TF_IDF(clave, frecuencia);
+			cout<<frecPond<<endl;
+			hashDocsEnMemoria[clave] = frecPond;
 			aux = strtok(NULL, ", ");
 		}
 		escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
 		hash2 nuevoHash = generarHashMemoria();
 		hashDocsEnMemoria = nuevoHash;
 		delete []linea;
+
 	}
 	indiceDocumentos.close();
 }
@@ -341,7 +344,7 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 //Calcula el peso total mediante TFxIDF
 float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
 	
-	return (frecuencia * log10f(( (vector_archivos.size()-1)) / (1+hashPrincipal[clave])));
+	return (frecuencia * log10f(( (vector_archivos.size())) / (1+hashPrincipal[clave])));
 	
 }
 
