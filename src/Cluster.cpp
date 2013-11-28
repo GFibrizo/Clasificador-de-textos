@@ -33,7 +33,7 @@ Cluster::Cluster(Punto* centroide, vector<Punto*> puntos){
 
 Cluster::~Cluster() {
 	//TODO
-	//delete this->centroide;
+	delete this->centroide;
 }
 
 /**********************************************************************/
