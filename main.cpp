@@ -21,7 +21,7 @@ int obtenerKOptimo(int a){
 
 int tamMuestra(int cantDocsTotal){
 	
-	if (cantDocsTotal <= 500000) return 500000;
+	if (cantDocsTotal > 500000) return 500000;
 	return cantDocsTotal;
 	
 }
@@ -139,8 +139,8 @@ int main (int argc, char **argv) {
 		if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) multiPertenencia = false;
 
 	}
-	d_value ="files/";
 	
+
 	int valor_K=0; //funcion
 	if (d_value != NULL) { 
 		cout<<d_value<<endl;
@@ -158,7 +158,7 @@ int main (int argc, char **argv) {
 
 		//clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total/2, multiPertenencia,vectorArchivos);
 
-		clustering =  Clustering(valor_K, cantidad_docs_total, tamMuestra(cant_docs_total), multiPertenencia,vectorArchivos);
+		clustering =  Clustering(valor_K, cantidad_docs_total, tamMuestra(cantidad_docs_total), multiPertenencia,vectorArchivos);
 
 		clusters = clustering.getListaClusters();
 		mostrarClusters(clusters);
