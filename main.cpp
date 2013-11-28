@@ -18,6 +18,15 @@ using namespace std;
 int obtenerKOptimo(int a){
 	return 2;
 }
+
+int tamMuestra(int cantDocsTotal){
+	
+	if (cantDocsTotal <= 500000) return 500000;
+	return cantDocsTotal;
+	
+}
+
+
 void mostrarClusters(vector<Cluster*> clusters){
 	cout << "Clusters" << endl;
 		for (unsigned int i = 0; i < clusters.size(); ++i) {
@@ -142,7 +151,7 @@ int main (int argc, char **argv) {
 			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
 		else
 			valor_K = atoi(c_value);
-		clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total, multiPertenencia,vectorArchivos);
+		clustering =  Clustering(valor_K, cantidad_docs_total, tamMuestra(cant_docs_total), multiPertenencia,vectorArchivos);
 		clusters = clustering.getListaClusters();
 		mostrarClusters(clusters);
 	}else{
