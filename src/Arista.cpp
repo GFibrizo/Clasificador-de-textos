@@ -38,14 +38,14 @@ int Arista::getI2(){
 using namespace std;
 
 //busca y devuelve la arista con la minima distancia de una lista de aristas.
-Arista* Arista::buscar_minimo(vector<Arista*> lista_aristas){
+Arista Arista::buscar_minimo(vector<Arista*> lista_aristas){
 	double minimo = (*(lista_aristas[0])).getDistancia();
-	Arista* menor_arista = lista_aristas[0];
+	Arista menor_arista = *lista_aristas[0];
 	unsigned int i;
 	for (i=1; i < lista_aristas.size(); i++){
 		if ((*(lista_aristas[i])).getDistancia() < minimo){
 			minimo = (*(lista_aristas[i])).getDistancia();
-			menor_arista = lista_aristas[i];
+			menor_arista = *lista_aristas[i];
 		}
 	}
 	return menor_arista;	
@@ -58,7 +58,7 @@ Punto Arista::buscar_promedio(){
 	vector<float> frecPond;
 	unsigned int i;
 	for (i = 0; i < v1.size(); i++){
-		frecPond[i] = (v1[i] + v2[i]) / 2;	
+		frecPond.push_back((v1[i] + v2[i]) / 2);	
 	}
 	Punto nuevo_punto = Punto(frecPond, -1);
 	return nuevo_punto;

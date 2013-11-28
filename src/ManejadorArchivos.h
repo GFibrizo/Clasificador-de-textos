@@ -35,6 +35,8 @@ public:
   //Destructor
   ~ManejadorArchivos();
 
+  void cerrarArchivo();		
+
   void abrirLectura(const string& miruta);
 
   bool leerUnaLinea(string& micadena);

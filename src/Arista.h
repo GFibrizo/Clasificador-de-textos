@@ -32,7 +32,7 @@ public:
 	Punto getV2();
 	int getI1();
 	int getI2();
-	Arista* buscar_minimo(vector<Arista*> lista_aristas);
+	Arista buscar_minimo(vector<Arista*> lista_aristas);
 	//buscar promedio entre los dos vectores que posee la arista:
 	Punto buscar_promedio();
 };

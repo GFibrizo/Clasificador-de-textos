@@ -34,6 +34,7 @@ public:
 	// recibe una cantidad de docs, una cantidad de semillas, y un vector con sqrt(N.K) 
 	// instancias de la clase Punto. Devuelve un vector con K semillas de tipo Punto.
 	vector<Punto> buckShot (unsigned int cantSemillas, vector<Punto> lista_puntos);
+	vector<int> indices_no_muestreados(int cantidad_docs_total, vector<int> indices_muestra);
 
 	
 };

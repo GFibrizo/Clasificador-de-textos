@@ -137,7 +137,7 @@ int main (int argc, char **argv) {
 		hashPrincipal = preDatos->obtenerHashVocabulario();
 		vectorArchivos = preDatos->getVectorArchivos();
 		cantidad_docs_total = vectorArchivos.size();
-
+		cout<<"cant docs: "<<cantidad_docs_total<<endl;
 		if (c_value == NULL)
 			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
 		else

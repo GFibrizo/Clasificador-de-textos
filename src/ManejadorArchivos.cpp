@@ -15,8 +15,15 @@ ManejadorArchivos::ManejadorArchivos(){}
   * Cierra el archivo unicamente, no lo destruye
   */
 ManejadorArchivos::~ManejadorArchivos() {
-  miarchivo.close();
+  if (miarchivo != NULL) miarchivo.close();
 }
+
+
+//ojo: usar solo si hay que abrir y cerrar muchos archivos, sino el destructor cierra el archivo.
+//se usa en LevantarListaDePuntos.
+void ManejadorArchivos::cerrarArchivo(){
+	miarchivo.close();
+}	
 
 /*Abre el archivo pasado por parametro
  * en modo LECTURA
@@ -129,30 +136,37 @@ char* ManejadorArchivos::leerArchivo(){
 //Recibe una lista de numeros de docs NO ORDENADA
 vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos){
 	//ordena la lista:
+	
 	std::sort (numero_doc.begin(), numero_doc.end());
 	string auxLinea;
-	
+	Punto punto;
 	vector<Punto> lista_de_puntos;
+	/*cout<<"En Manejador:\n";
+	for (unsigned int u = 0; u < numero_doc.size(); u++){
+		cout<<"numero: "<<numero_doc[u]<<endl;  }*/
 	
 	this->abrirLectura(DIR_FILE_INDICE_FINAL);//
 
 	int indice = 0;
 	unsigned int j = 0;
 	char *linea = new char[512];
-				
-	while ( (this->leerUnaLinea(auxLinea)) && (j<numero_doc.size())){
+
+	while ( (this->leerUnaLinea(auxLinea) == true) && (j<numero_doc.size())){
 		int doc = numero_doc[j];
-		
+			
 		if (indice != doc) { //no es el doc que busco:
 			indice++;
 			continue;
+			//cout<<"INDICES NOT DOC\n";
 		}else { //para un doc que busco:
+			//cout<<"ELSE\n";
 			vector<float> vector_frec;
 			strcpy(linea, auxLinea.c_str()); 
 			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
 			char* auxPalabra = strtok(linea," ,  ");
 
 			while(auxPalabra != NULL){
+				//cout<<"WHILE NOT NULL\n";
 				//std::string::size_type sz;     // alias of size_t
 				float frec = atof(auxPalabra);
 				//long float frec = std::stold (auxPalabra,&sz);
@@ -160,15 +174,21 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 				auxPalabra = strtok(NULL," ,  ");
 			}
 			//termina la linea:	
-			indice++;
-			Punto punto =  Punto(vector_frec, doc, vectorArchivos[j]);
+			//cout<<"PUSH: "<<j<<"\n";
+			punto =  Punto(vector_frec, doc, vectorArchivos[j]);
 			lista_de_puntos.push_back(punto);
+			//cout<<"&punto = "<<&punto<<endl;
+			indice++;
 			j++; //pasa al siguiente doc
 			
+			
 		}
+		
 	}	
 		
 	delete []linea;
+	this->cerrarArchivo();
+	cout<<"MANEJADOR LISTA DE PUNTOS SIZE: "<<lista_de_puntos.size()<<endl;
 	return lista_de_puntos;
 	
 }

@@ -25,18 +25,22 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	vector<int> indices_muestra = this->obtener_muestra(tam_muestra, cantidad_docs_total);
 	//indices de puntos random
 	vector<int> indices_random = this->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
-	cout<<"\n tam indices muestra:"<<indices_muestra.size()<<"\n\n tam indices random"<<indices_random.size()<<"\n";
+	//cout<<"\n tam indices muestra:"<<indices_muestra.size()<<"\n tam indices random: "<<indices_random.size()<<"\n";
 
 	//lista de puntos random:
 	vector<Punto> puntos_iniciales= this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
 	//lista de puntos muestra:
 	this->puntos_muestra = this->manejador->LevantarListaDePuntos(indices_muestra, vectorArchivos);
+	
+	cout<<"cantidad de puntos muestra desde manejador "<<this->puntos_muestra.size()<<endl;
+	
+	cout<<"cantidad de puntos iniciales desde manejador  "<<puntos_iniciales.size()<<endl;
+	
+	
 	//obtiene semillas:
 	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
-
-	cout<<"cantidad de puntos para la muestra "<<puntos_muestra.size()<<endl;
-	cout<<"cantidad de puntos para x "<<puntos_iniciales.size()<<endl;
-	cout<<"cantidad de semillas para la muestra "<<semillas.size()<<endl;
+	cout<<"cantidad de semillas para la muestra "<<cantidad_de_semillas<<" size: "<<semillas.size()<<endl;
+	
 	//K-Means:
 	KMeans instancia_KMeans = KMeans(&(this->puntos_muestra), 0 , &(this->semillas) , multiPertenencia); //MAX_ITERACIONES = 0, DEFINIR.
 	(&instancia_KMeans)->calcularClusters();
@@ -44,16 +48,12 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 
 	//CLASIFICAR LOS DEMAS PUNTOS:
 	//creo lista de indices de los puntos que no estan en la muestra
-	vector<int> indices_no_muestreados;
-	int indice = 0;
-	for (unsigned int i = 0; i < cantidad_docs_total; i++){
-		unsigned int numero_doc_muestra = indices_muestra[indice];
-		if (i != numero_doc_muestra) indices_no_muestreados.push_back(i);
-		indice++;
-	}		
-
+	vector<int> indices_no_muestreados = this->indices_no_muestreados(cantidad_docs_total, indices_muestra);
+	
 	//Genero lista de puntos no muestreados:		
+	
 	vector<Punto> lista_no_muestreados = this->manejador->LevantarListaDePuntos(indices_no_muestreados, vectorArchivos);
+	cout<<"No Muestreados.. size: "<<lista_no_muestreados.size()<<endl;
 
 	//Clasifico cada uno de esos puntos:
 	for (unsigned int j = 0; j < lista_no_muestreados.size(); j++){
@@ -65,6 +65,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	
 	delete this->manejador;
 }
+
 
 
 
@@ -124,20 +125,83 @@ vector<Cluster*> Clustering::getListaClusters(){
 
 
 
-
 /* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
- * agarraron de manera aleatoria para agrupar con el clustering jerarquico aglomerativo  */
-vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas, vector<int> docs_muestra){
-	int numero;
+ * tomaron como muestra para hacer el clutering*/
+vector<int> Clustering::obtener_muestra(int cantidad_de_puntos, int cantidad_docs){
+	int numero, random;
+	
 	vector<int> lista_de_punteros;
-	for (unsigned int i = 0; i < sqrt(cantidad_de_semillas * docs_muestra.size()); i++) {	
+	int i = 0; 
+	//cout<< "CANT PUNTOS, CANT DOCS : "<<cantidad_de_puntos<<" , "<< cantidad_docs;
+	while (i < cantidad_de_puntos){
+		bool agregar = true;
+		//cout<<"dentro de while"<<endl;
 		// obtain a seed from the system clock:
 		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
 		mt19937 generator (seed);
 		numero = generator();
-		lista_de_punteros.push_back(abs(numero % (docs_muestra.size())));
-	}
+		random = abs(numero % (cantidad_docs));
+		//cout << "random : "<<random<<" ";
+		/*if (i == 0) {
+			lista_de_punteros.push_back(random);
+			i++;
+		}*/	
+		for ( unsigned int j = 0; j < lista_de_punteros.size(); j++){
+			if (lista_de_punteros[j] == random) {
+				  //continue;
+				  agregar = false;
+			}
+		}
+		if (agregar == true) {
+			lista_de_punteros.push_back(random);
+			i++;
+		}
+	}	
+	cout<<"fin obtener_muestra\n";
+	//for (unsigned int g = 0; g < lista_de_punteros.size(); g++){
+		//cout<<lista_de_punteros[g]<<endl;  }
 	return lista_de_punteros;	
+	
+}
+
+
+/* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
+ * agarraron de manera aleatoria para agrupar con el clustering jerarquico aglomerativo  */
+vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas, vector<int> docs_muestra){
+	int numero, random;
+	vector<int> lista_de_punteros;
+	unsigned int i = 0;
+	//cout<<"sqrt; "<<sqrt(cantidad_de_semillas * docs_muestra.size())<<endl;
+	
+	while (i < sqrt(cantidad_de_semillas * docs_muestra.size())){
+		bool agregar = true;
+		// obtain a seed from the system clock:
+		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+		mt19937 generator (seed);
+		numero = generator();
+		random = abs(numero % (docs_muestra.size()));
+	//	cout << "randomM : "<<random<<" ";
+		/*if (i == 0) {
+			lista_de_punteros.push_back(random);
+			i++;
+		}*/
+		for ( unsigned int j = 0; j < lista_de_punteros.size(); j++){
+			if (lista_de_punteros[j] == random) { 
+				//continue;
+				agregar = false;
+			}
+		}
+		if (agregar == true){
+			lista_de_punteros.push_back(random);
+			i++;
+		}
+	}	
+	
+	cout<<"fin obtener_puntos_random\n";
+	//for (unsigned int g = 0; g < lista_de_punteros.size(); g++){
+		//cout<<lista_de_punteros[g]<<endl;  }
+	return lista_de_punteros;	
+	
 }
 
 
@@ -155,12 +219,14 @@ vector<Punto> Clustering::buckShot(unsigned int cantSemillas,  vector<Punto> lis
  * que es el promedio de ambos. Vuelvo a empezar con largo -1 y asi hasta tener largo = cantSemillas*/
 	unsigned int i,j;
 	vector<Arista*> lista_aristas;
-	Arista arista, *menor_arista;
+	Arista arista, menor_arista;
 	double distancia;
-	
+	Punto nuevo_punto;
+	cout<<"BUCKSHOT: size de lista de puntos:"<<lista_puntos.size()<<endl;
 	while (lista_puntos.size() > cantSemillas){
 		for (i = 0; i < lista_puntos.size(); i++){
 		Punto actual = lista_puntos[i];
+		
 			for (j = i+1; j < lista_puntos.size(); j++){
 				distancia = actual.distanciaCoseno(lista_puntos[j]);
 				arista = Arista(actual, lista_puntos[j],distancia, i,j);
@@ -169,33 +235,36 @@ vector<Punto> Clustering::buckShot(unsigned int cantSemillas,  vector<Punto> lis
 		}
 		menor_arista = arista.buscar_minimo(lista_aristas);
 		//creo un nuevo punto que se va a situar en el medio de los dos con menor distancia:
-		Punto nuevo_punto = (*menor_arista).buscar_promedio();
+		nuevo_punto = (menor_arista).buscar_promedio();
 		//elimino los dos puntos que tenian menor distancia e inserto su promedio:
-		lista_puntos.erase(lista_puntos.begin()+((*menor_arista).getI1()));
-		lista_puntos.erase(lista_puntos.begin()+((*menor_arista).getI2()));
+		lista_puntos.erase(lista_puntos.begin()+((menor_arista).getI1()));
+		lista_puntos.erase(lista_puntos.begin()+((menor_arista).getI2()));
 		lista_puntos.push_back(nuevo_punto);
 	}
 	return lista_puntos;
 }
 
 	
-/* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
- * tomaron como muestra para hacer el clutering*/
-vector<int> Clustering::obtener_muestra(int cantidad_de_puntos, int cantidad_docs){
-	int numero;
-	vector<int> lista_de_punteros;
-	for (int i = 0; i < cantidad_de_puntos; i++) {	
-		// obtain a seed from the system clock:
-		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-		mt19937 generator (seed);
-		numero = generator();
-		lista_de_punteros.push_back(abs(numero % cantidad_docs));
+vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total, vector<int> indices_muestra){
+	vector<int> indices_no_muestreados;
+	std::sort (indices_muestra.begin(), indices_muestra.end());
+
+	int i = 0,indice = 0;		
+	
+	while (i < cantidad_docs_total){
+		unsigned int numero_doc_muestra = indices_muestra[indice];
+		if (i == numero_doc_muestra){
+			indice++;
+		} else {
+			indices_no_muestreados.push_back(i);
+		}
+		i++;	
 	}
-	return lista_de_punteros;	
+	
+	return indices_no_muestreados;
 }
 
-
-
+/*
 void persistirClusters(){
 	
 	vector<Punto> puntosDelCluster;
@@ -276,3 +345,4 @@ void levantarClusters(){
 	indiceDocumentos.close();
 	
 }
+*/
