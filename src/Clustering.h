@@ -10,7 +10,7 @@
 #include "KMeans.h"
 #include "Arista.h"
 
-#define DIR_FILE_CLUSTERS "sistema/file_hash2"
+#define DIR_FILE_CLUSTERS "sistema/file_clusters"
 
 using namespace std;
 
