@@ -198,30 +198,81 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos, int cantidad_doc
 
 void persistirClusters(){
 	
-//	string aux;
-//	archivoIndice.setf( ios::fixed, ios::floatfield );
-//	archivoIndice.precision(5);
-//	vector<float> centroide;
-//
-//	for (int i = 0; i< lista_de_clusters.size(); i++) {
-//
-//		centroide = (lista_de_clusters[i]).getCentroide();
-//
-//		for(int j = 0; j < centroide.size(); j++)
-//			archivoCentroides << centroide[j] <<",";
-//	}
-//	archivoIndice << endl;
-//
-//
-//		(lista_de_clusters[i]).getPuntos();
-//
-//	}
-//
-//
+	vector<Punto> puntosDelCluster;
+	string nombreDoc;
+	int nroDoc;
+	
+	//Cada iteracion es un cluster distinto
+	for (int i = 0; i< lista_de_clusters.size(); i++) {
+		
+		//Tamanio del vector, lo indico para saber hasta donde leer despues
+		archivoClusters << centroide.size() << ",";
+		centroide = (lista_de_clusters[i]).getCentroide();
+		
+		//Escribo las componentes del centroide del cluster nro i
+		for(int j = 0; j < centroide.size(); j++)
+			archivoClusters << centroide[j] <<",";
+	
+		//Escribo los nombres y nros de documentos correspondiente a los
+		//puntos contenidos en el cluster
+		puntosDelCluster = (lista_de_clusters[i]).getPuntos();
+		for (int k = 0; k < puntosDelCluster.size(); k++) {
+			archivoClusters << getNombreDoc(puntosDelCluster[k]) << ",";
+			archivoClusters << getDocumento() << ",";
+		}	
+		archivoClusters << "/"; //Caracter separador de clusters
+	 }
 	
 }
 
 void levantarClusters(){
 	
+	vector<float> centroide;
+	vector<Punto> puntosDelCluster;
+	string auxLinea;
+	char* valor;
+	char* aux;
+	string nombreDoc;
+	int nroDoc;
+	int i; //aunque creo que no se usa.
+	ManejadorArchivos* manejador = new ManejadorArchivos(); //posible perdida de memoria.
+	manejador->abrirLectura(DIR_FILE_CLUSTERS);
+
+	//Cada iteracion es un cluster distinto
+	while ( this->manejador->leerUnaLineaIndice(auxLinea)){
+	
+		char *linea = new char[102400];
+		strcpy(linea, auxLinea.c_str());
+		i = 0;		
+		
+		//Leo la longitud del centroide para saber hasta donde leer
+		longitud = strtok(linea, ", ");
+
+		
+		//Recupero el centroide del cluster actual
+		while (i < longitud) {
+		
+			valor = strtok(NULL, ", ");
+			centroide[i] = atof(valor);
+			i++;
+		}
+		
+		
+		while (valor != NULL) {
+				
+			aux = strtok(NULL, ", ");		 
+			nombreDoc = aux;
+			nroDoc = strtol(strtok(NULL, ", "));
+
+		}
+
+		puntosDelCluster[i] = 
+		
+		escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
+		hash2 nuevoHash = generarHashMemoria();
+		hashDocsEnMemoria = nuevoHash;
+		delete []linea;
+	}
+	indiceDocumentos.close();
 	
 }
