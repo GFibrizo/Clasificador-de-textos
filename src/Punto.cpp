@@ -15,7 +15,7 @@ Punto::Punto(vector<float> frecPond,int doc) {
 
 	this->frecPond = frecPond;
 	this->doc=doc;
-	this->nombreDoc = "";
+	this->nombreDoc = " ";
 }
 
 /**********************************************************************/

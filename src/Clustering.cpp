@@ -42,7 +42,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	//indices de puntos random
 	vector<int> indices_random = this->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
 	cout<<"\n tam indices muestra:"<<indices_muestra.size()<<"\n tam indices random: "<<indices_random.size()<<"\n";
-
+	cout<<"indices muestra, indices random  =  "<<indices_muestra.size()<<"  ;  "<<indices_random.size()<<endl;
 	//lista de puntos random:
 	vector<Punto> puntos_iniciales= this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
 	//lista de puntos muestra:
@@ -107,6 +107,8 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 // (*) UNA VEZ QUE YA TENGO EL NUEVO PUNTO:
 // Recibe la lista_de_clusters del Clustering y el nuevo punto ya creado.
 void Clustering::Clasificar(Punto nuevo_punto){
+	cout<<"CLASIFICAR EN CLUSTERING"<<endl;
+	cout<<"doc, nombre :"<<nuevo_punto.getDocumento()<<" , "<<nuevo_punto.getNombreDoc()<<endl;
 	vector<Cluster*> cluster_destino; //lista de los clusters donde se va a agregar el nuevo punto.
 	vector<Cluster*> lista_de_clusters = this->lista_de_clusters;
 	// Primero busco cual es la minima distancia.
@@ -148,7 +150,7 @@ vector<Cluster*> Clustering::getListaClusters(){
  * tomaron como muestra para hacer el clutering*/
 vector<int> Clustering::obtener_muestra(int cantidad_de_puntos, int cantidad_docs){
 	int numero, random;
-	
+cout<<"tam muestra :"<<cantidad_de_puntos<<endl;	
 	vector<int> lista_de_punteros;
 	int i = 0; 
 	//cout<< "CANT PUNTOS, CANT DOCS : "<<cantidad_de_puntos<<" , "<< cantidad_docs;
@@ -279,9 +281,10 @@ vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total, vector<i
 
 	int i = 0,indice = 0;
 	
-	while (i < cantidad_docs_total){
+	while ((i < cantidad_docs_total) && (indice < indices_muestra.size())){
 		 int numero_doc_muestra = indices_muestra[indice];
 		if (i == numero_doc_muestra){
+			//cout<<"no muestreado"<<endl;
 			indice++;
 		} else {
 			indices_no_muestreados.push_back(i);
@@ -295,7 +298,7 @@ vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total, vector<i
 /**********************************************************************/
 /**********************************************************************/
 
-
+/*
 void Clustering::persistirClusters(){
 	
 	ofstream archivoClusters;
@@ -327,8 +330,8 @@ void Clustering::persistirClusters(){
 	archivoClusters.close();
 }
 
-/**********************************************************************/
-/**********************************************************************/
+/*********************************************************************
+/*********************************************************************
 
 
 void Clustering::levantarClusters(){
@@ -383,3 +386,5 @@ void Clustering::levantarClusters(){
 	delete manejador;
 	
 }
+
+*/

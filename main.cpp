@@ -16,7 +16,7 @@
 
 using namespace std;
 int obtenerKOptimo(int a){
-	return 2;
+	return 4;
 }
 
 int tamMuestra(int cantDocsTotal){
@@ -28,23 +28,27 @@ int tamMuestra(int cantDocsTotal){
 
 
 void mostrarClusters(vector<Cluster*> clusters){
-	cout << "Clusters" << endl;
-		for (unsigned int i = 0; i < clusters.size(); ++i) {
+	cout <<endl<< "Clusters" << endl;
+		for (unsigned int i = 0; i < clusters.size(); i++) {
 			cout<<"Cluster: "<<endl;
-//			cout<<"Centroide "<<endl;
-//			for (unsigned int k = 0; k < clusters[i]->getCentroide().vectorDeFrecuencias().size(); ++k) {
-//				cout<<clusters[i]->getCentroide().vectorDeFrecuencias()[k]<<endl;
-//			}
+			cout<<"Centroide "<<endl;
+			//for (unsigned int k = 0; k < clusters[i]->getCentroide().vectorDeFrecuencias().size(); ++k) {
+				//cout<<clusters[i]->getCentroide().vectorDeFrecuencias()[k]<<endl;
+			//}
+
 			cout<<endl;
 			cout<<"tamaño del cluster: "<<clusters[i]->getPuntos().size()<<endl;
 			cout<<"Puntos"<<endl;
-			for (unsigned int j = 0; j < clusters[i]->getPuntos().size(); ++j) {
 
+			for (unsigned int j = 0; j < clusters[i]->getPuntos().size(); j++) {
 				cout<<clusters[i]->getPuntos()[j]->getNombreDoc()<<endl;
+				//cout<<clusters[i]->getPuntos()[j]->getDocumento()<<endl;
+
 			}
 		}
 
 }
+
 int main (int argc, char **argv) {
 
 	typedef map<string,int> hash;
@@ -151,7 +155,11 @@ int main (int argc, char **argv) {
 			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
 		else
 			valor_K = atoi(c_value);
+
+		//clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total/2, multiPertenencia,vectorArchivos);
+
 		clustering =  Clustering(valor_K, cantidad_docs_total, tamMuestra(cant_docs_total), multiPertenencia,vectorArchivos);
+
 		clusters = clustering.getListaClusters();
 		mostrarClusters(clusters);
 	}else{
