@@ -15,7 +15,27 @@
 #include "src/Clasificador.h"
 
 using namespace std;
+int obtenerKOptimo(int a){
+	return 2;
+}
+void mostrarClusters(vector<Cluster*> clusters){
+	cout << "Clusters" << endl;
+		for (unsigned int i = 0; i < clusters.size(); ++i) {
+			cout<<"Cluster: "<<endl;
+			cout<<"Centroide "<<endl;
+			for (unsigned int k = 0; k < clusters[i]->getCentroide().vectorDeFrecuencias().size(); ++k) {
+				cout<<clusters[i]->getCentroide().vectorDeFrecuencias()[k]<<endl;
+			}
+			cout<<endl;
+			cout<<"tamaño del cluster: "<<clusters[i]->getPuntos().size()<<endl;
+			cout<<"Puntos"<<endl;
+			for (unsigned int j = 0; j < clusters[i]->getPuntos().size(); ++j) {
 
+				cout<<clusters[i]->getPuntos()[j]->getDocumento()<<endl;
+			}
+		}
+
+}
 int main (int argc, char **argv) {
 
 	typedef map<string,int> hash;
@@ -79,6 +99,7 @@ int main (int argc, char **argv) {
 			
 			default:
 				abort ();
+				break;
 		}
 	}
 
@@ -93,35 +114,38 @@ int main (int argc, char **argv) {
 	//PROBLEMAAAAA: COMO HACEMOS SI EL CLUSTERING YA ESTA HECHO, PARA QUE NO LO VUELVA A CREAR?
 
 	/* LOGICA */
-	bool multiPertenencia = false;
-	int cantidad_docs_total;
+	bool multiPertenencia=false;
+	int cantidad_docs_total=0;
 	string ruta;
 	hash hashPrincipal;
 	Clustering clustering;
 	vector<Cluster*> clusters;
 	vector<string> vectorArchivos;
-	if (o_value != NULL) {
+	if(o_value!= NULL){
 		if ((strcmp (o_value, "Y") == 0) || (strcmp (o_value, "y") == 0) ) multiPertenencia = true;
 		if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) multiPertenencia = false;
-	}	
+
+	}
+
 	
-	int valor_K; //funcion
+	int valor_K=0; //funcion
 	if (d_value != NULL) { 
+		cout<<d_value<<endl;
 		PreProcesarDatos* preDatos = new PreProcesarDatos(d_value);
 		//lee los archivos, arma el hash principal y lo guarda como atributo. Arma los hash secundarios y los guarda en archivos.
-		preDatos->preProcesarDatos();
-		hashPrincipal = preDatos->obtenerHashVocabulario(); 
+		//preDatos->preProcesarDatos();
+		hashPrincipal = preDatos->obtenerHashVocabulario();
 		vectorArchivos = preDatos->getVectorArchivos();
 		cantidad_docs_total = vectorArchivos.size();
-		
-		if (c_value == NULL) 
-			valor_K = 4;//obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
+
+		if (c_value == NULL)
+			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
 		else
 			valor_K = atoi(c_value);
-		//clustering =  Clustering(valor_K, cantidad_docs_total, 0.10 * cantidad_docs_total, multiPertenencia,vectorArchivos);
-		//clusters = clustering.getListaClusters();
-	}
-	/*else{
+		clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total, multiPertenencia,vectorArchivos);
+		clusters = clustering.getListaClusters();
+		mostrarClusters(clusters);
+	}else{
 		if (a_value != NULL){
 			Clasificador clasificador = Clasificador(clusters, hashPrincipal);
 			clasificador.clasificarNuevoPunto(string(a_value));
@@ -132,13 +156,13 @@ int main (int argc, char **argv) {
 			for (unsigned int i = 0; i < lista_de_clusters.size() ; i++){
 				vector<Punto*> puntos_cluster = (*(lista_de_clusters[i])).getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
-					string nombreDoc = puntos_cluster[j]->getNombreDoc();
+					string nombreDoc = puntos_cluster[j]->getNombreDoc();//TDV NO EXISTE
 					cout<<nombreDoc<<" , categoria:"<<i<<"\n";
-				}	
-			}	
+				}
+			}
 		}
 		if (g_flag != false){
-			// Lista los grupos o categorías existentes y los documentos dentro de cada grupo o categoría 
+			// Lista los grupos o categorías existentes y los documentos dentro de cada grupo o categoría
 			vector<Cluster*> lista_de_clusters = clustering.getListaClusters();
 			for (unsigned int i = 0; i < lista_de_clusters.size() ; i++){
 				cout<<"CATEGORIA: "<<i<<"\n";
@@ -147,12 +171,12 @@ int main (int argc, char **argv) {
 					string nombreDoc = puntos_cluster[j]->getNombreDoc();
 					cout<<nombreDoc<<"\n";
 				}
-			}	
-		}	
-	}		
+			}
+		}
+	}
 	
 	
-	*/
+	
 		
 		
 	return 0;
