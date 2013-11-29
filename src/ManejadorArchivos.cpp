@@ -178,7 +178,7 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 
 	while ( (this->leerUnaLinea(auxLinea) == true) && (j<numero_doc.size())){
 		int doc = numero_doc[j];
-
+		//cout<<"numero doc:  "<<doc<<endl;
 		if (indice != doc) { //no es el doc que busco:
 			indice++;
 			continue;
@@ -198,9 +198,10 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 				vector_frec.push_back(frec);	
 				auxPalabra = strtok(NULL," ,  ");
 			}
-			punto =  Punto(vector_frec, doc, vectorArchivos[j]);
+			punto =  Punto(vector_frec, doc, vectorArchivos[doc]);
+			
 			lista_de_puntos.push_back(punto);
-			//cout<<"&punto = "<<&punto<<endl;
+			
 			indice++;
 			j++; //pasa al siguiente doc
 			

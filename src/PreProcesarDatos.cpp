@@ -48,6 +48,8 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 			throw std::ios_base::failure("El archivo no se abre");
 		}
 	this->relative_dir_base_split(ruta,this->directorio);
+	
+	delete lecDirectorio;
 }
 
 /**********************************************************************/

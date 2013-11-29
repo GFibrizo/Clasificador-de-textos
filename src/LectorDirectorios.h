@@ -25,7 +25,9 @@ public:
 	virtual ~LectorDirectorios();
 	// se le entrega una ruta y devuelve una lista de archivos en ese directorio
 	// devuelve NULL ante algun problema
-	vector<string>& leerDir(const char* ruta);
+	
+	//vector<string>& leerDir(const char* ruta);
+	vector<string> leerDir(const char* ruta);
 };
 
 #endif /* LECTORDIRECTORIOS_H_ */
