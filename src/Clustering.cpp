@@ -27,7 +27,7 @@
 
 Clustering::Clustering() {
 }
-;
+
 
 /**********************************************************************/
 /**********************************************************************/
@@ -144,13 +144,14 @@ void Clustering::Clasificar(Punto nuevo_punto) {
 	if (this->multiPertenencia == true) {
 		for (unsigned int x = 0; x < cluster_destino.size(); x++) {
 			cluster_destino[x]->agregarElemento(nuevo_punto); //agregar Clasificacion
+		}
 		for (unsigned int x = 0; x < cluster_destino.size() ; x++){
 			cluster_destino[x]->agregarElemento(nuevo_punto); //agregar Clasificacion
 		}
 	
 		cluster_destino[0]->agregarElemento(nuevo_punto);
 	} else {
-		cluster_destino[0]->agregarElemento(&nuevo_punto);
+		cluster_destino[0]->agregarElemento(nuevo_punto);
 	}
 
 }
