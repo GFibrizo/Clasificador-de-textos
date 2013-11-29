@@ -50,6 +50,8 @@ void mostrarClusters(vector<Cluster*> clusters){
 
 }
 
+
+
 int main (int argc, char **argv) {
 
 	typedef map<string,int> hash;
@@ -128,21 +130,21 @@ int main (int argc, char **argv) {
 	//PROBLEMAAAAA: COMO HACEMOS SI EL CLUSTERING YA ESTA HECHO, PARA QUE NO LO VUELVA A CREAR?
 
 	/* LOGICA */
-	bool multiPertenencia=false;
-	int cantidad_docs_total=0;
+	bool multiPertenencia = false; //por defecto.
+	int cantidad_docs_total = 0;
 	string ruta;
 	hash hashPrincipal;
 	Clustering clustering;
 	vector<Cluster*> clusters;
 	vector<string> vectorArchivos;
+	
 	if(o_value!= NULL){
 		if ((strcmp (o_value, "Y") == 0) || (strcmp (o_value, "y") == 0) ) multiPertenencia = true;
 		if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) multiPertenencia = false;
-
 	}
 	
-
-	int valor_K=0; //funcion
+	int valor_K = 0; //funcion
+	
 	if (d_value != NULL) { 
 		cout<<d_value<<endl;
 		PreProcesarDatos* preDatos = new PreProcesarDatos(d_value);
@@ -150,15 +152,15 @@ int main (int argc, char **argv) {
 		preDatos->preProcesarDatos();
 		hashPrincipal = preDatos->obtenerHashVocabulario();
 		vectorArchivos = preDatos->getVectorArchivos();
+		preDatos->escribirArchivoDeHashPrincipal(hashPrincipal); //persistencia del hash principal.
 		cantidad_docs_total = vectorArchivos.size();
 		cout<<"cant docs: "<<cantidad_docs_total<<endl;
 		if (c_value == NULL)
-			valor_K = obtenerKOptimo(cantidad_docs_total);//TDV NO EXISTE
+			valor_K = obtenerKOptimo(cantidad_docs_total);
 		else
 			valor_K = atoi(c_value);
 
 		clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total/2, multiPertenencia,vectorArchivos);
-
 		//clustering =  Clustering(valor_K, cantidad_docs_total, tamMuestra(cantidad_docs_total), multiPertenencia,vectorArchivos);
 
 		clusters = clustering.getListaClusters();
@@ -171,28 +173,37 @@ int main (int argc, char **argv) {
 		delete preDatos;
 		
 		
-	}else{
+	}
+	else{ // Busco clustering ya hecho:
+		//levantar hash principal:
+		ManejadorArchivos* manejador = new ManejadorArchivos();
+		hash hashPrincipal = manejador->LevantarHashPrincipal();
+		//levantar clusters hechos:
+		clustering = Clustering(); //constructor especial para clustering ya hecho.
+		clustering.levantarClusters();
+		clusters =  clustering.getListaClusters();
+		multiPertenencia = clustering.getMultiPertenencia(); //agregar al persistidor/levantador
+		delete manejador;
+		
 		if (a_value != NULL){
 			Clasificador clasificador = Clasificador(clusters, hashPrincipal);
 			clasificador.clasificarNuevoPunto(string(a_value));
 		}
-		if (l_flag != false){
+		if (l_flag == true){
 			// Lista todos los documentos del repositorio y la categoría a la cual pertenece cada uno.
-			vector<Cluster*> lista_de_clusters = clustering.getListaClusters(); //puede ser con persistencia o no .
-			for (unsigned int i = 0; i < lista_de_clusters.size() ; i++){
-				vector<Punto> puntos_cluster = lista_de_clusters[i]->getPuntos();
+			for (unsigned int i = 0; i < clusters.size() ; i++){
+				vector<Punto> puntos_cluster = clusters[i]->getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
-					string nombreDoc = puntos_cluster[j].getNombreDoc();//TDV NO EXISTE
+					string nombreDoc = puntos_cluster[j].getNombreDoc();
 					cout<<nombreDoc<<" , categoria:"<<i<<"\n";
 				}
 			}
 		}
-		if (g_flag != false){
+		if (g_flag == true){
 			// Lista los grupos o categorías existentes y los documentos dentro de cada grupo o categoría
-			vector<Cluster*> lista_de_clusters = clustering.getListaClusters();
-			for (unsigned int i = 0; i < lista_de_clusters.size() ; i++){
+			for (unsigned int i = 0; i < clusters.size() ; i++){
 				cout<<"CATEGORIA: "<<i<<"\n";
-				vector<Punto>puntos_cluster = lista_de_clusters[i]->getPuntos();
+				vector<Punto>puntos_cluster = clusters[i]->getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
 					string nombreDoc = puntos_cluster[j].getNombreDoc();
 					cout<<nombreDoc<<"\n";
@@ -200,10 +211,7 @@ int main (int argc, char **argv) {
 			}
 		}
 	}
-	
-	
-	
-		
+			
 		
 	return 0;
 }

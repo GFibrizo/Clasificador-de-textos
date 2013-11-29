@@ -13,9 +13,11 @@
 #include <string.h>
 #include <string>
 #include <cstring>
+#include <map>
 #include <ios>
 #include "Punto.h"
 #define DIR_STOP_WORDS "sistema/stop_words"
+#define DIR_FILE_HASH_1 "sistema/file_hash1"
 #define DIR_FILE_HASH_2 "sistema/file_hash2"
 #define DIR_FILE_INDICE_FINAL "sistema/indiceDocumentos"
 
@@ -27,7 +29,7 @@ class ManejadorArchivos {
 private:
 
    std::fstream  miarchivo;  // mi archivo
-
+	typedef map<string,int> hash;
 public:
 
   //Constructor
@@ -50,6 +52,8 @@ public:
   char* leerArchivo();
   //Recibe un vector con numeros de docs, lee el archivo del hash secundario y crea y devuelve la lista de puntos correspondiente.
   vector<Punto> LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos);
+  // Lee las claves del archivo file_hash1 y las carga en memoria con frecuencia cero.
+  map<string, int> LevantarHashPrincipal();
 
 };
 #endif /* MANEJADORARCHIVOS_H_ */

@@ -167,6 +167,10 @@ vector<Cluster*> Clustering::getListaClusters() {
 	return this->lista_de_clusters;
 }
 
+
+bool Clustering::getMultiPertenencia(){
+	return this->multiPertenencia;
+}	
 /**********************************************************************/
 /**********************************************************************/
 
@@ -341,6 +345,7 @@ void Clustering::persistirClusters() {
 	Punto centroide;
 	//Cada iteracion es un cluster distinto
 	for (unsigned int i = 0; i < lista_de_clusters.size(); i++) {
+		cout<<"persisto cluster numero: "<<i<<endl;
 		centroide = (lista_de_clusters[i])->getCentroide();
 		//Tamanio del vector, lo indico para saber hasta donde leer despues
 		archivoClusters << centroide.vectorDeFrecuencias().size() << ",";
@@ -373,7 +378,7 @@ void Clustering::levantarClusters() {
 	Punto centroide;
 	string auxLinea;
 	char* valor;
-	char* aux;
+	char* aux, *auxDoc;
 	char* longitud;
 	string nombreDoc;
 	int nroDoc;
@@ -402,13 +407,16 @@ void Clustering::levantarClusters() {
 		}
 
 		j = 0;
+		aux = strtok(NULL, ", ");
 		while (aux != NULL) {
-			aux = strtok(NULL, ", ");
 			nombreDoc = aux;
-			nroDoc = atof(strtok(NULL, ", "));
-			if (aux != NULL)
+			auxDoc = strtok(NULL, ", ");
+			if (auxDoc != NULL) {
+				nroDoc = atof(auxDoc);
 				puntosDelCluster[j] =Punto(nroDoc, nombreDoc);
+			}	
 			j++;
+			aux = strtok(NULL, ", ");
 		}
 		centroide = Punto(frecCentroide, nroDoc, nombreDoc);
 		nuevoCluster = Cluster(centroide, puntosDelCluster);

@@ -85,6 +85,8 @@ public:
 	Punto procesarNuevoDocumento(string ruta);
 	map<string, int> obtenerHashVocabulario();
 	vector<string> getVectorArchivos();
+	//Persistencia del Hash principal
+	void escribirArchivoDeHashPrincipal(hash hash);
 
 };
 

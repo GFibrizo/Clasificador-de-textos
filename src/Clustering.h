@@ -40,6 +40,7 @@ public:
 	vector<int> indices_no_muestreados(int cantidad_docs_total, vector<int> indices_muestra);
 	void persistirClusters();
 	void levantarClusters();
+	bool getMultiPertenencia();
 
 
 	

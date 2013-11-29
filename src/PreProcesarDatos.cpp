@@ -448,3 +448,21 @@ map<string, int> PreProcesarDatos::obtenerHashVocabulario (){
 vector<string> PreProcesarDatos::getVectorArchivos(){
 	return this->vector_archivos;	
 }	
+
+/**********************************************************************/
+/**********************************************************************/
+
+//Persistencia del Hash principal
+void PreProcesarDatos::escribirArchivoDeHashPrincipal(hash hash){
+	string aux;
+	ofstream archivoHashPrincipal;
+	archivoHashPrincipal.open(DIR_FILE_HASH_1, ios_base::out | ios_base::app);
+	for (hash::iterator it= hash.begin(); it != hash.end(); it++){
+		aux.operator = (it->first);
+		aux.append(",");
+		archivoHashPrincipal << aux;
+	}
+	archivoHashPrincipal << ",/";
+	archivoHashPrincipal.close();
+
+}

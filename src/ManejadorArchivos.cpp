@@ -213,3 +213,31 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 	//cout<<"MANEJADOR LISTA DE PUNTOS SIZE: "<<lista_de_puntos.size()<<endl;
 	return lista_de_puntos;
 }
+
+
+/**********************************************************************/
+/**********************************************************************/
+
+
+// Lee las claves del archivo file_hash1 y las carga en memoria con frecuencia cero.
+map<string, int> ManejadorArchivos::LevantarHashPrincipal(){
+
+	string auxLinea;
+	this->abrirLectura(DIR_FILE_HASH_1);
+	
+	hash hashPrincipal;
+	string clave;
+	char* aux;
+	char *linea = new char[1024000];
+	while ( leerUnaLineaIndice(auxLinea)){		
+		strcpy(linea, auxLinea.c_str());
+		aux = strtok(linea, ",/ ");
+		while (aux != NULL) {			
+			clave = aux;
+			hashPrincipal[clave] = 0;
+			aux = strtok(NULL, ",/ ");
+		}
+	}
+	delete []linea;
+	return hashPrincipal;
+}
