@@ -31,20 +31,21 @@ void mostrarClusters(vector<Cluster*> clusters){
 	cout <<endl<< "Clusters" << endl;
 		for (unsigned int i = 0; i < clusters.size(); i++) {
 			cout<<"Cluster: "<<endl;
-			cout<<"Centroide "<<endl;
 			//for (unsigned int k = 0; k < clusters[i]->getCentroide().vectorDeFrecuencias().size(); ++k) {
 				//cout<<clusters[i]->getCentroide().vectorDeFrecuencias()[k]<<endl;
 			//}
 
 			cout<<endl;
 			cout<<"tamaño del cluster: "<<clusters[i]->getPuntos().size()<<endl;
-			cout<<"Puntos"<<endl;
+			cout<<"Documentos"<<endl;
 
 			for (unsigned int j = 0; j < clusters[i]->getPuntos().size(); j++) {
-				//cout<<clusters[i]->getPuntos()[j]->getNombreDoc()<<endl;
-				cout<<(clusters[i]->getPuntos()[j])->getDocumento()<<endl;
+
+				cout<<clusters[i]->getPuntos()[j].getNombreDoc()<<endl;
+				//cout<<clusters[i]->getPuntos()[j].getDocumento()<<endl;
 
 			}
+			cout<<endl;
 		}
 
 }
@@ -156,12 +157,13 @@ int main (int argc, char **argv) {
 		else
 			valor_K = atoi(c_value);
 
-		clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total/2, multiPertenencia,vectorArchivos);
+		//clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total/2, multiPertenencia,vectorArchivos);
 
 		clustering =  Clustering(valor_K, cantidad_docs_total, tamMuestra(cantidad_docs_total), multiPertenencia,vectorArchivos);
 
 		clusters = clustering.getListaClusters();
 		mostrarClusters(clusters);
+		clustering.persistirClusters();
 	}else{
 		if (a_value != NULL){
 			Clasificador clasificador = Clasificador(clusters, hashPrincipal);
@@ -171,9 +173,9 @@ int main (int argc, char **argv) {
 			// Lista todos los documentos del repositorio y la categoría a la cual pertenece cada uno.
 			vector<Cluster*> lista_de_clusters = clustering.getListaClusters(); //puede ser con persistencia o no .
 			for (unsigned int i = 0; i < lista_de_clusters.size() ; i++){
-				vector<Punto*> puntos_cluster = (*(lista_de_clusters[i])).getPuntos();
+				vector<Punto> puntos_cluster = lista_de_clusters[i]->getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
-					string nombreDoc = puntos_cluster[j]->getNombreDoc();//TDV NO EXISTE
+					string nombreDoc = puntos_cluster[j].getNombreDoc();//TDV NO EXISTE
 					cout<<nombreDoc<<" , categoria:"<<i<<"\n";
 				}
 			}
@@ -183,9 +185,9 @@ int main (int argc, char **argv) {
 			vector<Cluster*> lista_de_clusters = clustering.getListaClusters();
 			for (unsigned int i = 0; i < lista_de_clusters.size() ; i++){
 				cout<<"CATEGORIA: "<<i<<"\n";
-				vector<Punto*> puntos_cluster = (*(lista_de_clusters[i])).getPuntos();
+				vector<Punto>puntos_cluster = lista_de_clusters[i]->getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
-					string nombreDoc = puntos_cluster[j]->getNombreDoc();
+					string nombreDoc = puntos_cluster[j].getNombreDoc();
 					cout<<nombreDoc<<"\n";
 				}
 			}
