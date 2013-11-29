@@ -185,7 +185,7 @@ void KMeans::agregarElemento(Punto elemento) {
 	vector<Cluster*> temp = this->getClustersDistanciaMinima(elemento);
 	//Una vez obtenido el cluster al cual el punto esta a menor distancia
 	//Agrego este punto al cluster
-	for (unsigned int k = 0; k < temp.size(); ++k) {
+	for (unsigned int k = 0; k < temp.size(); k++) {
 		temp[k]->agregarElemento(&elemento);
 	}
 }

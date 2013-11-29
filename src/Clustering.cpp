@@ -36,7 +36,7 @@ Clustering::Clustering () {};
 Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_docs_total, int tam_muestra, bool multiPertenencia, vector<string> vectorArchivos){
 	
 	this->manejador = new ManejadorArchivos();
-	
+	this->multiPertenencia =  multiPertenencia;
 	//muestra de M documentos:
 	vector<int> indices_muestra = this->obtener_muestra(tam_muestra, cantidad_docs_total);
 	//indices de puntos random
@@ -54,8 +54,8 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 	
 	
 	//obtiene semillas:
-	//this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
-	this->semillas=puntos_iniciales;
+	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
+	//this->semillas=puntos_iniciales;
 	cout<<"cantidad de semillas para la muestra "<<cantidad_de_semillas<<" size: "<<semillas.size()<<endl;
 	
 	//K-Means:
@@ -77,7 +77,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas, unsigned int cantidad_
 		this->Clasificar(lista_no_muestreados[j]);
 	}
 	//ya tengo todos los clusters armados.
-	delete this->manejador;
+	//delete this->manejador;
 }
 
 
@@ -128,9 +128,11 @@ void Clustering::Clasificar(Punto nuevo_punto){
 	// o solo al primer cluster de la lista si solo puede esta en un cluster
 	if (this->multiPertenencia == true) {
 		for (unsigned int x = 0; x < cluster_destino.size() ; x++){
-			(*(cluster_destino[x])).agregarElemento(&nuevo_punto); //agregar Clasificacion
+			cluster_destino[x]->agregarElemento(nuevo_punto); //agregar Clasificacion
 		}
-	} else (*(cluster_destino[0])).agregarElemento(&nuevo_punto);
+	} else {
+		cluster_destino[0]->agregarElemento(&nuevo_punto);
+	}
 
 }
 
@@ -276,6 +278,14 @@ vector<Punto> Clustering::buckShot(unsigned int cantSemillas,  vector<Punto> lis
 
 	
 vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total, vector<int> indices_muestra){
+	cout<<"NO MUESTREADO"<<endl;
+	cout<<"CANT DOCS "<<cantidad_docs_total<<endl;
+	cout<<"INDICES MUESTRA "<<indices_muestra.size()<<endl;
+	
+	for (unsigned int x = 0; x < indices_muestra.size() ; x++){
+		cout<<indices_muestra[x]<<" - ";
+	}
+	cout<<endl;
 	vector<int> indices_no_muestreados;
 	std::sort (indices_muestra.begin(), indices_muestra.end());
 
@@ -285,9 +295,10 @@ vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total, vector<i
 		 int numero_doc_muestra = indices_muestra[indice];
 		if (i == numero_doc_muestra){
 			//cout<<"no muestreado"<<endl;
-			indice++;
+			if (indice < indices_muestra.size()-1) indice++;
 		} else {
 			indices_no_muestreados.push_back(i);
+			cout<<"push: "<<i<<endl;
 		}
 		i++;	
 	}

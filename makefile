@@ -20,4 +20,6 @@ $(EXEC): $(OBJ1) src/Porter.o main.cpp
 
 clean: 
 		rm -f *.o  $(EXEC)
+		rm -f sistema/file_hash2
+		rm -f sistema/indiceDocumentos
 

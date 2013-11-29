@@ -18,7 +18,7 @@ public:
 	Cluster();
 	Cluster(Punto* centroide, vector<Punto*> puntos);
 	virtual ~Cluster();
-	void agregarElemento(Punto* elemento);
+	void agregarElemento(Punto* elemento);//
 	Punto getCentroide();
 	bool esSimilar(Cluster cluster);
 	float gradoCohesion();

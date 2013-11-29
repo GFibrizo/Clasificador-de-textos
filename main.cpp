@@ -41,8 +41,8 @@ void mostrarClusters(vector<Cluster*> clusters){
 			cout<<"Puntos"<<endl;
 
 			for (unsigned int j = 0; j < clusters[i]->getPuntos().size(); j++) {
-				cout<<clusters[i]->getPuntos()[j]->getNombreDoc()<<endl;
-				//cout<<clusters[i]->getPuntos()[j]->getDocumento()<<endl;
+				//cout<<clusters[i]->getPuntos()[j]->getNombreDoc()<<endl;
+				cout<<(clusters[i]->getPuntos()[j])->getDocumento()<<endl;
 
 			}
 		}
@@ -156,7 +156,7 @@ int main (int argc, char **argv) {
 		else
 			valor_K = atoi(c_value);
 
-		//clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total/2, multiPertenencia,vectorArchivos);
+		clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total/2, multiPertenencia,vectorArchivos);
 
 		clustering =  Clustering(valor_K, cantidad_docs_total, tamMuestra(cantidad_docs_total), multiPertenencia,vectorArchivos);
 
