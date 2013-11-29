@@ -11,18 +11,18 @@
 using namespace std;
 class Cluster {
 private:
-	Punto* centroide;
-	vector<Punto*> puntos;
+	Punto centroide;
+	vector<Punto> puntos;
 	void calcularCentroide();
 public:
 	Cluster();
-	Cluster(Punto* centroide, vector<Punto*> puntos);
+	Cluster(Punto centroide, vector<Punto> puntos);
 	virtual ~Cluster();
-	void agregarElemento(Punto* elemento);//
+	void agregarElemento(Punto elemento);
 	Punto getCentroide();
 	bool esSimilar(Cluster cluster);
 	float gradoCohesion();
-	vector<Punto*> getPuntos();
+	vector<Punto> getPuntos();
 	void vaciarPuntos();
 
 };

@@ -18,10 +18,10 @@ unsigned int const KMeans::PORCENTAJE_CENTROIDES=0.75;
 /**********************************************************************/
 /**********************************************************************/
 
-KMeans::KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,
-		vector<Punto> *semillas, bool multiPertenencia) {
+KMeans::KMeans(vector<Punto> puntos, unsigned int maxIteraciones,
+		vector<Punto> semillas, bool multiPertenencia) {
 
-	this->numClusters = semillas->size();
+	this->numClusters = semillas.size();
 
 	if (maxIteraciones == 0) {
 		this->maxIteraciones = MAX_ITERACIONES;
@@ -29,8 +29,8 @@ KMeans::KMeans(vector<Punto> *puntos, unsigned int maxIteraciones,
 		this->maxIteraciones = maxIteraciones;
 	}
 	this->multiPertenencia = multiPertenencia;
-	this->semillas = *semillas;
-	this->puntos = *puntos;
+	this->semillas = semillas;
+	this->puntos = puntos;
 }
 
 /**********************************************************************/
@@ -48,7 +48,7 @@ KMeans::~KMeans() {
 
 //Aca es donde va la magia
 void KMeans::calcularClusters() {
-
+	cout<<"Iniciando proceso de clustering..."<<endl;
 	int cantIteraciones = 0;
 	//Primero calculo los centroides de los clusters con las semillas
 	inicializarCentroides();
@@ -64,7 +64,7 @@ void KMeans::calcularClusters() {
 			//Una vez obtenido el cluster al cual el punto esta a menor distancia
 			//Agrego este punto al cluster
 			for (unsigned int k = 0; k < temps.size(); k++) {
-				temps[k]->agregarElemento(&this->puntos[j]);
+				temps[k]->agregarElemento(this->puntos[j]);
 
 			}
 		}
@@ -166,7 +166,7 @@ void KMeans::inicializarCentroides() {
 		cluster = new Cluster();
 		//Cada vez que agrego el elemento al cluster estoy actualizando su centroide
 		//Como en este caso tengo un solo elemento, este es su centroide
-		cluster->agregarElemento(&this->semillas[i]);
+		cluster->agregarElemento(this->semillas[i]);
 		this->clusters.push_back(cluster);
 		//Agrego a la lista de centroides que luego se usa para verificar cambios
 		this->centroides.push_back(this->semillas[i]);
@@ -185,8 +185,8 @@ void KMeans::agregarElemento(Punto elemento) {
 	vector<Cluster*> temp = this->getClustersDistanciaMinima(elemento);
 	//Una vez obtenido el cluster al cual el punto esta a menor distancia
 	//Agrego este punto al cluster
-	for (unsigned int k = 0; k < temp.size(); k++) {
-		temp[k]->agregarElemento(&elemento);
+	for (unsigned int k = 0; k < temp.size(); ++k) {
+		temp[k]->agregarElemento(elemento);
 	}
 }
 
