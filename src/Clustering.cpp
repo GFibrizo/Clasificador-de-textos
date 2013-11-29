@@ -40,15 +40,15 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,
 
 	this->multiPertenencia =  multiPertenencia;
 	//muestra de M documentos:
-	vector<int> indices_muestra = this->obtener_muestra(tam_muestra, cantidad_docs_total);
+	vector<int> indices_muestra = this->obtener_muestra(tam_muestra,
+			cantidad_docs_total);
 	//indices de puntos random
-	vector<int> indices_random = this->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
-	
+	vector<int> indices_random = this->obtener_puntos_random(
+			cantidad_de_semillas, indices_muestra);
 	cout << "\n tam indices muestra:" << indices_muestra.size()
 			<< "\n tam indices random: " << indices_random.size() << "\n";
 	cout << "indices muestra, indices random  =  " << indices_muestra.size()
 			<< "  ;  " << indices_random.size() << endl;
-	
 	//lista de puntos random:
 	vector<Punto> puntos_iniciales = this->manejador->LevantarListaDePuntos(
 			indices_random, vectorArchivos);
@@ -63,8 +63,8 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,
 			<< puntos_iniciales.size() << endl;
 
 	//obtiene semillas:
-	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
-	//this->semillas = puntos_iniciales;
+	//this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
+	this->semillas = puntos_iniciales;
 	cout << "cantidad de semillas para la muestra " << cantidad_de_semillas
 			<< " size: " << semillas.size() << endl;
 
@@ -147,8 +147,8 @@ void Clustering::Clasificar(Punto nuevo_punto) {
 		}
 		for (unsigned int x = 0; x < cluster_destino.size() ; x++){
 			cluster_destino[x]->agregarElemento(nuevo_punto); //agregar Clasificacion
-		}
-	
+			}
+
 		cluster_destino[0]->agregarElemento(nuevo_punto);
 	} else {
 		cluster_destino[0]->agregarElemento(nuevo_punto);
@@ -200,9 +200,8 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos,
 		}
 	}
 	cout << "fin obtener_muestra\n";
-	for (unsigned int g = 0; g < lista_de_punteros.size(); g++){
-	cout<<lista_de_punteros[g]<<" - ";  }
-	cout<<endl;
+	//for (unsigned int g = 0; g < lista_de_punteros.size(); g++){
+	//cout<<lista_de_punteros[g]<<endl;  }
 	return lista_de_punteros;
 
 }
@@ -212,7 +211,8 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos,
 
 /* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
  * agarraron de manera aleatoria para agrupar con el clustering jerarquico aglomerativo  */
-vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas, vector<int> docs_muestra) {
+vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas,
+		vector<int> docs_muestra) {
 	int numero, random;
 	vector<int> lista_de_punteros;
 	unsigned int i = 0;
@@ -231,21 +231,20 @@ vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas, vector<i
 		 i++;
 		 }*/
 		for (unsigned int j = 0; j < lista_de_punteros.size(); j++) {
-			if (lista_de_punteros[j] == docs_muestra[random]) {
+			if (lista_de_punteros[j] == random) {
 				//continue;
 				agregar = false;
 			}
 		}
 		if (agregar == true) {
-			lista_de_punteros.push_back(docs_muestra[random]);
+			lista_de_punteros.push_back(random);
 			i++;
 		}
 	}
 
 	cout << "fin obtener_puntos_random\n";
-	for (unsigned int g = 0; g < lista_de_punteros.size(); g++){
-	cout<<lista_de_punteros[g]<<" , ";  }
-	cout<<endl;
+	//for (unsigned int g = 0; g < lista_de_punteros.size(); g++){
+	//cout<<lista_de_punteros[g]<<endl;  }
 	return lista_de_punteros;
 
 }
@@ -313,10 +312,7 @@ vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total,
 		}
 		i++;
 	}
-	cout<<"fin indices no muestreados\n";
-	for (unsigned int x= 0; x < indices_no_muestreados.size(); x++){
-		cout<<indices_no_muestreados[x]<<" - "; }
-	cout<< endl;	
+
 	return indices_no_muestreados;
 }
 
