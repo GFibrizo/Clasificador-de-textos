@@ -207,7 +207,7 @@ void PreProcesarDatos::preProcesarDatos(){
 	string palabra;
 	unsigned int i;
 	unsigned int ant_i = -1;
-
+	cout<<"Iniciando proceso de parseo..."<<endl;
 	for (i = 0; i < this->vector_archivos.size(); i++){
 
 		if (this->vector_archivos[i].compare(".svn") == 0) continue;

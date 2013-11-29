@@ -37,7 +37,7 @@ void Clasificador::clasificarNuevoPunto(string ruta){
 	
 	while ((CompararCentroides(centroideCercano, centroides[i]) == false) && ( i < centroides.size() )) i++;
 
-	(*(clusters[i])).agregarElemento(&nuevoPunto);
+	(*(clusters[i])).agregarElemento(nuevoPunto);
 
 }
 

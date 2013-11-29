@@ -198,8 +198,6 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 				vector_frec.push_back(frec);	
 				auxPalabra = strtok(NULL," ,  ");
 			}
-			//termina la linea:	
-			//cout<<"PUSH: "<<j<<"\n";
 			punto =  Punto(vector_frec, doc, vectorArchivos[j]);
 			lista_de_puntos.push_back(punto);
 			//cout<<"&punto = "<<&punto<<endl;
@@ -211,6 +209,6 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 	}		
 	delete []linea;
 	this->cerrarArchivo();
-	cout<<"MANEJADOR LISTA DE PUNTOS SIZE: "<<lista_de_puntos.size()<<endl;
+	//cout<<"MANEJADOR LISTA DE PUNTOS SIZE: "<<lista_de_puntos.size()<<endl;
 	return lista_de_puntos;
 }
