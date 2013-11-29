@@ -16,6 +16,7 @@ Punto::Punto(vector<float> frecPond,int doc) {
 	this->frecPond = frecPond;
 	this->doc=doc;
 	this->nombreDoc = " ";
+
 }
 
 /**********************************************************************/
@@ -56,17 +57,23 @@ Punto::~Punto() {
 	// TODO Auto-generated destructor stub
 }
 
+
+
+
+float Punto::calcularNorma(){
+	float acum=0;
+
+		for (unsigned int i = 0; i < this->frecPond.size(); i++) {
+			acum+=pow(this->frecPond[i],2.0);
+		}
+		return sqrt(acum);
+}
 /**********************************************************************/
 /**********************************************************************/
 
 
 float Punto::getNorma(){
-	float acum=0;
-
-	for (unsigned int i = 0; i < this->frecPond.size(); i++) {
-		acum+=pow(this->frecPond[i],2.0);
-	}
-	return sqrt(acum);
+	return this->norma;
 }
 
 /**********************************************************************/
@@ -88,7 +95,8 @@ double Punto::distanciaCoseno(Punto otroPunto){
 
 	for (unsigned int i=0; i<this->frecPond.size(); i++){
 		suma=suma+(this->frecPond[i] * otroPunto.frecPond[i]);
-	}	coseno = suma / (this->getNorma() * otroPunto.getNorma() );
+	}
+	coseno = suma / (this->getNorma() * otroPunto.getNorma() );
 
 	return coseno;
 }

@@ -18,7 +18,8 @@ private:
 	vector<float> frecPond;
 	int doc;
 	string nombreDoc;
-
+	float norma;
+	float calcularNorma();
 public:
 	Punto();
 	Punto(vector<float> frecPond,int doc);
