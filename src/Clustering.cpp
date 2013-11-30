@@ -44,38 +44,37 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,
 	//indices de puntos random
 	vector<int> indices_random = this->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
 	
-	cout << "\n tam indices muestra:" << indices_muestra.size()
-			<< "\n tam indices random: " << indices_random.size() << "\n";
-	
-	/*cout<<"NOMBRES ARCHIVOS: "<<vectorArchivos.size()<<endl;
-	for (unsigned int w=0; w < vectorArchivos.size() ; w++){
-		cout<<vectorArchivos[w]<<" , ";
-	}		
-	cout<<endl;		*/
+	cout << "\n tam indices muestra:" << indices_muestra.size()<< "\n tam indices random: " << indices_random.size() << "\n";
 	//lista de puntos random:
 	vector<Punto> puntos_iniciales = this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
 			
 	cout<<"PUNTOS INICIALES: ";		
 	for (unsigned int x=0; x < puntos_iniciales.size(); x++){
-		cout<<puntos_iniciales[x].getDocumento()<<" , ";
+		//cout<<puntos_iniciales[x].getDocumento()<<" , ";
+		cout<<puntos_iniciales[x].getNombreDoc()<<" , ";
 	}
 	cout<<endl;
 			
 	//lista de puntos muestra:
 	this->puntos_muestra = this->manejador->LevantarListaDePuntos(indices_muestra, vectorArchivos);
 
-	cout << "cantidad de puntos muestra desde manejador "
-			<< this->puntos_muestra.size() << endl;
+	cout<<"PUNTOS  MUESTRA: ";
+	for (unsigned int x=0; x < puntos_muestra.size(); x++){
+		cout<<puntos_muestra[x].getNombreDoc()<<" , ";
+	}
+	cout << "cantidad de puntos muestra desde manejador "<< this->puntos_muestra.size() << endl;
 
-	cout << "cantidad de puntos iniciales desde manejador  "
-			<< puntos_iniciales.size() << endl;
+	cout << "cantidad de puntos iniciales desde manejador  "<< puntos_iniciales.size() << endl;
 
 	//obtiene semillas:
 	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
-	//this->semillas = puntos_iniciales;
-	cout << "cantidad de semillas para la muestra " << cantidad_de_semillas
-			<< " size: " << semillas.size() << endl;
 
+	//this->semillas = puntos_iniciales;
+	cout << "cantidad de semillas para la muestra " << cantidad_de_semillas	<< " size: " << semillas.size() << endl;
+	cout<<"PUNTOS  SEMILLA: ";
+		for (unsigned int x=0; x < semillas.size(); x++){
+			cout<<semillas[x].getNombreDoc()<<" , ";
+		}
 	//K-Means:
 	KMeans instancia_KMeans = KMeans(this->puntos_muestra, 0,
 			this->semillas, multiPertenencia); //MAX_ITERACIONES = 0, DEFINIR.
@@ -90,12 +89,16 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,
 
 	vector<Punto> lista_no_muestreados = this->manejador->LevantarListaDePuntos(indices_no_muestreados, vectorArchivos);
 	cout << "No Muestreados.. size: " << lista_no_muestreados.size() << endl;
-
+	cout<<"PUNTOS  NO MUESTREADOS: ";
+			for (unsigned int x=0; x < lista_no_muestreados.size(); x++){
+				cout<<lista_no_muestreados[x].getNombreDoc()<<" , ";
+			}
 	
 	//Clasifico cada uno de esos puntos:
 	for (unsigned int j = 0; j < lista_no_muestreados.size(); j++) {
 		this->Clasificar(lista_no_muestreados[j]);
 	}
+	cout<<"sale del clustering"<<endl;
 	//ya tengo todos los clusters armados.
 	delete this->manejador;
 }
@@ -126,6 +129,7 @@ void Clustering::Clasificar(Punto nuevo_punto) {
 	vector<Cluster*> cluster_destino; //lista de los clusters donde se va a agregar el nuevo punto.
 	vector<Cluster*> lista_de_clusters = this->lista_de_clusters;
 	// Primero busco cual es la minima distancia.
+
 	double minima_distancia =
 			lista_de_clusters[0]->getCentroide().distanciaCoseno(nuevo_punto);
 	for (unsigned int i = 1; i < lista_de_clusters.size(); i++) {
@@ -346,10 +350,9 @@ void Clustering::persistirClusters() {
 	//Cada iteracion es un cluster distinto
 	for (unsigned int i = 0; i < lista_de_clusters.size(); i++) {
 		cout<<"persisto cluster numero: "<<i<<endl;
-		centroide = (lista_de_clusters[i])->getCentroide();
+		centroide = lista_de_clusters[i]->getCentroide();
 		//Tamanio del vector, lo indico para saber hasta donde leer despues
 		archivoClusters << centroide.vectorDeFrecuencias().size() << ",";
-
 		//Escribo las componentes del centroide del cluster nro i
 		for (unsigned int j = 0; j < centroide.vectorDeFrecuencias().size();
 				j++)
@@ -372,8 +375,6 @@ void Clustering::persistirClusters() {
 /*********************************************************************/
 
 void Clustering::levantarClusters() {
-
-	vector<float> frecCentroide;
 	vector<Punto> puntosDelCluster;
 	Punto centroide;
 	string auxLinea;
@@ -383,29 +384,32 @@ void Clustering::levantarClusters() {
 	string nombreDoc;
 	int nroDoc;
 	Punto nuevoPunto;
-	Cluster nuevoCluster;
+	Cluster* nuevoCluster;
 	int i, j, n, longCentroid = 0;
-	ManejadorArchivos* manejador = new ManejadorArchivos(); //posible perdida de memoria.
-	manejador->abrirLectura(DIR_FILE_CLUSTERS);
+	int cantPuntos=0;
+	ManejadorArchivos manejadorCluster;
+	manejadorCluster.abrirLectura(DIR_FILE_CLUSTERS);
 	n = 0;
-
+	char *linea = new char[1024000];
 	//Cada iteracion es un cluster distinto
-	while (this->manejador->leerUnaLineaIndice(auxLinea)) {
+	while (manejadorCluster.leerUnaLineaIndice(auxLinea)) {
 
-		char *linea = new char[102400];
 		strcpy(linea, auxLinea.c_str());
 		i = 0;
-
 		//Leo la longitud del centroide para saber hasta donde leer
-		longitud = strtok(linea, ",");
-		longCentroid = atoi((char*) longitud);
+		longCentroid = atoi( strtok(linea, ","));;
 		//Recupero el centroide del cluster actual
+		vector<float> frecCentroide(longCentroid,0);
+
 		while (i < longCentroid) {
-			valor = strtok(NULL, ", ");
-			frecCentroide[i] = atof(valor);
+			valor = strtok(NULL, ",");
+			frecCentroide[i] =atof(valor);
 			i++;
 		}
 
+		centroide = Punto(frecCentroide, nroDoc, nombreDoc);
+		nuevoCluster =new Cluster();
+		nuevoCluster->setCentroide(centroide);
 		j = 0;
 		aux = strtok(NULL, ", ");
 		while (aux != NULL) {
@@ -413,18 +417,21 @@ void Clustering::levantarClusters() {
 			auxDoc = strtok(NULL, ", ");
 			if (auxDoc != NULL) {
 				nroDoc = atof(auxDoc);
-				puntosDelCluster[j] =Punto(nroDoc, nombreDoc);
+				nuevoCluster->agregarElemento( Punto(nroDoc, nombreDoc));
+				//puntosDelCluster.push_back( Punto(nroDoc, nombreDoc));
 			}	
+
 			j++;
 			aux = strtok(NULL, ", ");
 		}
-		centroide = Punto(frecCentroide, nroDoc, nombreDoc);
-		nuevoCluster = Cluster(centroide, puntosDelCluster);
-		this->lista_de_clusters[n] = &nuevoCluster;
-		n++;
-		delete[] linea;
-	}
-	delete manejador;
 
+
+		this->lista_de_clusters.push_back( nuevoCluster);
+		n++;
+
+
+	}
+	cout << "sale : "<<endl;
+	delete[] linea;
 }
 

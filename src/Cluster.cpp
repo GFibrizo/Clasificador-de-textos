@@ -112,3 +112,9 @@ vector<Punto> Cluster::getPuntos(){
 void Cluster::vaciarPuntos(){
 	this->puntos.clear();
 }
+/**********************************************************************/
+/**********************************************************************/
+
+void Cluster::setCentroide(Punto centroide){
+	this->centroide=centroide;
+}

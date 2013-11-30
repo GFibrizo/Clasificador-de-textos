@@ -25,19 +25,19 @@ Clasificador::Clasificador(vector<Cluster*> clusters, hash hashPrincipal){
 
 void Clasificador::clasificarNuevoPunto(string ruta){
 	unsigned int i;
-	
+	cout<<"clas nu po"<<endl;
 	Punto nuevoPunto =  this->PreProcesador->procesarNuevoDocumento(ruta); 
 	vector<Punto> centroides;
 	
 	for (i = 0; i < clusters.size(); i++) 
-		centroides[i] = (*(clusters[i])).getCentroide();
+		centroides[i] = clusters[i]->getCentroide();
 	
 	Punto centroideCercano = nuevoPunto.calcularCercanos(centroides);
 	i = 0;
 	
 	while ((CompararCentroides(centroideCercano, centroides[i]) == false) && ( i < centroides.size() )) i++;
 
-	(*(clusters[i])).agregarElemento(nuevoPunto);
+	clusters[i]->agregarElemento(nuevoPunto);
 
 }
 

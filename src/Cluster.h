@@ -24,6 +24,7 @@ public:
 	float gradoCohesion();
 	vector<Punto> getPuntos();
 	void vaciarPuntos();
+	void setCentroide(Punto centroide);
 
 };
 
