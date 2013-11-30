@@ -71,7 +71,7 @@ private:
 	void generarIndiceDocumentos();
 	string stem_palabra(string palabra);
 	void agregarElementoAHashPrincipal(hash& hash,string palabra, bool cambio_doc);
-	void relative_dir_base_split(const string& path, string& dir);
+	void relative_dir_base_split(const string& path, string& dir, string& nombre);
 	const char* getInvalidos();
 	void tokenizar(char* linea);
 	//Genera un hash con las claves del hash principal y frecuencia 0.

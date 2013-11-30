@@ -16,17 +16,21 @@ typedef map<string,float> hash2;
 
 
 //Devuelve en dir el directorio indicado en la ruta
-void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir)
+
+void relative_dir_base_split(const string& path, string& dir, string& nombre)
 {
-	std::string::size_type slash_pos = path.rfind("/"); //Encuentra la barra
-	
-	if (slash_pos != std::string::npos) { //Si hay una barra
-		slash_pos++;
-		dir = path.substr(0, slash_pos); //Directorio esta antes de la barra
-		
-	} else { //Sino, no hay directorio
-		dir.clear();
-	}
+  std::string::size_type slash_pos = path.rfind("/"); //Find the last slash
+  if (slash_pos != std::string::npos) //If there is a slash
+  {
+    slash_pos++;
+    dir = path.substr(0, slash_pos); //Directory is before slash
+    nombre = path.substr(slash_pos); //And obviously, the file is after
+  }
+  else //Otherwise, there is no directory present
+  {
+    dir.clear();
+    nombre = path;
+  }
 }
 
 /**********************************************************************/
