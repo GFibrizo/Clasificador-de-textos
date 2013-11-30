@@ -53,17 +53,22 @@ void KMeans::calcularClusters() {
 	//Primero calculo los centroides de los clusters con las semillas
 	inicializarCentroides();
 	vector<Cluster*> temps;
-
+	//cout<<"cantidad de puntos que llegan al kmeans "<<this->puntos.size()<<endl;
 	//dejo de iterar cuando llego al maximo de iteraciones y no se registran cambios en los clusters
 	while ((cantIteraciones < this->maxIteraciones)) { //&& (!this->cambiosClusters())) {
-		cout<<"ite "<<cantIteraciones<<endl;
+		cout<<"*********** "<<endl;
+		cout<<"ITERACION: "<<cantIteraciones<<endl;
+		cout<<"********** "<<endl;
 		this->actualizarCentroides();
 		//itero sobre todos los puntos
 		for (unsigned int j = 0; j < this->puntos.size(); j++) {
 			temps = this->getClustersDistanciaMinima(puntos[j]);
+			//cout<<"doc "<<this->puntos[j].getNombreDoc() <<endl;
 			//Una vez obtenido el cluster al cual el punto esta a menor distancia
 			//Agrego este punto al cluster
+			//cout<<"cant de clusters cercanos "<<temps.size()<<endl;
 			for (unsigned int k = 0; k < temps.size(); k++) {
+				//cout<<"lo agrega al cluster"<<k<<endl;
 				temps[k]->agregarElemento(this->puntos[j]);
 
 			}
@@ -79,20 +84,22 @@ void KMeans::calcularClusters() {
 vector<Cluster*> KMeans::getClustersDistanciaMinima(Punto punto) {
 
 	vector<Cluster*> temps;
-	double distancia = 0;
-	double distanciaMin = 0;
+	double distancia = 0.0;
+	double distanciaMin = 0.0;
 	//Calculo la distancia de este punto contra cada centroide
 	for (unsigned int i = 0; i < this->clusters.size(); i++) {
 		distancia = punto.distanciaCoseno(this->clusters[i]->getCentroide());
+		//cout<<"distancia del punto "<<punto.getNombreDoc()<<" al cluster "<<this->clusters[i]->getCentroide().getNombreDoc()<<" es "<<distancia<<endl;
 		//si la distancia es igual a la distancia minima, solo lo agrego a la lista de clusters cercanos
 		if ((distancia == distanciaMin) && (this->multiPertenencia)) {
 			temps.push_back(this->clusters[i]);
 		}
 		//Si la distancia es minima y nueva-> limpio el vector de clusters,la seteo como distancia minima y agrego este cluster como cercano
-		if (distancia > distanciaMin) {
+		if (distancia >= distanciaMin) {
 			temps.clear();
 			distanciaMin = distancia;
 			temps.push_back(this->clusters[i]);
+			//cout<<"el punto  "<<punto.getNombreDoc()<<" deberia estar en el cluster "<<this->clusters[i]->getCentroide().getNombreDoc()<<endl;
 
 		}
 
