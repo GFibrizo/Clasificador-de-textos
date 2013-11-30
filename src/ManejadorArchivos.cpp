@@ -159,7 +159,7 @@ char* ManejadorArchivos::leerArchivo(){
 
 //Recibe una lista de numeros de docs NO ORDENADA
 vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos){
-
+	cout<<"size docs: "<<numero_doc.size()<<endl;
 	//ordena la lista:
 	
 	std::sort (numero_doc.begin(), numero_doc.end());
@@ -175,8 +175,9 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 	int indice = 0;
 	unsigned int j = 0;
 	char *linea = new char[1024000];
-
+cout<<"size docs postorder: "<<numero_doc.size()<<endl;
 	while ( (this->leerUnaLinea(auxLinea) == true) && (j<numero_doc.size())){
+		cout<<"J : "<<j<<endl;
 		int doc = numero_doc[j];
 		if (indice != doc) { //no es el doc que busco:
 			indice++;
@@ -202,8 +203,7 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 			
 			indice++;
 			j++; //pasa al siguiente doc
-			
-			
+			cout<<"J++ : "<<j<<endl;
 		}
 	}		
 	delete []linea;
@@ -222,7 +222,7 @@ map<string, int> ManejadorArchivos::LevantarHashPrincipal(){
 
 	string auxLinea;
 	this->abrirLectura(DIR_FILE_HASH_1);
-	
+	float frecuencia;
 	hash hashPrincipal;
 	string clave;
 	char* aux;
@@ -232,10 +232,18 @@ map<string, int> ManejadorArchivos::LevantarHashPrincipal(){
 		aux = strtok(linea, ",/ ");
 		while (aux != NULL) {			
 			clave = aux;
-			hashPrincipal[clave] = 0;
+			frecuencia = atof(strtok(NULL, ",/ "));
+			cout<<clave<<",";
+			cout<<endl<<frecuencia<<",";
 			aux = strtok(NULL, ",/ ");
+			//if (aux != NULL) {
+				//frecuencia = atof(aux);
+			hashPrincipal[clave] = frecuencia;
+			//}	
+			//else cout<<"ELSEE";	
 		}
 	}
+	cout<<endl;
 	delete []linea;
 	return hashPrincipal;
 }

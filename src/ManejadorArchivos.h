@@ -12,6 +12,8 @@
 #include <iostream>
 #include <string.h>
 #include <string>
+#include <cmath>
+#include <stdlib.h>  
 #include <cstring>
 #include <map>
 #include <ios>

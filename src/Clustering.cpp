@@ -47,8 +47,9 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,
 	cout << "\n tam indices muestra:" << indices_muestra.size()<< "\n tam indices random: " << indices_random.size() << "\n";
 	//lista de puntos random:
 	vector<Punto> puntos_iniciales = this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
-			
-	cout<<"PUNTOS INICIALES: ";		
+	
+	cout<<"SALIDA MANEJADOR: "<<puntos_iniciales.size()<<endl;	
+	cout<<"PUNTOS INICIALES (random). Size: "<<indices_random.size()<<"  ";		
 	for (unsigned int x=0; x < puntos_iniciales.size(); x++){
 		//cout<<puntos_iniciales[x].getDocumento()<<" , ";
 		cout<<puntos_iniciales[x].getNombreDoc()<<" , ";
@@ -57,19 +58,19 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,
 			
 	//lista de puntos muestra:
 	this->puntos_muestra = this->manejador->LevantarListaDePuntos(indices_muestra, vectorArchivos);
-
-	cout<<"PUNTOS  MUESTRA: ";
+	cout<<"SALIDA MANEJADOR: "<<puntos_muestra.size()<<endl;
+	cout<<"PUNTOS  MUESTRA: (todos). size = "<<cantidad_docs_total<<"  ";
 	for (unsigned int x=0; x < puntos_muestra.size(); x++){
 		cout<<puntos_muestra[x].getNombreDoc()<<" , ";
 	}
-	cout<<endl;
+	cout<<endl<<endl;
 	cout << "cantidad de puntos muestra desde manejador "<< this->puntos_muestra.size() << endl;
 
 	cout << "cantidad de puntos iniciales desde manejador  "<< puntos_iniciales.size() << endl;
-
+	cout<<endl;
 	//obtiene semillas:
 	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
-
+	cout<<endl;
 	//this->semillas = puntos_iniciales;
 	cout << "cantidad de semillas para la muestra " << cantidad_de_semillas	<< " size: " << semillas.size() << endl;
 	cout<<"PUNTOS  SEMILLA: ";
@@ -187,32 +188,38 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos,
 	int numero, random;
 	cout << "tam muestra :" << cantidad_de_puntos << endl;
 	vector<int> lista_de_punteros;
-	int i = 0;
-	//cout<< "CANT PUNTOS, CANT DOCS : "<<cantidad_de_puntos<<" , "<< cantidad_docs;
-	while (i < cantidad_de_puntos) {
-		bool agregar = true;
-		//cout<<"dentro de while"<<endl;
-		// obtain a seed from the system clock:
-		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-		mt19937 generator(seed);
-		numero = generator();
-		random = abs(numero % (cantidad_docs));
-		//cout << "random : "<<random<<" ";
-		/*if (i == 0) {
-		 lista_de_punteros.push_back(random);
-		 i++;
-		 }*/
-		for (unsigned int j = 0; j < lista_de_punteros.size(); j++) {
-			if (lista_de_punteros[j] == random) {
-				//continue;
-				agregar = false;
+	if (cantidad_de_puntos != cantidad_docs){
+		int i = 0;
+		//cout<< "CANT PUNTOS, CANT DOCS : "<<cantidad_de_puntos<<" , "<< cantidad_docs;
+		while (i < cantidad_de_puntos) {
+			bool agregar = true;
+			// obtain a seed from the system clock:
+			unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+			mt19937 generator(seed);
+			numero = generator();
+			random = abs(numero % (cantidad_docs));
+			//cout << "random : "<<random<<" ";
+			/*if (i == 0) {
+			 lista_de_punteros.push_back(random);
+			 i++;
+			 }*/
+			for (unsigned int j = 0; j < lista_de_punteros.size(); j++) {
+				if (lista_de_punteros[j] == random) {
+					//continue;
+					agregar = false;
+				}
+			}
+			if (agregar == true) {
+				lista_de_punteros.push_back(random);
+				i++;
 			}
 		}
-		if (agregar == true) {
-			lista_de_punteros.push_back(random);
-			i++;
-		}
 	}
+	else {
+		for (int i = 0; i < cantidad_de_puntos; i++){
+			lista_de_punteros.push_back(i);
+		}	
+	}	
 	cout << "fin obtener_muestra\n";
 	/*for (unsigned int g = 0; g < lista_de_punteros.size(); g++){
 	cout<<lista_de_punteros[g]<<" , ";  }

@@ -57,6 +57,7 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 
 //Segundo Constructor de la Clase PreProcesarDatos
 PreProcesarDatos::PreProcesarDatos(hash hashPorParametro) {
+	cout<<"entro a preprocesar datos"<<endl;
 	
 	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r \t \\ \r\n";
 	//this->vector_archivos = NULL;
@@ -64,6 +65,13 @@ PreProcesarDatos::PreProcesarDatos(hash hashPorParametro) {
 	//this->archivoHashSecundario = NULL;
 	this->verifDocDiferentes=0;
 	this->hashPrincipal = hashPorParametro;	
+	
+	cout<<"this hash"<<endl;
+	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
+			cout<<"clave: "<<it->first;
+			cout<<"  frec: "<<it->second;
+		}
+	cout<<endl<<endl;
 }
 
 
@@ -345,14 +353,22 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 	return hashDocsEnMemoria;
 }
 
+
+
 /**********************************************************************/
 /**********************************************************************/
 
 
 //Calcula el peso total mediante TFxIDF
 float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
-	
-	return (frecuencia * log10f(( (vector_archivos.size())) / (hashPrincipal[clave])));
+	cout<<endl<<"calcular_TF_IDF"<<endl;
+	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
+			cout<<" clavepre: "<<it->first;
+			cout<<"  frecpre: "<<it->second;
+	}
+	cout<<endl;
+	cout<<"lalala: "<<this->hashPrincipal[clave]<<endl;
+	return (frecuencia * log10f(( (vector_archivos.size())) / (this->hashPrincipal[clave])));
 	
 }
 
@@ -422,7 +438,8 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 		
 		//clave = hashNuevoDoc[it->first];
 		//frecuencia = hashNuevoDoc[it->second];
-		vectorDoc[i] = calcular_TF_IDF(it->first, it->second);
+		cout<<"it first: :"<<it->first<<endl;
+		vectorDoc.push_back(calcular_TF_IDF(string(it->first), it->second));//divide por cero.
 		i++;
 	}
 	
@@ -441,7 +458,7 @@ map<string, int> PreProcesarDatos::obtenerHashVocabulario (){
 	return hashPrincipal;
 }
 
-/**********************************************************************/
+/*********************************************************************/
 /**********************************************************************/
 
 
@@ -460,9 +477,13 @@ void PreProcesarDatos::escribirArchivoDeHashPrincipal(hash hash){
 	for (hash::iterator it= hash.begin(); it != hash.end(); it++){
 		aux.operator = (it->first);
 		aux.append(",");
+		aux.append(this->numberToString(it->second));
+		cout<<"second: "<<it->second;
+		aux.append(",");
 		archivoHashPrincipal << aux;
 	}
 	archivoHashPrincipal << ",/";
 	archivoHashPrincipal.close();
+	cout<<"cerrar archivo\n";
 
 }

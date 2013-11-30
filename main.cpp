@@ -178,14 +178,19 @@ int main (int argc, char **argv) {
 		//levantar hash principal:
 		ManejadorArchivos* manejador = new ManejadorArchivos();
 		hash hashPrincipal = manejador->LevantarHashPrincipal();
+		for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
+			cout<<"clave: "<<it->first;
+			cout<<"  frec: "<<it->second;
+		}
 		//levantar clusters hechos:
 		clustering = Clustering(); //constructor especial para clustering ya hecho.
 		clustering.levantarClusters();
 		clusters =  clustering.getListaClusters();
 		multiPertenencia = clustering.getMultiPertenencia(); //agregar al persistidor/levantador
 		delete manejador;
-		
+		cout<<"antes del if"<<endl;
 		if (a_value != NULL){
+			cout<<"a_value: "<<a_value<<endl;
 			Clasificador clasificador = Clasificador(clusters, hashPrincipal);
 			clasificador.clasificarNuevoPunto(string(a_value));
 		}
