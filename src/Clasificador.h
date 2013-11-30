@@ -33,10 +33,13 @@ private:
 
 	PreProcesarDatos* PreProcesador;
 	vector<Cluster*> clusters;
+	bool multiPertenencia;
 	typedef map<string,int> hash;
 	bool CompararCentroides(Punto p1, Punto p2);
+	vector<Cluster*> getClustersDistanciaMinima(Punto punto);
+	void mostrarPunto(Punto punto);
 public:
-	Clasificador(vector<Cluster*> clusters, hash hashPrincipal);
+	Clasificador(vector<Cluster*> clusters, hash hashPrincipal,bool multiPertenencia);
 	void clasificarNuevoPunto(string ruta);
 	virtual ~Clasificador();
 	
