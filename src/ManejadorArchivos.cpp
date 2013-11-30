@@ -178,20 +178,18 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 
 	while ( (this->leerUnaLinea(auxLinea) == true) && (j<numero_doc.size())){
 		int doc = numero_doc[j];
-		//cout<<"numero doc:  "<<doc<<endl;
 		if (indice != doc) { //no es el doc que busco:
 			indice++;
 			continue;
-			//cout<<"INDICES NOT DOC\n";
+			
 		}else { //para un doc que busco:
-			//cout<<"ELSE\n";
 			vector<float> vector_frec;
 			strcpy(linea, auxLinea.c_str()); 
+			
 			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
 			char* auxPalabra = strtok(linea," ,  ");
 
 			while(auxPalabra != NULL){
-				//cout<<"WHILE NOT NULL\n";
 				//std::string::size_type sz;     // alias of size_t
 				float frec = atof(auxPalabra);
 				//long float frec = std::stold (auxPalabra,&sz);

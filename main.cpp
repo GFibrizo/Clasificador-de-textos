@@ -71,7 +71,7 @@ int main (int argc, char **argv) {
 
 	opterr = 0;
 
-	while ((c = getopt (argc, argv, "d:c:o:1ga")) != -1) {
+	while ((c = getopt (argc, argv, "d:c:o:a:lg")) != -1) {
 		switch (c) {
 
 			case 'd':
@@ -160,8 +160,8 @@ int main (int argc, char **argv) {
 		else
 			valor_K = atoi(c_value);
 
-		clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total/2, multiPertenencia,vectorArchivos);
-		//clustering =  Clustering(valor_K, cantidad_docs_total, tamMuestra(cantidad_docs_total), multiPertenencia,vectorArchivos);
+		//clustering =  Clustering(valor_K, cantidad_docs_total, cantidad_docs_total/2, multiPertenencia,vectorArchivos);
+		clustering =  Clustering(valor_K, cantidad_docs_total, tamMuestra(cantidad_docs_total), multiPertenencia,vectorArchivos);
 
 		clusters = clustering.getListaClusters();
 		mostrarClusters(clusters);
@@ -195,14 +195,14 @@ int main (int argc, char **argv) {
 				vector<Punto> puntos_cluster = clusters[i]->getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
 					string nombreDoc = puntos_cluster[j].getNombreDoc();
-					cout<<nombreDoc<<" , categoria:"<<i<<"\n";
+					cout<<nombreDoc<<" 	, categoria:"<<i<<"\n";
 				}
 			}
 		}
 		if (g_flag == true){
 			// Lista los grupos o categorías existentes y los documentos dentro de cada grupo o categoría
 			for (unsigned int i = 0; i < clusters.size() ; i++){
-				cout<<"CATEGORIA: "<<i<<"\n";
+				cout<<endl<<"CATEGORIA: "<<i<<"\n";
 				vector<Punto>puntos_cluster = clusters[i]->getPuntos();
 				for (unsigned int j = 0; j < puntos_cluster.size(); j++){
 					string nombreDoc = puntos_cluster[j].getNombreDoc();

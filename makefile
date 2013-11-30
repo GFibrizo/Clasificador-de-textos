@@ -1,4 +1,4 @@
-CFLAGS= -g -Wall --pedantic -std=c++0x
+CFLAGS= -g -Wall --pedantic -O3 -std=c++0x
 EXEC=main
 SRC=$(wildcard src/*.cpp)
 OBJ1=$(SRC:.cpp=.o)

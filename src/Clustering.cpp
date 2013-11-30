@@ -62,6 +62,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,
 	for (unsigned int x=0; x < puntos_muestra.size(); x++){
 		cout<<puntos_muestra[x].getNombreDoc()<<" , ";
 	}
+	cout<<endl;
 	cout << "cantidad de puntos muestra desde manejador "<< this->puntos_muestra.size() << endl;
 
 	cout << "cantidad de puntos iniciales desde manejador  "<< puntos_iniciales.size() << endl;
@@ -75,6 +76,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,
 		for (unsigned int x=0; x < semillas.size(); x++){
 			cout<<semillas[x].getNombreDoc()<<" , ";
 		}
+	cout<<endl;	
 	//K-Means:
 	KMeans instancia_KMeans = KMeans(this->puntos_muestra, 0,
 			this->semillas, multiPertenencia); //MAX_ITERACIONES = 0, DEFINIR.
