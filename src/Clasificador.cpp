@@ -12,11 +12,11 @@
 /**********************************************************************/
 
 
-Clasificador::Clasificador(vector<Cluster*> clusters, hash hashPrincipal){
-	cout<<"constructor de clasificador::\n";
+Clasificador::Clasificador(vector<Cluster*> clusters, hash hashPrincipal,bool multiPertenencia){
+	
 	this->PreProcesador =  new PreProcesarDatos(hashPrincipal);
 	this->clusters = clusters;
-
+	this->multiPertenencia=multiPertenencia;
 }
 
 /**********************************************************************/
@@ -24,24 +24,56 @@ Clasificador::Clasificador(vector<Cluster*> clusters, hash hashPrincipal){
 
 
 void Clasificador::clasificarNuevoPunto(string ruta){
-	unsigned int i;
-	cout<<"clasificar nuevo punto"<<endl;
+	//unsigned int i;
+	cout<<"clasif nuevo punto"<<endl;
 	Punto nuevoPunto =  this->PreProcesador->procesarNuevoDocumento(ruta); 
-	cout<<"luego de pasar ruta"<<endl;
-	vector<Punto> centroides;
-	
-	for (i = 0; i < clusters.size(); i++) 
-		centroides[i] = clusters[i]->getCentroide();
-	cout<<"luego del for"<<endl;
-	Punto centroideCercano = nuevoPunto.calcularCercanos(centroides);
-	i = 0;
-	cout<<"antes del while"<<endl;
-	while ((CompararCentroides(centroideCercano, centroides[i]) == false) && ( i < centroides.size() )) i++;
+	cout<<"pedi el punto"<<endl;
+	vector<Cluster*> temps = this->getClustersDistanciaMinima(nuevoPunto);
+	cout<<"cacule distancia minima"<<endl;
+	for (unsigned int k = 0; k < temps.size(); k++) {
+		temps[k]->agregarElemento(nuevoPunto);
+		}
+	cout<<"agregue el punto"<<endl;
 
-	clusters[i]->agregarElemento(nuevoPunto);
-	cout<<"fin de clasificar nuevo punto"<<endl;
 }
 
+void Clasificador::mostrarPunto(Punto punto){
+
+	for (unsigned int i = 0; i < punto.vectorDeFrecuencias().size(); i++) {
+		cout<<punto.vectorDeFrecuencias()[i]<<",";
+	}
+	cout<<endl;
+}
+vector<Cluster*> Clasificador::getClustersDistanciaMinima(Punto punto) {
+
+	vector<Cluster*> temps;
+	double distancia = 0.0;
+	double distanciaMin = 0.0;
+	cout<<"Muestro punto "<<endl;
+	mostrarPunto(punto);
+	cout<<"Muestro centroides "<<endl;
+	//Calculo la distancia de este punto contra cada centroide
+	for (unsigned int i = 0; i < this->clusters.size(); i++) {
+		mostrarPunto(clusters[i]->getCentroide());
+//		distancia = punto.distanciaCoseno(this->clusters[i]->getCentroide());
+//		cout<<"distancia "<<distancia<<endl;
+//
+//		if ((distancia == distanciaMin) && (this->multiPertenencia)) {
+//			temps.push_back(this->clusters[i]);
+//		}
+//		//Si la distancia es minima y nueva-> limpio el vector de clusters,la seteo como distancia minima y agrego este cluster como cercano
+//		if (distancia >= distanciaMin) {
+//			temps.clear();
+//			distanciaMin = distancia;
+//			temps.push_back(this->clusters[i]);
+//			//cout<<"el punto  "<<punto.getNombreDoc()<<" deberia estar en el cluster "<<this->clusters[i]->getCentroide().getNombreDoc()<<endl;
+//
+//		}
+
+	}
+
+	return temps;
+}
 /**********************************************************************/
 /**********************************************************************/
 
