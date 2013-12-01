@@ -26,7 +26,36 @@ Clasificador::Clasificador(vector<Cluster*> clusters, hash hashPrincipal,bool mu
 void Clasificador::clasificarNuevoPunto(string ruta){
 	//unsigned int i;
 	cout<<"clasif nuevo punto"<<endl;
-	Punto nuevoPunto =  this->PreProcesador->procesarNuevoDocumento(ruta); 
+	Punto nuevoPunto = this->PreProcesador->procesarNuevoDocumento(ruta); 
+	vector<float> v = nuevoPunto.vectorDeFrecuencias();
+	cout<<"vector de frecuencias del nuevo punto: ";
+	for (i = 0; i< v.size();i++){
+		cout<<v[i]<<" , ";
+			
+	}	
+	cout<<endl;
+//<<<<<<< .mine
+	cout<<"luego de pasar ruta"<<endl;
+	vector<Punto> centroides;
+	
+	for (i = 0; i < clusters.size(); i++) {
+		centroides.push_back(clusters[i]->getCentroide());
+		
+		cout<<(clusters[i]->getCentroide()).getDocumento()<<" , "<<endl;//vectorDeFrecuencias)[0];
+	}
+	cout<<endl<<"VERIFICAR FRECUENCIAS: size clusters: "<<clusters.size()<<endl;
+	for (i = 0; i < clusters.size(); i++) {
+		for (int j = 0; j < clusters[i]->getCentroide().vectorDeFrecuencias().size() ; j++){
+			cout<<clusters[i]->getCentroide().vectorDeFrecuencias()[j]<<" , ";
+		}
+		cout<<endl;	
+	}	
+	cout<<"luego del for"<<endl;
+	Punto centroideCercano = nuevoPunto.calcularCercanos(centroides);
+	i = 0;
+	cout<<"antes del while"<<endl;
+	while ((CompararCentroides(centroideCercano, centroides[i]) == false) && ( i < centroides.size() )) i++;
+//=======
 	cout<<"pedi el punto"<<endl;
 	vector<Cluster*> temps = this->getClustersDistanciaMinima(nuevoPunto);
 	cout<<"cacule distancia minima"<<endl;
@@ -34,6 +63,7 @@ void Clasificador::clasificarNuevoPunto(string ruta){
 		temps[k]->agregarElemento(nuevoPunto);
 		}
 	cout<<"agregue el punto"<<endl;
+//>>>>>>> .r151
 
 }
 

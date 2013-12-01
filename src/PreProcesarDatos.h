@@ -87,6 +87,7 @@ public:
 	vector<string> getVectorArchivos();
 	//Persistencia del Hash principal
 	void escribirArchivoDeHashPrincipal(hash hash);
+	void contarEnHash(hash2& hash, string clave);
 
 };
 

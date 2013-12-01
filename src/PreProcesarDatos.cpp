@@ -134,6 +134,19 @@ void PreProcesarDatos::agregarElementoAHash(hash2& hash, string clave){
 /**********************************************************************/
 /**********************************************************************/
 
+//Recibe un hash con valores del tipo float
+//Si la clave no esta en el hash, la agrega asociada a un valor 0.
+//Si la clave esta en el hash, aumenta en 1 el valor asociado.
+void PreProcesarDatos::contarEnHash(hash2& hash, string clave){
+	if (hash.count(clave) > 0){
+		 hash[clave]=hash[clave]+ 1;
+		 return;
+	}
+}
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 //Agrega una palabra como clave al hash. Si la palabra estaba entre el conjunto
 //de claves, entonces aumenta su correspondiente valor en 1. Sino, agrega la clave
@@ -365,13 +378,13 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 
 //Calcula el peso total mediante TFxIDF
 float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
-	cout<<endl<<"calcular_TF_IDF"<<endl;
+	/*cout<<endl<<"calcular_TF_IDF"<<endl;
 	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
 			cout<<" clavepre: "<<it->first;
 			cout<<"  frecpre: "<<it->second;
 	}
 	cout<<endl;
-	cout<<"lalala: "<<this->hashPrincipal[clave]<<endl;
+	cout<<"lalala: "<<this->hashPrincipal[clave]<<endl;*/
 	return (frecuencia * log10f(( (vector_archivos.size())) / (this->hashPrincipal[clave])));
 	
 }
@@ -423,7 +436,7 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 			//veo si es un stopword y sino lo agrego a hashes:
 			if(!this->verifStopWord->verificarPalabra(palabra)){
 				palabra = stem_palabra(palabra);
-				if (palabra.length() > 1) agregarElementoAHash(hashNuevoDoc, palabra);
+				if (palabra.length() > 1) contarEnHash(hashNuevoDoc, palabra);
 			}
 			auxPalabra = strtok (NULL, this->invalidos);
 		}
@@ -443,11 +456,11 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 		//clave = hashNuevoDoc[it->first];
 		//frecuencia = hashNuevoDoc[it->second];
 		cout<<"it first: :"<<it->first<<endl;
-		vectorDoc.push_back(calcular_TF_IDF(string(it->first), it->second));//divide por cero.
+		vectorDoc.push_back(calcular_TF_IDF(it->first, it->second));//divide por cero.
 		i++;
 	}
 	
-	Punto puntoNuevoDoc (vectorDoc, 10000000);
+	Punto puntoNuevoDoc = Punto(vectorDoc, 10000000);
 	//Falta ver como setear el numero del doc en la instancia de Punto
 	return puntoNuevoDoc;
 

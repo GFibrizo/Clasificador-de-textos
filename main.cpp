@@ -178,10 +178,11 @@ int main (int argc, char **argv) {
 		//levantar hash principal:
 		ManejadorArchivos* manejador = new ManejadorArchivos();
 		hash hashPrincipal = manejador->LevantarHashPrincipal();
-		for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
+		/*for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
 			cout<<"clave: "<<it->first;
 			cout<<"  frec: "<<it->second;
-		}
+		}*/
+		
 		//levantar clusters hechos:
 		clustering = Clustering(); //constructor especial para clustering ya hecho.
 		clustering.levantarClusters();
