@@ -3,7 +3,7 @@ EXEC=main
 SRC=$(wildcard src/*.cpp)
 OBJ1=$(SRC:.cpp=.o)
 OBJ = ManejadorArchivos.o LectorDirectorios.o PreProcesarDatos.o VerificadorStopWords.o Porter.o Punto.o Clasificador.o Arista.o Cluster.o Clustering.o KMeans.o Par.o
-CC=g++-4.5
+CC=g++
 CC2=gcc
 
 

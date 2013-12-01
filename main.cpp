@@ -199,7 +199,7 @@ int main (int argc, char **argv) {
 		cout<<"antes del if"<<endl;
 		if (a_value != NULL){
 			cout<<"a_value: "<<a_value<<endl;
-			Clasificador clasificador = Clasificador(clusters, hashPrincipal);
+			Clasificador clasificador = Clasificador(clusters, hashPrincipal, multiPertenencia);
 			clasificador.clasificarNuevoPunto(string(a_value));
 		}
 		if (l_flag == true){
