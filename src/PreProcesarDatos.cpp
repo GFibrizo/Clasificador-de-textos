@@ -17,7 +17,7 @@ typedef map<string,float> hash2;
 
 //Devuelve en dir el directorio indicado en la ruta
 
-void relative_dir_base_split(const string& path, string& dir, string& nombre)
+void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir, string& nombre)
 {
   std::string::size_type slash_pos = path.rfind("/"); //Find the last slash
   if (slash_pos != std::string::npos) //If there is a slash
