@@ -17,7 +17,7 @@ typedef map<string,float> hash2;
 
 //Devuelve en dir el directorio indicado en la ruta
 
-void relative_dir_base_split(const string& path, string& dir, string& nombre)
+void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir, string& nombre)
 {
   std::string::size_type slash_pos = path.rfind("/"); //Find the last slash
   if (slash_pos != std::string::npos) //If there is a slash
@@ -51,7 +51,8 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 		if (!this->archivoHashSecundario.is_open()){
 			throw std::ios_base::failure("El archivo no se abre");
 		}
-	this->relative_dir_base_split(ruta,this->directorio);
+	string a;
+	this->relative_dir_base_split(ruta,this->directorio,a);
 	
 	delete lecDirectorio;
 }
@@ -70,12 +71,12 @@ PreProcesarDatos::PreProcesarDatos(hash hashPorParametro) {
 	this->verifDocDiferentes=0;
 	this->hashPrincipal = hashPorParametro;	
 	
-	cout<<"this hash"<<endl;
-	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
-			cout<<"clave: "<<it->first;
-			cout<<"  frec: "<<it->second;
-		}
-	cout<<endl<<endl;
+	//cout<<"this hash"<<endl;
+//	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
+//			cout<<"clave: "<<it->first;
+//			cout<<"  frec: "<<it->second;
+//		}
+//	cout<<endl<<endl;
 }
 
 
@@ -344,10 +345,9 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 			
 			clave = aux;
 			frecuencia = atof(strtok(NULL, ", "));
-			if (hashPrincipal.count(clave) > 0){
-				frecPond = calcular_TF_IDF(clave, frecuencia);
-				hashDocsEnMemoria[clave] = frecPond;
-			}
+			float frecPond = calcular_TF_IDF(clave, frecuencia);
+			//cout<<frecPond<<endl;
+			hashDocsEnMemoria[clave] = frecPond;
 			aux = strtok(NULL, ", ");
 		}
 		escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
@@ -383,6 +383,13 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 
 //Calcula el peso total mediante TFxIDF
 float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
+//	cout<<endl<<"calcular_TF_IDF"<<endl;
+//	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
+//			cout<<" clavepre: "<<it->first;
+//			cout<<"  frecpre: "<<it->second;
+//	}
+//	cout<<endl;
+//	cout<<"lalala: "<<this->hashPrincipal[clave]<<endl;
 	/*cout<<endl<<"calcular_TF_IDF"<<endl;
 	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
 			cout<<" clavepre: "<<it->first;
@@ -460,7 +467,7 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 		
 		//clave = hashNuevoDoc[it->first];
 		//frecuencia = hashNuevoDoc[it->second];
-		cout<<"it first: :"<<it->first<<endl;
+		//cout<<"it first: :"<<it->first<<endl;
 		vectorDoc.push_back(calcular_TF_IDF(it->first, it->second));//divide por cero.
 		i++;
 	}
@@ -500,13 +507,13 @@ void PreProcesarDatos::escribirArchivoDeHashPrincipal(hash hash){
 		aux.operator = (it->first);
 		aux.append(",");
 		aux.append(this->numberToString(it->second));
-		cout<<"second: "<<it->second;
+		//cout<<"second: "<<it->second;
 		aux.append(",");
 		archivoHashPrincipal << aux;
 	}
 	archivoHashPrincipal << ",/";
 	archivoHashPrincipal.close();
-	cout<<"cerrar archivo\n";
+	//cout<<"cerrar archivo\n";
 
 }
 
