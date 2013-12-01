@@ -25,6 +25,7 @@ public:
 	vector<Punto> getPuntos();
 	void vaciarPuntos();
 	void setCentroide(Punto centroide);
+	void agregarElementoSinCalcularCentroide(Punto punto);
 
 };
 

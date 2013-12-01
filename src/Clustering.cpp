@@ -406,22 +406,16 @@ void Clustering::levantarClusters() {
 		
 		//Recupero el centroide del cluster actual
 		//PRUEBA
-		vector<float>* frecCentroide=new vector<float>(longCentroid);
-		//vector<float> frecCentroide;
-
+		vector<float>frecCentroide;
+		cout<<"longitud centroide "<<longCentroid<<endl;
 		while (i < longCentroid) {
 			valor = strtok(NULL, ",");
-			cout << "valor : " <<atof(valor)<< endl;
-			frecCentroide->push_back(atof(valor));
+			frecCentroide.push_back(atof(valor));
 			i++;
-
 		}
-		for (unsigned int j = 0; j < frecCentroide->size(); j++) {
-				cout<< frecCentroide->at(i)<<",";
-			}
-			cout<<endl;
+		cout<<"tamaño centroide "<<frecCentroide.size()<<endl;
 		//nroDoc y nombreDoc son basura pero no importa
-		centroide = Punto(*frecCentroide, nroDoc, nombreDoc);
+		centroide = Punto(frecCentroide, nroDoc, nombreDoc);
 		nuevoCluster = new Cluster();
 		nuevoCluster->setCentroide(centroide);
 		j = 0;
@@ -431,7 +425,7 @@ void Clustering::levantarClusters() {
 			auxDoc = strtok(NULL, ", ");
 			if (auxDoc != NULL) {
 				nroDoc = atof(auxDoc);
-				nuevoCluster->agregarElemento(Punto(nroDoc, nombreDoc));
+				nuevoCluster->agregarElementoSinCalcularCentroide(Punto(nroDoc, nombreDoc));
 			}
 
 			j++;

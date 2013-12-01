@@ -118,3 +118,7 @@ void Cluster::vaciarPuntos(){
 void Cluster::setCentroide(Punto centroide){
 	this->centroide=centroide;
 }
+
+void Cluster::agregarElementoSinCalcularCentroide(Punto punto){
+	this->puntos.push_back(punto);
+}

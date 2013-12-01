@@ -21,6 +21,7 @@ private:
 	vector<Punto> puntos_muestra;
 	bool multiPertenencia;
 	ManejadorArchivos* manejador;
+
 public:
 	//constructor vacio para persistencia
 	Clustering();
