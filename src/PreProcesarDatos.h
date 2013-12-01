@@ -26,7 +26,7 @@
 #include "VerificadorStopWords.h"
 #include "LectorDirectorios.h"
 #include "Porter.h"
-
+#include "Par.h"
 
 #define CANT_MAX 3//1000
 #define CANT_DE_SEPARADORES 61
@@ -50,6 +50,7 @@ private:
 		
 	hash hashAux;
 	hash hashPrincipal;
+	hash hashTF;
 	hash hashSecundario;
 	queue<hash> colaHashesSecundarios;
 	//fstream archivoHashSecundario;
@@ -85,6 +86,7 @@ public:
 	Punto procesarNuevoDocumento(string ruta);
 	map<string, int> obtenerHashVocabulario();
 	vector<string> getVectorArchivos();
+	void reducirDimensionalidad();
 	//Persistencia del Hash principal
 	void escribirArchivoDeHashPrincipal(hash hash);
 	void contarEnHash(hash2& hash, string clave);

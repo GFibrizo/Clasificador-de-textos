@@ -262,6 +262,7 @@ void PreProcesarDatos::preProcesarDatos(){
 						if (palabra.length() > 1){
 							agregarElementoAHashPrincipal(this->hashPrincipal, palabra, i != ant_i);
 							agregarElementoAHash(this->hashSecundario, palabra);
+							agregarElementoAHash(this->hashTF, palabra);
 						}
 					}
 					auxPalabra = strtok (NULL, this->invalidos);
@@ -279,6 +280,7 @@ void PreProcesarDatos::preProcesarDatos(){
 	}
 
 	this->archivoHashSecundario.close();
+	reducirDimensionalidad();
 	generarIndiceDocumentos();
 	//CERRAR ARCHIVO DE HASH SECUNDARIO
 }
@@ -321,6 +323,7 @@ const char* PreProcesarDatos::getInvalidos(){
 void PreProcesarDatos::generarIndiceDocumentos(){
 
 	string auxLinea;
+	float frecPond;
 	this->manejador = new ManejadorArchivos(); //posible perdida de memoria.
 	this->manejador->abrirLectura(DIR_FILE_HASH_2);
 	ofstream indiceDocumentos;
@@ -341,9 +344,10 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 			
 			clave = aux;
 			frecuencia = atof(strtok(NULL, ", "));
-			float frecPond = calcular_TF_IDF(clave, frecuencia);
-			//cout<<frecPond<<endl;
-			hashDocsEnMemoria[clave] = frecPond;
+			if (hashPrincipal.count(clave) > 0){
+				frecPond = calcular_TF_IDF(clave, frecuencia);
+				hashDocsEnMemoria[clave] = frecPond;
+			}
 			aux = strtok(NULL, ", ");
 		}
 		escribirArchivoIndice(hashDocsEnMemoria, indiceDocumentos);
@@ -364,8 +368,9 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 	
 	hash2 hashDocsEnMemoria;
 	
-	for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
-		hashDocsEnMemoria[it->first] = 0;//Linea dudosa
+	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
+		if (it->second != 0) 
+			hashDocsEnMemoria[it->first] = 0;//Linea dudosa
 	}
 	return hashDocsEnMemoria;
 }
@@ -503,4 +508,42 @@ void PreProcesarDatos::escribirArchivoDeHashPrincipal(hash hash){
 	archivoHashPrincipal.close();
 	cout<<"cerrar archivo\n";
 
+}
+
+void PreProcesarDatos::reducirDimensionalidad(){
+	
+	priority_queue<Par> heap;
+	int cantComponentes;
+	float peso;
+	Par datos;
+	string clave;
+	hash aux;
+	
+	//se empieza a truncar recien a partir de los 1000 docs
+	if (hashTF.size() < 1000) return;
+	
+	cantComponentes = 1000;
+	
+	//pongo en un heap las claves con su valor total en el cuerpo de docs
+	for (hash::iterator it= hashTF.begin(); it != hashTF.end(); it++){
+		peso = calcular_TF_IDF(it->first, (float)it->second);
+		//cout<< peso<< "\n";
+		heap.push(Par(peso, it->first));
+	}
+	
+	//genero un hash solo con las palabras de mas peso
+	for (int j = 0; j <= cantComponentes; j++) {
+		datos = heap.top();
+		clave = datos.getPalabra();
+		aux[clave] = this->hashPrincipal[clave];
+		heap.pop();
+	}
+	
+	//pongo como hashPrincipal el hash truncado aux
+	hash aux2 = hashPrincipal;
+	this->hashPrincipal = aux;
+	
+	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
+		cout<<it->first<<","<<it->second<<"\n";
+	}
 }

@@ -14,6 +14,7 @@
 #include "src/Cluster.h"
 #include "src/Clasificador.h"
 
+
 using namespace std;
 int obtenerKOptimo(int a){
 	return 4;
@@ -143,6 +144,12 @@ int main (int argc, char **argv) {
 		if ((strcmp (o_value, "N") == 0) || (strcmp (o_value, "n") == 0) ) multiPertenencia = false;
 	}
 	
+	
+	string s = "files1/";
+	d_value = (char*)malloc(8*sizeof(char));
+	strcpy(d_value, s.c_str());
+	
+	
 	int valor_K = 0; //funcion
 	
 	if (d_value != NULL) { 
@@ -218,6 +225,7 @@ int main (int argc, char **argv) {
 		}
 	}
 			
+	free(d_value);
 		
 	return 0;
 }

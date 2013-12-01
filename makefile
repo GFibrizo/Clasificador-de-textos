@@ -1,9 +1,9 @@
-CFLAGS= -g -Wall --pedantic -O3 -std=c++0x
+CFLAGS= -g -Wall --pedantic  -std=c++0x
 EXEC=main
 SRC=$(wildcard src/*.cpp)
 OBJ1=$(SRC:.cpp=.o)
-OBJ = ManejadorArchivos.o LectorDirectorios.o PreProcesarDatos.o VerificadorStopWords.o Porter.o Punto.o Clasificador.o Arista.o Cluster.o Clustering.o KMeans.o
-CC=g++
+OBJ = ManejadorArchivos.o LectorDirectorios.o PreProcesarDatos.o VerificadorStopWords.o Porter.o Punto.o Clasificador.o Arista.o Cluster.o Clustering.o KMeans.o Par.o
+CC=g++-4.5
 CC2=gcc
 
 
