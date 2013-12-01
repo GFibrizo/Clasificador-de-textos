@@ -145,9 +145,9 @@ int main (int argc, char **argv) {
 	}
 	
 	
-	string s = "files1/";
-	d_value = (char*)malloc(8*sizeof(char));
-	strcpy(d_value, s.c_str());
+	//string s = "files1/";
+	//d_value = (char*)malloc(8*sizeof(char));
+	//strcpy(d_value, s.c_str());
 	
 	
 	int valor_K = 0; //funcion
@@ -225,7 +225,7 @@ int main (int argc, char **argv) {
 		}
 	}
 			
-	free(d_value);
+	//free(d_value);
 		
 	return 0;
 }
