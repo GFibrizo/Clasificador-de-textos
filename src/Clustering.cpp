@@ -28,60 +28,57 @@
 Clustering::Clustering() {
 }
 
-
 /**********************************************************************/
 /**********************************************************************/
 
-Clustering::Clustering(unsigned int cantidad_de_semillas,
-		unsigned int cantidad_docs_total, int tam_muestra,
-		bool multiPertenencia, vector<string> vectorArchivos) {
+Clustering::Clustering(unsigned int cantidad_de_semillas,unsigned int cantidad_docs_total,
+						int tam_muestra,bool multiPertenencia, vector<string> vectorArchivos) {
 
 	this->manejador = new ManejadorArchivos();
 
-	this->multiPertenencia =  multiPertenencia;
+	this->multiPertenencia = multiPertenencia;
 	//muestra de M documentos:
 	vector<int> indices_muestra = this->obtener_muestra(tam_muestra,cantidad_docs_total);
 	//indices de puntos random
 	vector<int> indices_random = this->obtener_puntos_random(cantidad_de_semillas, indices_muestra);
-	
-	cout << "\n tam indices muestra:" << indices_muestra.size()<< "\n tam indices random: " << indices_random.size() << "\n";
+
+	cout << "tam indices muestra:" << indices_muestra.size()<<endl;
+	cout<< "tam indices random: " << indices_random.size() <<endl;
 	//lista de puntos random:
 	vector<Punto> puntos_iniciales = this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
-	
-	cout<<"SALIDA MANEJADOR: "<<puntos_iniciales.size()<<endl;	
-	cout<<"PUNTOS INICIALES (random). Size: "<<indices_random.size()<<"  ";		
-	for (unsigned int x=0; x < puntos_iniciales.size(); x++){
+
+	cout << "PUNTOS INICIALES: ";
+	for (unsigned int x = 0; x < puntos_iniciales.size(); x++) {
 		//cout<<puntos_iniciales[x].getDocumento()<<" , ";
-		cout<<puntos_iniciales[x].getNombreDoc()<<" , ";
+		cout << puntos_iniciales[x].getNombreDoc() << " , ";
 	}
-	cout<<endl;
-			
+	cout << endl;
+
 	//lista de puntos muestra:
 	this->puntos_muestra = this->manejador->LevantarListaDePuntos(indices_muestra, vectorArchivos);
-	cout<<"SALIDA MANEJADOR: "<<puntos_muestra.size()<<endl;
-	cout<<"PUNTOS  MUESTRA: (todos). size = "<<cantidad_docs_total<<"  ";
-	for (unsigned int x=0; x < puntos_muestra.size(); x++){
-		cout<<puntos_muestra[x].getNombreDoc()<<" , ";
+
+	cout << "PUNTOS  MUESTRA: ";
+	for (unsigned int x = 0; x < puntos_muestra.size(); x++) {
+		cout << puntos_muestra[x].getNombreDoc() << " , ";
 	}
-	cout<<endl<<endl;
+	cout << endl;
 	cout << "cantidad de puntos muestra desde manejador "<< this->puntos_muestra.size() << endl;
 
 	cout << "cantidad de puntos iniciales desde manejador  "<< puntos_iniciales.size() << endl;
-	cout<<endl;
+
 	//obtiene semillas:
 	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
-	cout<<endl;
+
 	//this->semillas = puntos_iniciales;
-	cout << "cantidad de semillas para la muestra " << cantidad_de_semillas	<< " size: " << semillas.size() << endl;
-	cout<<"PUNTOS  SEMILLA: ";
-		for (unsigned int x=0; x < semillas.size(); x++){
-			cout<<semillas[x].getNombreDoc()<<" , ";
-		}
-	cout<<endl;	
+	cout << "cantidad de semillas para la muestra " << cantidad_de_semillas<< " size: " << semillas.size() << endl;
+	cout << "PUNTOS  SEMILLA: ";
+	for (unsigned int x = 0; x < semillas.size(); x++) {
+		cout << semillas[x].getNombreDoc() << " , ";
+	}
+	cout << endl;
 	//K-Means:
-	KMeans instancia_KMeans = KMeans(this->puntos_muestra, 0,
-			this->semillas, multiPertenencia); //MAX_ITERACIONES = 0, DEFINIR.
-	(&instancia_KMeans)->calcularClusters();
+	KMeans instancia_KMeans = KMeans(this->puntos_muestra, 0, this->semillas,multiPertenencia); //MAX_ITERACIONES = 0, DEFINIR.
+	instancia_KMeans.calcularClusters();
 	this->lista_de_clusters = instancia_KMeans.getClusters();
 
 	//CLASIFICAR LOS DEMAS PUNTOS:
@@ -92,16 +89,16 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,
 
 	vector<Punto> lista_no_muestreados = this->manejador->LevantarListaDePuntos(indices_no_muestreados, vectorArchivos);
 	cout << "No Muestreados.. size: " << lista_no_muestreados.size() << endl;
-	cout<<"PUNTOS  NO MUESTREADOS: ";
-			for (unsigned int x=0; x < lista_no_muestreados.size(); x++){
-				cout<<lista_no_muestreados[x].getNombreDoc()<<" , ";
-			}
-	
+	cout << "PUNTOS  NO MUESTREADOS: ";
+	for (unsigned int x = 0; x < lista_no_muestreados.size(); x++) {
+		cout << lista_no_muestreados[x].getNombreDoc() << " , ";
+	}
+
 	//Clasifico cada uno de esos puntos:
 	for (unsigned int j = 0; j < lista_no_muestreados.size(); j++) {
 		this->Clasificar(lista_no_muestreados[j]);
 	}
-	cout<<"sale del clustering"<<endl;
+	cout << "sale del clustering" << endl;
 	//ya tengo todos los clusters armados.
 	delete this->manejador;
 }
@@ -156,9 +153,9 @@ void Clustering::Clasificar(Punto nuevo_punto) {
 		for (unsigned int x = 0; x < cluster_destino.size(); x++) {
 			cluster_destino[x]->agregarElemento(nuevo_punto); //agregar Clasificacion
 		}
-		for (unsigned int x = 0; x < cluster_destino.size() ; x++){
+		for (unsigned int x = 0; x < cluster_destino.size(); x++) {
 			cluster_destino[x]->agregarElemento(nuevo_punto); //agregar Clasificacion
-			}
+		}
 
 		cluster_destino[0]->agregarElemento(nuevo_punto);
 	} else {
@@ -174,10 +171,9 @@ vector<Cluster*> Clustering::getListaClusters() {
 	return this->lista_de_clusters;
 }
 
-
-bool Clustering::getMultiPertenencia(){
+bool Clustering::getMultiPertenencia() {
 	return this->multiPertenencia;
-}	
+}
 /**********************************************************************/
 /**********************************************************************/
 
@@ -189,41 +185,40 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos,
 	cout << "tam muestra :" << cantidad_de_puntos << endl;
 	vector<int> lista_de_punteros;
 	if (cantidad_de_puntos != cantidad_docs){
-		int i = 0;
-		//cout<< "CANT PUNTOS, CANT DOCS : "<<cantidad_de_puntos<<" , "<< cantidad_docs;
-		while (i < cantidad_de_puntos) {
-			bool agregar = true;
-			// obtain a seed from the system clock:
-			unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-			mt19937 generator(seed);
-			numero = generator();
-			random = abs(numero % (cantidad_docs));
-			//cout << "random : "<<random<<" ";
-			/*if (i == 0) {
-			 lista_de_punteros.push_back(random);
-			 i++;
-			 }*/
-			for (unsigned int j = 0; j < lista_de_punteros.size(); j++) {
-				if (lista_de_punteros[j] == random) {
-					//continue;
-					agregar = false;
+			int i = 0;
+			//cout<< "CANT PUNTOS, CANT DOCS : "<<cantidad_de_puntos<<" , "<< cantidad_docs;
+			while (i < cantidad_de_puntos) {
+				bool agregar = true;
+				// obtain a seed from the system clock:
+				unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+				mt19937 generator(seed);
+				numero = generator();
+				random = abs(numero % (cantidad_docs));
+				//cout << "random : "<<random<<" ";
+				/*if (i == 0) {
+				 lista_de_punteros.push_back(random);
+				 i++;
+				 }*/
+				for (unsigned int j = 0; j < lista_de_punteros.size(); j++) {
+					if (lista_de_punteros[j] == random) {
+						//continue;
+						agregar = false;
+					}
+				}
+				if (agregar == true) {
+					lista_de_punteros.push_back(random);
+					i++;
 				}
 			}
-			if (agregar == true) {
-				lista_de_punteros.push_back(random);
-				i++;
+		}else{
+			for (int i = 0; i < cantidad_de_puntos; i++){
+				lista_de_punteros.push_back(i);
 			}
 		}
-	}
-	else {
-		for (int i = 0; i < cantidad_de_puntos; i++){
-			lista_de_punteros.push_back(i);
-		}	
-	}	
 	cout << "fin obtener_muestra\n";
 	/*for (unsigned int g = 0; g < lista_de_punteros.size(); g++){
-	cout<<lista_de_punteros[g]<<" , ";  }
-	cout<<endl;*/
+	 cout<<lista_de_punteros[g]<<" , ";  }
+	 cout<<endl;*/
 	return lista_de_punteros;
 
 }
@@ -233,13 +228,14 @@ vector<int> Clustering::obtener_muestra(int cantidad_de_puntos,
 
 /* Devuelve una lista de los punteros (numero entero que representa al doc) de los documentos que se 
  * agarraron de manera aleatoria para agrupar con el clustering jerarquico aglomerativo  */
-vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas, vector<int> docs_muestra) {
+vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas,vector<int> docs_muestra) {
 	int numero, random;
 	vector<int> lista_de_punteros;
 	unsigned int i = 0;
 	//cout<<"sqrt; "<<sqrt(cantidad_de_semillas * docs_muestra.size())<<endl;
 
 	while (i < sqrt(cantidad_de_semillas * docs_muestra.size())) {
+	//while (i < cantidad_de_semillas) {
 		bool agregar = true;
 		// obtain a seed from the system clock:
 		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
@@ -265,8 +261,8 @@ vector<int> Clustering::obtener_puntos_random(int cantidad_de_semillas, vector<i
 
 	cout << "fin obtener_puntos_random\n";
 	/*for (unsigned int g = 0; g < lista_de_punteros.size(); g++){
-	cout<<lista_de_punteros[g]<<" , ";  }
-	cout<<endl;*/
+	 cout<<lista_de_punteros[g]<<" , ";  }
+	 cout<<endl;*/
 	return lista_de_punteros;
 
 }
@@ -293,17 +289,17 @@ vector<Punto> Clustering::buckShot(unsigned int cantSemillas,
 	double distancia;
 	Punto nuevo_punto;
 	cout << "BUCKSHOT: size de lista de puntos:" << lista_puntos.size() << endl;
-	
+
 	/*cout<<"PUNTOS en buckshot INICIALES: ";		
-	for (unsigned int x=0; x < lista_puntos.size(); x++){
-		cout<<lista_puntos[x].getDocumento()<<" , ";
-	}
-	cout<<endl;*/
-	
+	 for (unsigned int x=0; x < lista_puntos.size(); x++){
+	 cout<<lista_puntos[x].getDocumento()<<" , ";
+	 }
+	 cout<<endl;*/
+
 	while (lista_puntos.size() > cantSemillas) {
 		for (i = 0; i < lista_puntos.size(); i++) {
 			Punto actual = lista_puntos[i];
-			
+
 			for (j = i + 1; j < lista_puntos.size(); j++) {
 				distancia = actual.distanciaCoseno(lista_puntos[j]);
 				arista = Arista(actual, lista_puntos[j], distancia, i, j);
@@ -318,7 +314,7 @@ vector<Punto> Clustering::buckShot(unsigned int cantSemillas,
 		lista_puntos.erase(lista_puntos.begin() + ((menor_arista).getI2()));
 		lista_puntos.push_back(nuevo_punto);
 	}
-	
+
 	return lista_puntos;
 }
 
@@ -358,7 +354,7 @@ void Clustering::persistirClusters() {
 	Punto centroide;
 	//Cada iteracion es un cluster distinto
 	for (unsigned int i = 0; i < lista_de_clusters.size(); i++) {
-		cout<<"persisto cluster numero: "<<i<<endl;
+		cout << "persisto cluster numero: " << i << endl;
 		centroide = lista_de_clusters[i]->getCentroide();
 		//Tamanio del vector, lo indico para saber hasta donde leer despues
 		archivoClusters << centroide.vectorDeFrecuencias().size() << ",";
@@ -376,7 +372,7 @@ void Clustering::persistirClusters() {
 		}
 		archivoClusters << "/"; //Caracter separador de clusters
 	}
-	cout<<"fin del persistir..."<<endl;
+	cout << "fin del persistir..." << endl;
 	archivoClusters.close();
 }
 
@@ -384,18 +380,18 @@ void Clustering::persistirClusters() {
 /*********************************************************************/
 
 void Clustering::levantarClusters() {
-	vector<Punto> puntosDelCluster;
+
 	Punto centroide;
 	string auxLinea;
 	char* valor;
 	char* aux, *auxDoc;
-	char* longitud;
+
 	string nombreDoc;
 	int nroDoc;
 	Punto nuevoPunto;
 	Cluster* nuevoCluster;
 	int i, j, n, longCentroid = 0;
-	int cantPuntos=0;
+
 	ManejadorArchivos manejadorCluster;
 	manejadorCluster.abrirLectura(DIR_FILE_CLUSTERS);
 	n = 0;
@@ -406,18 +402,27 @@ void Clustering::levantarClusters() {
 		strcpy(linea, auxLinea.c_str());
 		i = 0;
 		//Leo la longitud del centroide para saber hasta donde leer
-		longCentroid = atoi( strtok(linea, ","));;
+		longCentroid = atoi(strtok(linea, ","));
+		
 		//Recupero el centroide del cluster actual
-		vector<float> frecCentroide(longCentroid,0);
+		//PRUEBA
+		vector<float>* frecCentroide=new vector<float>(longCentroid);
+		//vector<float> frecCentroide;
 
 		while (i < longCentroid) {
 			valor = strtok(NULL, ",");
-			frecCentroide[i] =atof(valor);
+			cout << "valor : " <<atof(valor)<< endl;
+			frecCentroide->push_back(atof(valor));
 			i++;
-		}
 
-		centroide = Punto(frecCentroide, nroDoc, nombreDoc);
-		nuevoCluster =new Cluster();
+		}
+		for (unsigned int j = 0; j < frecCentroide->size(); j++) {
+				cout<< frecCentroide->at(i)<<",";
+			}
+			cout<<endl;
+		//nroDoc y nombreDoc son basura pero no importa
+		centroide = Punto(*frecCentroide, nroDoc, nombreDoc);
+		nuevoCluster = new Cluster();
 		nuevoCluster->setCentroide(centroide);
 		j = 0;
 		aux = strtok(NULL, ", ");
@@ -426,21 +431,18 @@ void Clustering::levantarClusters() {
 			auxDoc = strtok(NULL, ", ");
 			if (auxDoc != NULL) {
 				nroDoc = atof(auxDoc);
-				nuevoCluster->agregarElemento( Punto(nroDoc, nombreDoc));
-				//puntosDelCluster.push_back( Punto(nroDoc, nombreDoc));
-			}	
+				nuevoCluster->agregarElemento(Punto(nroDoc, nombreDoc));
+			}
 
 			j++;
 			aux = strtok(NULL, ", ");
 		}
 
-
-		this->lista_de_clusters.push_back( nuevoCluster);
+		this->lista_de_clusters.push_back(nuevoCluster);
 		n++;
 
-
 	}
-	cout << "sale : "<<endl;
+	cout << "sale : " << endl;
 	delete[] linea;
 }
 
