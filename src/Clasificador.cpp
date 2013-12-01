@@ -23,16 +23,24 @@ Clasificador::Clasificador(vector<Cluster*> clusters, hash hashPrincipal,bool mu
 /**********************************************************************/
 
 
-void Clasificador::clasificarNuevoPunto(string ruta){
+void Clasificador::clasificarNuevoPunto(string ruta, int tamVectorArchivos){
 	//unsigned int i;
 	cout<<"clasif nuevo punto"<<endl;
-	Punto nuevoPunto = this->PreProcesador->procesarNuevoDocumento(ruta); 
+	Punto nuevoPunto = this->PreProcesador->procesarNuevoDocumento(ruta, tamVectorArchivos); 
 
+	//debug
+	cout<<endl<<"DEBUG"<<endl;
+	for (unsigned int x = 0; x < nuevoPunto.vectorDeFrecuencias().size(); x++){
+		cout<<nuevoPunto.vectorDeFrecuencias()[x]<<" , ";
+	}
+	cout<< endl;
 	cout<<"pedi el punto"<<endl;
 	vector<Cluster*> temps = this->getClustersDistanciaMinima(nuevoPunto);
 	cout<<"cacule distancia minima"<<endl;
 	for (unsigned int k = 0; k < temps.size(); k++) {
-		temps[k]->agregarElemento(nuevoPunto);
+		cout<<"FOR CLASIFICADOR 41: "<<endl;
+		//temps[k]->agregarElemento(nuevoPunto);
+		temps[k]->agregarElementoSinCalcularCentroide(nuevoPunto); //arreglar?
 		}
 	cout<<"agregue el punto"<<endl;
 
@@ -57,7 +65,7 @@ vector<Cluster*> Clasificador::getClustersDistanciaMinima(Punto punto) {
 	for (unsigned int i = 0; i < this->clusters.size(); i++) {
 		//mostrarPunto(clusters[i]->getCentroide());
 		distancia = punto.distanciaCoseno(this->clusters[i]->getCentroide());
-		cout<<"distancia "<<distancia<<endl;
+		cout<<"distancia getClusterDistanciaMinima calisifacdor 67: "<<distancia<<endl;
 
 		if ((distancia == distanciaMin) && (this->multiPertenencia)) {
 			temps.push_back(this->clusters[i]);
@@ -83,9 +91,9 @@ vector<Cluster*> Clasificador::getClustersDistanciaMinima(Punto punto) {
 Clasificador::~Clasificador() {
 
 	delete this->PreProcesador;
-	for (unsigned int i = 0 ; i < this->clusters.size() ; i++){
+	/*for (unsigned int i = 0 ; i < this->clusters.size() ; i++){
 		delete this->clusters[i];
-	}	
+	}*/	
 }
 
 /**********************************************************************/

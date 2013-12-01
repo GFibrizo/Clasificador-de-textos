@@ -40,7 +40,7 @@ private:
 	void mostrarPunto(Punto punto);
 public:
 	Clasificador(vector<Cluster*> clusters, hash hashPrincipal,bool multiPertenencia);
-	void clasificarNuevoPunto(string ruta);
+	void clasificarNuevoPunto(string ruta,int tamVectorArchivos);
 	virtual ~Clasificador();
 	
 };

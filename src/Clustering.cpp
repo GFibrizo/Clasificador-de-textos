@@ -93,7 +93,7 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,unsigned int cantidad_d
 	for (unsigned int x = 0; x < lista_no_muestreados.size(); x++) {
 		cout << lista_no_muestreados[x].getNombreDoc() << " , ";
 	}
-
+	cout<<endl;
 	//Clasifico cada uno de esos puntos:
 	for (unsigned int j = 0; j < lista_no_muestreados.size(); j++) {
 		this->Clasificar(lista_no_muestreados[j]);
@@ -348,7 +348,7 @@ vector<int> Clustering::indices_no_muestreados(int cantidad_docs_total,
 void Clustering::persistirClusters() {
 
 	ofstream archivoClusters;
-	archivoClusters.open(DIR_FILE_CLUSTERS, ios_base::out | ios_base::app);
+	archivoClusters.open(DIR_FILE_CLUSTERS, ios_base::out | ios_base::trunc);
 	vector<Punto> puntosDelCluster;
 	string nombreDoc;
 	Punto centroide;
@@ -368,13 +368,49 @@ void Clustering::persistirClusters() {
 		puntosDelCluster = lista_de_clusters[i]->getPuntos();
 		for (unsigned int k = 0; k < puntosDelCluster.size(); k++) {
 			archivoClusters << puntosDelCluster[k].getNombreDoc() << ",";
-			archivoClusters << puntosDelCluster[k].getDocumento() << ",";
+			archivoClusters << puntosDelCluster[k].getDocumento() << ","; //
 		}
 		archivoClusters << "/"; //Caracter separador de clusters
 	}
 	cout << "fin del persistir..." << endl;
 	archivoClusters.close();
 }
+
+
+void Clustering::persistirTamVectorArchivos(int tam){
+	
+	ofstream archivo;
+	archivo.open(DIR_FILE_SIZE_ARCHIVOS, ios_base::out | ios_base::app);
+	PreProcesarDatos *PreProcesador = new PreProcesarDatos();
+	
+	archivo<<PreProcesador->numberToString(tam);
+	cout<<"number to string : "<<PreProcesador->numberToString(tam)<<endl;
+	cout << "fin del persistir tamVectorArchivos" << endl;
+	archivo.close();
+	delete PreProcesador;
+}
+
+
+int Clustering::levantarTamVectorArchivos(){
+	int tam;
+	string auxLinea;
+	
+	ManejadorArchivos manejador;
+	manejador.abrirLectura(DIR_FILE_SIZE_ARCHIVOS);	
+	
+	char *linea = new char[1024000];
+	//Cada iteracion es un cluster distinto
+	while (manejador.leerUnaLineaIndice(auxLinea)) {
+
+		strcpy(linea, auxLinea.c_str());
+		tam = atoi(strtok(linea, ","));
+		
+	}
+	cout << "fin de levantar TamVectorArchivos " << endl;
+	delete[] linea;
+	return tam;
+}
+
 
 /*********************************************************************/
 /*********************************************************************/
@@ -407,13 +443,13 @@ void Clustering::levantarClusters() {
 		//Recupero el centroide del cluster actual
 		//PRUEBA
 		vector<float>frecCentroide;
-		cout<<"longitud centroide "<<longCentroid<<endl;
+		//cout<<"longitud centroide "<<longCentroid<<endl;
 		while (i < longCentroid) {
 			valor = strtok(NULL, ",");
 			frecCentroide.push_back(atof(valor));
 			i++;
 		}
-		cout<<"tamaño centroide "<<frecCentroide.size()<<endl;
+		//cout<<"tamaño centroide "<<frecCentroide.size()<<endl;
 		//nroDoc y nombreDoc son basura pero no importa
 		centroide = Punto(frecCentroide, nroDoc, nombreDoc);
 		nuevoCluster = new Cluster();
@@ -424,7 +460,7 @@ void Clustering::levantarClusters() {
 			nombreDoc = aux;
 			auxDoc = strtok(NULL, ", ");
 			if (auxDoc != NULL) {
-				nroDoc = atof(auxDoc);
+				nroDoc = atoi(auxDoc);
 				nuevoCluster->agregarElementoSinCalcularCentroide(Punto(nroDoc, nombreDoc));
 			}
 
@@ -439,4 +475,5 @@ void Clustering::levantarClusters() {
 	cout << "sale : " << endl;
 	delete[] linea;
 }
+
 

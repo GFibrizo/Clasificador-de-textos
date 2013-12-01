@@ -24,3 +24,4 @@ clean:
 		rm -f sistema/file_hash2
 		rm -f sistema/indiceDocumentos
 		rm -f sistema/file_clusters
+		rm -f sistema/file_size_archivos

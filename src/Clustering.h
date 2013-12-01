@@ -4,13 +4,22 @@
 #include <stdbool.h>
 #include <chrono>
 #include <vector>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <cstring>
 #include "Punto.h"
 #include "Cluster.h"
 #include "ManejadorArchivos.h"
 #include "KMeans.h"
 #include "Arista.h"
+#include "PreProcesarDatos.h"
 
 #define DIR_FILE_CLUSTERS "sistema/file_clusters"
+#define DIR_FILE_SIZE_ARCHIVOS "sistema/file_size_archivos"
 
 using namespace std;
 
@@ -40,9 +49,11 @@ public:
 	vector<Punto> buckShot (unsigned int cantSemillas, vector<Punto> lista_puntos);
 	vector<int> indices_no_muestreados(int cantidad_docs_total, vector<int> indices_muestra);
 	void persistirClusters();
+	void persistirTamVectorArchivos(int tam);
 	void levantarClusters();
+	int levantarTamVectorArchivos();
 	bool getMultiPertenencia();
-
+	string numberToString(int number);
 
 
 	

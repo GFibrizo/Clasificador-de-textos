@@ -173,6 +173,7 @@ int main (int argc, char **argv) {
 		clusters = clustering.getListaClusters();
 		mostrarClusters(clusters);
 		clustering.persistirClusters();
+		clustering.persistirTamVectorArchivos(vectorArchivos.size());
 		
 		for (unsigned int x = 0; x < clusters.size(); x++){
 			delete clusters[x];
@@ -184,7 +185,7 @@ int main (int argc, char **argv) {
 	else{ // Busco clustering ya hecho:
 		//levantar hash principal:
 		ManejadorArchivos* manejador = new ManejadorArchivos();
-		hash hashPrincipal = manejador->LevantarHashPrincipal();
+		hashPrincipal = manejador->LevantarHashPrincipal();
 		/*for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
 			cout<<"clave: "<<it->first;
 			cout<<"  frec: "<<it->second;
@@ -193,6 +194,7 @@ int main (int argc, char **argv) {
 		//levantar clusters hechos:
 		clustering = Clustering(); //constructor especial para clustering ya hecho.
 		clustering.levantarClusters();
+		int tamVectorArchivos = clustering.levantarTamVectorArchivos();
 		clusters =  clustering.getListaClusters();
 		multiPertenencia = clustering.getMultiPertenencia(); //agregar al persistidor/levantador
 		delete manejador;
@@ -200,7 +202,10 @@ int main (int argc, char **argv) {
 		if (a_value != NULL){
 			cout<<"a_value: "<<a_value<<endl;
 			Clasificador clasificador = Clasificador(clusters, hashPrincipal, multiPertenencia);
-			clasificador.clasificarNuevoPunto(string(a_value));
+			clasificador.clasificarNuevoPunto(string(a_value), tamVectorArchivos);
+			clusters =  clustering.getListaClusters();
+			mostrarClusters(clusters);
+			clustering.persistirClusters();
 		}
 		if (l_flag == true){
 			// Lista todos los documentos del repositorio y la categoría a la cual pertenece cada uno.

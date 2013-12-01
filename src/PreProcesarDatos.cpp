@@ -73,14 +73,21 @@ PreProcesarDatos::PreProcesarDatos(hash hashPorParametro) {
 	this->verifDocDiferentes=0;
 	this->hashPrincipal = hashPorParametro;	
 	
-	cout<<"this hash"<<endl;
+	/*cout<<"this hash"<<endl;
 	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
 			cout<<"clave: "<<it->first;
 			cout<<"  frec: "<<it->second;
 		}
-	cout<<endl<<endl;
+	cout<<endl<<endl;*/
 }
 
+
+
+
+//Tercer Constructor
+PreProcesarDatos::PreProcesarDatos(){
+	
+}
 
 /**********************************************************************/
 /**********************************************************************/
@@ -90,7 +97,7 @@ PreProcesarDatos::PreProcesarDatos(hash hashPorParametro) {
 PreProcesarDatos::~PreProcesarDatos() {
 
 	delete this->verifStopWord;
-	delete this->manejador;
+	//delete this->manejador;
 	archivoHashSecundario.close();
 }
 
@@ -348,7 +355,7 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 			clave = aux;
 			frecuencia = atof(strtok(NULL, ", "));
 			if (hashPrincipal.count(clave) > 0){
-				frecPond = calcular_TF_IDF(clave, frecuencia);
+				frecPond = calcular_TF_IDF(clave, frecuencia, 0);
 				hashDocsEnMemoria[clave] = frecPond;
 			}
 			aux = strtok(NULL, ", ");
@@ -385,9 +392,11 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 
 
 //Calcula el peso total mediante TFxIDF
-float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia){
-
-	return (frecuencia * log10f(( (vector_archivos.size())) / (this->hashPrincipal[clave])));
+float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia, int tamVectorArchivos){
+	if (vector_archivos.size() > 0 ){
+		return (frecuencia * log10f(( (vector_archivos.size())) / (this->hashPrincipal[clave])));
+	}
+	return (frecuencia * log10f(( (tamVectorArchivos)) / (this->hashPrincipal[clave])));
 	
 }
 
@@ -414,13 +423,17 @@ string PreProcesarDatos::stem_palabra(string palabra){
 
 //A partir de la ruta donde se encuentra el documento genera su vector de
 //frecuencias ponderadas.
-Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
+Punto PreProcesarDatos::procesarNuevoDocumento(string ruta, int tamVectorArchivos){
 
 	string auxLinea;
 	string palabra;
 	hash2 hashNuevoDoc = generarHashMemoria();
 	this->manejador = new ManejadorArchivos();
 	this->manejador->abrirLectura(ruta);
+	
+	//recupero nombre del archivo:
+	string nombre, directorio;
+	relative_dir_base_split(ruta,directorio,nombre);
 	
 	while (this->manejador->leerUnaLinea(auxLinea)){
 		
@@ -457,12 +470,12 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta){
 		
 		//clave = hashNuevoDoc[it->first];
 		//frecuencia = hashNuevoDoc[it->second];
-		cout<<"it first: :"<<it->first<<endl;
-		vectorDoc.push_back(calcular_TF_IDF(it->first, it->second));//divide por cero.
+		
+		vectorDoc.push_back(calcular_TF_IDF(it->first, it->second, tamVectorArchivos));
 		i++;
 	}
 	
-	Punto puntoNuevoDoc = Punto(vectorDoc, 10000000);
+	Punto puntoNuevoDoc = Punto(vectorDoc, 10000000, nombre);
 	//Falta ver como setear el numero del doc en la instancia de Punto
 	return puntoNuevoDoc;
 
@@ -497,7 +510,6 @@ void PreProcesarDatos::escribirArchivoDeHashPrincipal(hash hash){
 		aux.operator = (it->first);
 		aux.append(",");
 		aux.append(this->numberToString(it->second));
-		cout<<"second: "<<it->second;
 		aux.append(",");
 		archivoHashPrincipal << aux;
 	}
@@ -523,7 +535,7 @@ void PreProcesarDatos::reducirDimensionalidad(){
 	
 	//pongo en un heap las claves con su valor total en el cuerpo de docs
 	for (hash::iterator it= hashTF.begin(); it != hashTF.end(); it++){
-		peso = calcular_TF_IDF(it->first, (float)it->second);
+		peso = calcular_TF_IDF(it->first, (float)it->second,0);
 		//cout<< peso<< "\n";
 		heap.push(Par(peso, it->first));
 	}
@@ -540,7 +552,7 @@ void PreProcesarDatos::reducirDimensionalidad(){
 	hash aux2 = hashPrincipal;
 	this->hashPrincipal = aux;
 	
-	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
+/*	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
 		cout<<it->first<<","<<it->second<<"\n";
-	}
+	}*/
 }

@@ -67,7 +67,7 @@ private:
 	void escribirArchivoIndice(hash2 hash, ofstream& indiceDocumentos);
 	void agregarElementoAHash(hash& hash, string clave);
 	void agregarElementoAHash(hash2& hash, string clave);
-	string numberToString(int number);
+	
 	string numberToString(float number);
 	void generarIndiceDocumentos();
 	string stem_palabra(string palabra);
@@ -77,13 +77,15 @@ private:
 	void tokenizar(char* linea);
 	//Genera un hash con las claves del hash principal y frecuencia 0.
 	hash2 generarHashMemoria();
-	float calcular_TF_IDF(string clave, float frecuencia);
+	float calcular_TF_IDF(string clave, float frecuencia, int tamVectorArchivos);
 public:
 	PreProcesarDatos(const char* ruta);
 	PreProcesarDatos(hash hashPorParametro);
+	PreProcesarDatos();
 	virtual ~PreProcesarDatos();
 	void preProcesarDatos();
-	Punto procesarNuevoDocumento(string ruta);
+	string numberToString(int number);
+	Punto procesarNuevoDocumento(string ruta, int tamVectorArchivos);
 	map<string, int> obtenerHashVocabulario();
 	vector<string> getVectorArchivos();
 	void reducirDimensionalidad();

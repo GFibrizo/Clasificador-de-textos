@@ -175,9 +175,9 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 	int indice = 0;
 	unsigned int j = 0;
 	char *linea = new char[1024000];
-cout<<"size docs postorder: "<<numero_doc.size()<<endl;
+	//cout<<"size docs postorder: "<<numero_doc.size()<<endl;
 	while ( (this->leerUnaLinea(auxLinea) == true) && (j<numero_doc.size())){
-		cout<<"J : "<<j<<endl;
+		//cout<<"J : "<<j<<endl;
 		int doc = numero_doc[j];
 		if (indice != doc) { //no es el doc que busco:
 			indice++;
@@ -203,7 +203,7 @@ cout<<"size docs postorder: "<<numero_doc.size()<<endl;
 			
 			indice++;
 			j++; //pasa al siguiente doc
-			cout<<"J++ : "<<j<<endl;
+			//cout<<"J++ : "<<j<<endl;
 		}
 	}		
 	delete []linea;
@@ -233,8 +233,8 @@ map<string, int> ManejadorArchivos::LevantarHashPrincipal(){
 		while (aux != NULL) {			
 			clave = aux;
 			frecuencia = atof(strtok(NULL, ",/ "));
-			cout<<clave<<",";
-			cout<<endl<<frecuencia<<",";
+			//cout<<clave<<",";
+			//cout<<endl<<frecuencia<<",";
 			aux = strtok(NULL, ",/ ");
 			//if (aux != NULL) {
 				//frecuencia = atof(aux);
