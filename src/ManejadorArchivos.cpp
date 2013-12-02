@@ -140,7 +140,6 @@ char* ManejadorArchivos::leerArchivo(){
     miarchivo.seekg (0, miarchivo.beg);
 
 	char * buffer = new char [2*largo];
-	//char* buffer = (char*) malloc((largo+1)*sizeof(char));
 	
     miarchivo.read (buffer,largo);
     
@@ -148,6 +147,48 @@ char* ManejadorArchivos::leerArchivo(){
 
 	return buffer;
 	
+}
+/**********************************************************************/
+/**********************************************************************/
+
+
+/*Recibe un vector con numeros de docs, lee el archivo del hash secundario
+ *Crea y devuelve la lista de puntos correspondiente. */
+
+//Recibe una lista de numeros de docs NO ORDENADA
+vector<Punto> ManejadorArchivos::LevantarListaDePuntosTotal(vector<string> vectorArchivos){
+
+
+	string auxLinea;
+	Punto punto;
+	vector<Punto> lista_de_puntos;
+	this->abrirLectura(DIR_FILE_INDICE_FINAL);//
+
+	int indice = 0;
+
+	char *linea = new char[1024000];
+	while ( (this->leerUnaLinea(auxLinea) )){//== true) && (j<numero_doc.size())){
+
+			vector<float> vector_frec;
+			strcpy(linea, auxLinea.c_str());
+			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
+			char* auxPalabra = strtok(linea," ,  ");
+
+			while(auxPalabra != NULL){
+				float frec = atof(auxPalabra);
+				vector_frec.push_back(frec);
+				auxPalabra = strtok(NULL," ,  ");
+			}
+			punto =  Punto(vector_frec, indice, vectorArchivos[indice]);
+
+			lista_de_puntos.push_back(punto);
+
+			indice++;
+			}
+	delete []linea;
+	this->cerrarArchivo();
+	//cout<<"MANEJADOR LISTA DE PUNTOS SIZE: "<<lista_de_puntos.size()<<endl;
+	return lista_de_puntos;
 }
 
 /**********************************************************************/
@@ -159,17 +200,13 @@ char* ManejadorArchivos::leerArchivo(){
 
 //Recibe una lista de numeros de docs NO ORDENADA
 vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos){
-	cout<<"size docs: "<<numero_doc.size()<<endl;
+
 	//ordena la lista:
 	
 	std::sort (numero_doc.begin(), numero_doc.end());
 	string auxLinea;
 	Punto punto;
 	vector<Punto> lista_de_puntos;
-	/*cout<<"En Manejador:\n";
-	for (unsigned int u = 0; u < numero_doc.size(); u++){
-		cout<<"numero: "<<numero_doc[u]<<endl;  }*/
-	
 	this->abrirLectura(DIR_FILE_INDICE_FINAL);//
 
 	int indice = 0;
@@ -179,18 +216,20 @@ vector<Punto> ManejadorArchivos::LevantarListaDePuntos(vector<int> numero_doc, v
 	while ( (this->leerUnaLinea(auxLinea) == true) && (j<numero_doc.size())){
 		//cout<<"J : "<<j<<endl;
 		int doc = numero_doc[j];
+		//cout<<"numero doc:  "<<doc<<endl;
 		if (indice != doc) { //no es el doc que busco:
 			indice++;
 			continue;
-			
+			//cout<<"INDICES NOT DOC\n";
 		}else { //para un doc que busco:
+			//cout<<"ELSE\n";
 			vector<float> vector_frec;
 			strcpy(linea, auxLinea.c_str()); 
-			
 			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
 			char* auxPalabra = strtok(linea," ,  ");
 
 			while(auxPalabra != NULL){
+				//cout<<"WHILE NOT NULL\n";
 				//std::string::size_type sz;     // alias of size_t
 				float frec = atof(auxPalabra);
 				//long float frec = std::stold (auxPalabra,&sz);
@@ -230,20 +269,15 @@ map<string, int> ManejadorArchivos::LevantarHashPrincipal(){
 	while ( leerUnaLineaIndice(auxLinea)){		
 		strcpy(linea, auxLinea.c_str());
 		aux = strtok(linea, ",/ ");
-		while (aux != NULL) {			
+			while (aux != NULL) {			
 			clave = aux;
 			frecuencia = atof(strtok(NULL, ",/ "));
 			//cout<<clave<<",";
 			//cout<<endl<<frecuencia<<",";
 			aux = strtok(NULL, ",/ ");
-			//if (aux != NULL) {
-				//frecuencia = atof(aux);
 			hashPrincipal[clave] = frecuencia;
-			//}	
-			//else cout<<"ELSEE";	
 		}
 	}
-	cout<<endl;
 	delete []linea;
 	return hashPrincipal;
 }

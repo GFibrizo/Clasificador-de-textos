@@ -86,8 +86,12 @@ void Cluster::calcularCentroide(){
 	//puntos de cluster. Divido cada termino por el total de puntos para normalizar.
 	for (unsigned int i = 0;  i < cantPuntos; i++) {
 		for (unsigned int j = 0;  j < this->puntos[i].vectorDeFrecuencias().size(); j++) {
-			frecTemp[j] =frecTemp[j] + (this->puntos[i].vectorDeFrecuencias()[j])/cantPuntos;
+			//frecTemp[j] =frecTemp[j] + (this->puntos[i].vectorDeFrecuencias()[j])/cantPuntos;
+			frecTemp[j] =frecTemp[j] + (this->puntos[i].vectorDeFrecuencias()[j]);
 		}
+	}
+	for (unsigned int i = 0; i < frecTemp.size(); i++) {
+		frecTemp[i]=frecTemp[i]/cantPuntos;
 	}
 	//Se crea un nuevo punto con el promedio de las frecuencias ponderadas de los puntos del cluster
 	//y que tiene como documento al -1 (ya que es un punto que puede ser ficticio)

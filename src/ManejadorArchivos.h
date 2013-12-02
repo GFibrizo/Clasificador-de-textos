@@ -56,6 +56,7 @@ public:
   vector<Punto> LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos);
   // Lee las claves del archivo file_hash1 y las carga en memoria con frecuencia cero.
   map<string, int> LevantarHashPrincipal();
+  vector<Punto> LevantarListaDePuntosTotal(vector<string> vectorArchivos);
 
 };
 #endif /* MANEJADORARCHIVOS_H_ */

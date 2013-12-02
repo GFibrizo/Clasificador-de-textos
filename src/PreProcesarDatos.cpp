@@ -466,6 +466,14 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta, int tamVectorArchivo
 
 	vector<float> vectorDoc;
 	
+//	for (hash2::iterator it= hashNuevoDoc.begin(); it != hashNuevoDoc.end(); it++){
+//
+//		//clave = hashNuevoDoc[it->first];
+//		//frecuencia = hashNuevoDoc[it->second];
+//		cout<<"it first: :"<<it->first<<endl;
+//		vectorDoc.push_back(calcular_TF_IDF(it->first, it->second));//divide por cero.
+//		i++;
+//	}
 	for (hash2::iterator it= hashNuevoDoc.begin(); it != hashNuevoDoc.end(); it++){
 		
 		//clave = hashNuevoDoc[it->first];
@@ -529,10 +537,40 @@ void PreProcesarDatos::reducirDimensionalidad(){
 	hash aux;
 	
 	//se empieza a truncar recien a partir de los 1000 docs
-	if (hashTF.size() < 1000) return;
+	if (hashTF.size() < 10000) return;
 	
-	cantComponentes = 1000;
 	
+	//cantComponentes = 5000;
+	/*
+	//pongo en un heap las claves con su valor total en el cuerpo de docs
+	for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
+		//peso = calcular_TF_IDF(it->first, (float)it->second);
+		peso = (float) (it->second)/(this->vector_archivos.size());
+		//cout<< peso<< "\n";
+		heap.push(Par(peso, it->first));
+	}
+	
+	int totalPalabras = 0;
+	
+	for (hash::iterator it= hashTF.begin(); it != hashTF.end(); it++){
+<<<<<<< .mine
+		totalPalabras = totalPalabras + it->second;
+	}
+	
+	//genero un hash solo con las palabras de mas peso
+	for (int j = 0; j < this->vector_archivos.size(); j++) {
+		datos = heap.top();
+		clave = datos.getPalabra();
+		if ((datos.getPesoTotal() < 0.7) && ((hashTF[clave]/totalPalabras) < 0.4)){
+			aux[clave] = this->hashPrincipal[clave];
+		}
+			heap.pop();
+	}
+	*/
+
+
+	cantComponentes = 10000;
+
 	//pongo en un heap las claves con su valor total en el cuerpo de docs
 	for (hash::iterator it= hashTF.begin(); it != hashTF.end(); it++){
 		peso = calcular_TF_IDF(it->first, (float)it->second,0);
@@ -543,11 +581,15 @@ void PreProcesarDatos::reducirDimensionalidad(){
 	//genero un hash solo con las palabras de mas peso
 	for (int j = 0; j <= cantComponentes; j++) {
 		datos = heap.top();
-		clave = datos.getPalabra();
-		aux[clave] = this->hashPrincipal[clave];
+		//if (datos.getPesoTotal() < ) {
+			clave = datos.getPalabra();
+			aux[clave] = this->hashPrincipal[clave];
+		//}
 		heap.pop();
 	}
-	
+
+
+
 	//pongo como hashPrincipal el hash truncado aux
 	hash aux2 = hashPrincipal;
 	this->hashPrincipal = aux;

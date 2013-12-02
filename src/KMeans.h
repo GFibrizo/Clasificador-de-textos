@@ -36,6 +36,7 @@ private:
 	vector<Punto> getPuntos();
 	vector<Punto> getSemillas();
 	vector<Punto> getCentroides();
+	void mostrarPunto(Punto punto);
 public:
 	KMeans(vector<Punto> puntos,unsigned int maxIteraciones,vector<Punto> semillas,bool multiPertenencia);
 	virtual ~KMeans();

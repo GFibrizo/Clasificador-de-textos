@@ -17,7 +17,8 @@
 #include "KMeans.h"
 #include "Arista.h"
 #include "PreProcesarDatos.h"
-
+#include <time.h>
+#include <stdlib.h>
 #define DIR_FILE_CLUSTERS "sistema/file_clusters"
 #define DIR_FILE_SIZE_ARCHIVOS "sistema/file_size_archivos"
 
@@ -53,7 +54,7 @@ public:
 	void levantarClusters();
 	int levantarTamVectorArchivos();
 	bool getMultiPertenencia();
-	string numberToString(int number);
+	vector<Punto> obtenerSemillas(vector<Punto> puntos_muestra,unsigned int k);
 
 
 	

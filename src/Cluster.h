@@ -13,7 +13,7 @@ class Cluster {
 private:
 	Punto centroide;
 	vector<Punto> puntos;
-	void calcularCentroide();
+
 public:
 	Cluster();
 	Cluster(Punto centroide, vector<Punto> puntos);
@@ -26,6 +26,7 @@ public:
 	void vaciarPuntos();
 	void setCentroide(Punto centroide);
 	void agregarElementoSinCalcularCentroide(Punto punto);
+	void calcularCentroide();
 
 };
 

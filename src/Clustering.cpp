@@ -45,18 +45,18 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,unsigned int cantidad_d
 	cout << "tam indices muestra:" << indices_muestra.size()<<endl;
 	cout<< "tam indices random: " << indices_random.size() <<endl;
 	//lista de puntos random:
-	vector<Punto> puntos_iniciales = this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
-
-	cout << "PUNTOS INICIALES: ";
-	for (unsigned int x = 0; x < puntos_iniciales.size(); x++) {
-		//cout<<puntos_iniciales[x].getDocumento()<<" , ";
-		cout << puntos_iniciales[x].getNombreDoc() << " , ";
-	}
+	//vector<Punto> puntos_iniciales = this->manejador->LevantarListaDePuntos(indices_random, vectorArchivos);
+	//vector<Punto> puntos_iniciales = this->manejador->LevantarListaDePuntosTotal(vectorArchivos);
+//	cout << "PUNTOS INICIALES: ";
+//	for (unsigned int x = 0; x < puntos_iniciales.size(); x++) {
+//		//cout<<puntos_iniciales[x].getDocumento()<<" , ";
+//		cout << puntos_iniciales[x].getNombreDoc() << " , ";
+//	}
 	cout << endl;
 
 	//lista de puntos muestra:
-	this->puntos_muestra = this->manejador->LevantarListaDePuntos(indices_muestra, vectorArchivos);
-
+	//this->puntos_muestra = this->manejador->LevantarListaDePuntos(indices_muestra, vectorArchivos);
+	this->puntos_muestra = this->manejador->LevantarListaDePuntosTotal(vectorArchivos);
 	cout << "PUNTOS  MUESTRA: ";
 	for (unsigned int x = 0; x < puntos_muestra.size(); x++) {
 		cout << puntos_muestra[x].getNombreDoc() << " , ";
@@ -64,12 +64,12 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,unsigned int cantidad_d
 	cout << endl;
 	cout << "cantidad de puntos muestra desde manejador "<< this->puntos_muestra.size() << endl;
 
-	cout << "cantidad de puntos iniciales desde manejador  "<< puntos_iniciales.size() << endl;
+	//cout << "cantidad de puntos iniciales desde manejador  "<< puntos_iniciales.size() << endl;
 
 	//obtiene semillas:
-	this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
+	//this->semillas = this->buckShot(cantidad_de_semillas, puntos_iniciales);
 
-	//this->semillas = puntos_iniciales;
+	this->semillas = obtenerSemillas(puntos_muestra,cantidad_de_semillas);
 	cout << "cantidad de semillas para la muestra " << cantidad_de_semillas<< " size: " << semillas.size() << endl;
 	cout << "PUNTOS  SEMILLA: ";
 	for (unsigned int x = 0; x < semillas.size(); x++) {
@@ -83,6 +83,21 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,unsigned int cantidad_d
 
 	//CLASIFICAR LOS DEMAS PUNTOS:
 	//creo lista de indices de los puntos que no estan en la muestra
+//	vector<int> indices_no_muestreados = this->indices_no_muestreados(cantidad_docs_total, indices_muestra);
+//
+//	//Genero lista de puntos no muestreados:
+//
+//	vector<Punto> lista_no_muestreados = this->manejador->LevantarListaDePuntos(indices_no_muestreados, vectorArchivos);
+//	cout << "No Muestreados.. size: " << lista_no_muestreados.size() << endl;
+//	cout << "PUNTOS  NO MUESTREADOS: ";
+//	for (unsigned int x = 0; x < lista_no_muestreados.size(); x++) {
+//		cout << lista_no_muestreados[x].getNombreDoc() << " , ";
+//	}
+//
+//	//Clasifico cada uno de esos puntos:
+//	for (unsigned int j = 0; j < lista_no_muestreados.size(); j++) {
+//		this->Clasificar(lista_no_muestreados[j]);
+//	}
 	vector<int> indices_no_muestreados = this->indices_no_muestreados(cantidad_docs_total, indices_muestra);
 
 	//Genero lista de puntos no muestreados:		
@@ -101,6 +116,18 @@ Clustering::Clustering(unsigned int cantidad_de_semillas,unsigned int cantidad_d
 	cout << "sale del clustering" << endl;
 	//ya tengo todos los clusters armados.
 	delete this->manejador;
+}
+vector<Punto> Clustering::obtenerSemillas(vector<Punto> puntos_muestra,unsigned int k){
+	vector<Punto> semillas;
+	 srand (time(NULL));
+	 Punto semilla;
+	 int indice=0;
+	 for (unsigned int i = 0; i < k; ++i) {
+		indice= rand()%puntos_muestra.size();
+		semilla=puntos_muestra[indice];
+		semillas.push_back(semilla);
+	}
+	 return semillas;
 }
 
 /**********************************************************************/
