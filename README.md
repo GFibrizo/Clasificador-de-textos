@@ -6,6 +6,7 @@ Trabajo práctico para la materia 7506 Organización de Datos de la facultado de
 
 - Compilar ejecutando el comando `make`
 - Correr ejecutando `./main -d PATH_A_ARCHIVOS -c CANT_CLUSTERS`
+- Para correrlo por segunda vez ejecutar `make clean` y volver al primer paso
 
 ### Argumentos del programa
 
