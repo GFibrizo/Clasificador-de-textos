@@ -23,10 +23,8 @@ class LectorDirectorios {
 public:
 	LectorDirectorios();
 	virtual ~LectorDirectorios();
-	// se le entrega una ruta y devuelve una lista de archivos en ese directorio
+	// Se le entrega una ruta y devuelve una lista de archivos en ese directorio
 	// devuelve NULL ante algun problema
-	
-	//vector<string>& leerDir(const char* ruta);
 	vector<string> leerDir(const char* ruta);
 };
 

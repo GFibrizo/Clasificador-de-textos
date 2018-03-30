@@ -15,19 +15,15 @@ typedef map<string,float> hash2;
 /**********************************************************************/
 
 
-//Devuelve en dir el directorio indicado en la ruta
+// Devuelve en dir el directorio indicado en la ruta
 
-void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir, string& nombre)
-{
+void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir, string& nombre) {
   std::string::size_type slash_pos = path.rfind("/"); //Find the last slash
-  if (slash_pos != std::string::npos) //If there is a slash
-  {
+  if (slash_pos != std::string::npos) {  // If there is a slash
     slash_pos++;
-    dir = path.substr(0, slash_pos); //Directory is before slash
-    nombre = path.substr(slash_pos); //And obviously, the file is after
-  }
-  else //Otherwise, there is no directory present
-  {
+    dir = path.substr(0, slash_pos); // Directory is before slash
+    nombre = path.substr(slash_pos); // And obviously, the file is after
+  } else { // Otherwise, there is no directory present
     dir.clear();
     nombre = path;
   }
@@ -39,23 +35,19 @@ void PreProcesarDatos::relative_dir_base_split(const string& path, string& dir, 
 
 //Primer Constructor de la Clase PreProcesarDatos
 PreProcesarDatos::PreProcesarDatos(const char* ruta) {
-	
-	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r \t \\ \r\n";//[CANT_DE_SEPARADORES]
-	LectorDirectorios * lecDirectorio= new LectorDirectorios(); //no olvidar delete.
-	//levanta archivos del directorio:
+	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r \t \\ \r\n";
+	LectorDirectorios * lecDirectorio= new LectorDirectorios();
+	// Levanta archivos del directorio:
 	this->vector_archivos = lecDirectorio->leerDir (ruta);
 	this->verifStopWord= new VerificadorStopWords(DIR_STOP_WORDS);
-	this->archivoHashSecundario.open(DIR_FILE_HASH_2, ios_base::out | ios_base::app); //modo append
+	this->archivoHashSecundario.open(DIR_FILE_HASH_2, ios_base::out | ios_base::app); // modo append
 	this->verifDocDiferentes=0;
-		//si no se puede abrir:
-		if (!this->archivoHashSecundario.is_open()){
-			throw std::ios_base::failure("El archivo no se abre");
-		}
-
-
+		// Si no se puede abrir:
+	if (!this->archivoHashSecundario.is_open()){
+		throw std::ios_base::failure("El archivo no se abre");
+	}
 	string a;
 	this->relative_dir_base_split(ruta,this->directorio,a);
-	
 	delete lecDirectorio;
 }
 
@@ -65,26 +57,17 @@ PreProcesarDatos::PreProcesarDatos(const char* ruta) {
 //Segundo Constructor de la Clase PreProcesarDatos
 PreProcesarDatos::PreProcesarDatos(hash hashPorParametro) {
 	cout<<"entro a preprocesar datos"<<endl;
-	
 	this->invalidos= "¡!#$%&'(	 )*+,‘’”“-.:;<=>¿?@[]^_`{|}~/\\\"\n´~ÑÞ`1234567890\r \t \\ \r\n";
-	//this->vector_archivos = NULL;
 	this->verifStopWord= new VerificadorStopWords(DIR_STOP_WORDS);
-	//this->archivoHashSecundario = NULL;
 	this->verifDocDiferentes=0;
-	this->hashPrincipal = hashPorParametro;	
-	
-	/*cout<<"this hash"<<endl;
-	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
-			cout<<"clave: "<<it->first;
-			cout<<"  frec: "<<it->second;
-		}
-	cout<<endl<<endl;*/
+	this->hashPrincipal = hashPorParametro;
 }
 
+/**********************************************************************/
+/**********************************************************************/
 
 
-
-//Tercer Constructor
+// Tercer Constructor
 PreProcesarDatos::PreProcesarDatos(){
 	
 }
@@ -93,31 +76,28 @@ PreProcesarDatos::PreProcesarDatos(){
 /**********************************************************************/
 
 
-//Destructor de la clase PreProcesarDatos
+// Destructor de la clase PreProcesarDatos
 PreProcesarDatos::~PreProcesarDatos() {
-
 	delete this->verifStopWord;
-	//delete this->manejador;
 	archivoHashSecundario.close();
 }
 
 /**********************************************************************/
 /**********************************************************************/
 
-//Pasa a minusculas los caracteres del string str
-void PreProcesarDatos::pasarAminusculas(string& str){
-     transform(str.begin(), str.end(), str.begin(), ::tolower);
+// Pasa a minusculas los caracteres del string str
+void PreProcesarDatos::pasarAminusculas(string& str) {
+  transform(str.begin(), str.end(), str.begin(), ::tolower);
 }
 
 /**********************************************************************/
 /**********************************************************************/
 
 
-//Recibe un hash con valores del tipo int.
-//Si la clave no esta en el hash, la agrega asociada a un valor 0.
-//Si la clave esta en el hash, aumenta en 1 el valor asociado.
+// Recibe un hash con valores del tipo int.
+// Si la clave no esta en el hash, la agrega asociada a un valor 0.
+// Si la clave esta en el hash, aumenta en 1 el valor asociado.
 void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
-
 	if (hash.count(clave) > 0){
 		 hash[clave]=hash[clave]+ 1;
 		 return;
@@ -129,11 +109,10 @@ void PreProcesarDatos::agregarElementoAHash(hash& hash, string clave){
 /**********************************************************************/
 
 
-//Recibe un hash con valores del tipo float
-//Si la clave no esta en el hash, la agrega asociada a un valor 0.
-//Si la clave esta en el hash, aumenta en 1 el valor asociado.
+// Recibe un hash con valores del tipo float
+// Si la clave no esta en el hash, la agrega asociada a un valor 0.
+// Si la clave esta en el hash, aumenta en 1 el valor asociado.
 void PreProcesarDatos::agregarElementoAHash(hash2& hash, string clave){
-
 	if (hash.count(clave) > 0){
 		 hash[clave]=hash[clave]+ 1;
 		 return;
@@ -144,9 +123,9 @@ void PreProcesarDatos::agregarElementoAHash(hash2& hash, string clave){
 /**********************************************************************/
 /**********************************************************************/
 
-//Recibe un hash con valores del tipo float
-//Si la clave no esta en el hash, la agrega asociada a un valor 0.
-//Si la clave esta en el hash, aumenta en 1 el valor asociado.
+// Recibe un hash con valores del tipo float
+// Si la clave no esta en el hash, la agrega asociada a un valor 0.
+// Si la clave esta en el hash, aumenta en 1 el valor asociado.
 void PreProcesarDatos::contarEnHash(hash2& hash, string clave){
 	if (hash.count(clave) > 0){
 		 hash[clave]=hash[clave]+ 1;
@@ -158,15 +137,13 @@ void PreProcesarDatos::contarEnHash(hash2& hash, string clave){
 /**********************************************************************/
 
 
-//Agrega una palabra como clave al hash. Si la palabra estaba entre el conjunto
-//de claves, entonces aumenta su correspondiente valor en 1. Sino, agrega la clave
-//al conjunto de claves y setea en 1 su valor correspondiente
+// Agrega una palabra como clave al hash. Si la palabra estaba entre el conjunto
+// de claves, entonces aumenta su correspondiente valor en 1. Sino, agrega la clave
+// al conjunto de claves y setea en 1 su valor correspondiente
 void PreProcesarDatos::agregarElementoAHashPrincipal(hash& hash,string clave, bool cambio_doc){
-	
 	if (hash.count(clave) == 0) hash[clave] = 1;
-	
 	if (cambio_doc){
-		hash[clave]=hash[clave]+ 1;	//aumento cant de docs
+		hash[clave]=hash[clave]+ 1;	// Aumento cant de docs
 		return;
 	}
 }
@@ -175,7 +152,7 @@ void PreProcesarDatos::agregarElementoAHashPrincipal(hash& hash,string clave, bo
 /**********************************************************************/
 
 
-//Conviente un int a string
+// Conviente un int a string
 string PreProcesarDatos::numberToString(int number){
 	stringstream ss;
 	ss << number;
@@ -187,7 +164,7 @@ string PreProcesarDatos::numberToString(int number){
 /**********************************************************************/
 
 
-//Convierte un float a string
+// Convierte un float a string
 string PreProcesarDatos::numberToString(float number){
 	stringstream ss;
 	ss << number;
@@ -199,8 +176,8 @@ string PreProcesarDatos::numberToString(float number){
 /**********************************************************************/
 
 
-//Escribe el archivo secuencial intermedio que contiene los pares palabra,frecuencia
-//de todas las palabras en un documento, a partir de un hash en memoria
+// Escribe el archivo secuencial intermedio que contiene los pares palabra,frecuencia
+// de todas las palabras en un documento, a partir de un hash en memoria
 void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 	string aux;
 	for (hash::iterator it= hash.begin(); it != hash.end(); it++){
@@ -211,17 +188,15 @@ void PreProcesarDatos::escribirArchivoDeHash(hash hash){
 		this->archivoHashSecundario << aux;
 	}
 	this->archivoHashSecundario << ",/";
-
 }
 
 /**********************************************************************/
 /**********************************************************************/
 
 
-//Escribe el archivo que debe contener los vectores de frecuencias ponderadas
-//de palabras de cada documento a partir de un hash en memoria
+// Escribe el archivo que debe contener los vectores de frecuencias ponderadas
+// de palabras de cada documento a partir de un hash en memoria
 void PreProcesarDatos::escribirArchivoIndice(hash2 hash, ofstream& archivoIndice){
-
 	string aux;
 	archivoIndice.setf( ios::fixed, ios::floatfield );
 	archivoIndice.precision(5);
@@ -229,16 +204,15 @@ void PreProcesarDatos::escribirArchivoIndice(hash2 hash, ofstream& archivoIndice
 		archivoIndice << it->second <<",";
 	}
 	archivoIndice << endl;
-
 }
 
 /**********************************************************************/
 /**********************************************************************/
 
 
-//Genera, a partir de un conjunto de documentos el archivo final que 
-//contiene los vectores de frecuencias ponderadas correspondientes a cada
-//documento
+// Genera, a partir de un conjunto de documentos el archivo final que
+// contiene los vectores de frecuencias ponderadas correspondientes a cada
+// documento
 void PreProcesarDatos::preProcesarDatos(){
 	string auxLinea;
 	string palabra;
@@ -246,29 +220,23 @@ void PreProcesarDatos::preProcesarDatos(){
 	unsigned int ant_i = -1;
 	cout<<"Iniciando proceso de parseo..."<<endl;
 	for (i = 0; i < this->vector_archivos.size(); i++){
-
 		if (this->vector_archivos[i].compare(".svn") == 0) continue;
-
 		this->manejador = new ManejadorArchivos() ;
 		this->manejador->abrirLectura(this->directorio+this->vector_archivos[i]);
 
 		while (this->manejador->leerUnaLinea(auxLinea)){
-		
 			char *linea = new char[1024000];
 			strcpy(linea, auxLinea.c_str());
-			//auxPalabra va a ir conteniendo cada palabra sacando los tokens
+			// auxPalabra va a ir conteniendo cada palabra sacando los tokens
 			tokenizar(linea);
 			char* auxPalabra = strtok(linea,this->invalidos);
 
 			while ( auxPalabra != NULL ) {
-				
 					palabra = auxPalabra;
 					pasarAminusculas(palabra);
-					
-					//veo si es un stopword y sino lo agrego a hashes:
+					// Veo si es un stopword y sino lo agrego a hashes:
 					if(!this->verifStopWord->verificarPalabra(palabra)){
 						palabra = stem_palabra(palabra);
-						
 						if (palabra.length() > 1){
 							agregarElementoAHashPrincipal(this->hashPrincipal, palabra, i != ant_i);
 							agregarElementoAHash(this->hashSecundario, palabra);
@@ -280,15 +248,13 @@ void PreProcesarDatos::preProcesarDatos(){
 			}
 			delete []linea;
 			delete auxPalabra;
-		} //termina de trabajar con ese archivo
-		
+		} // Termina de trabajar con ese archivo
 		delete this->manejador;		
 		escribirArchivoDeHash(this->hashSecundario);
-		//referencio la variable hash_secundario a un nuevo hash de un nuevo archivo
+		// Referencio la variable hash_secundario a un nuevo hash de un nuevo archivo
 		hash nuevoHash;
 		this->hashSecundario = nuevoHash;
 	}
-
 	this->archivoHashSecundario.close();
 	reducirDimensionalidad();
 	generarIndiceDocumentos();
@@ -331,7 +297,6 @@ const char* PreProcesarDatos::getInvalidos(){
 //genera como salida el archivo indiceDocumentos que contiene los vectores
 //de frecuencias poderadas de cada documento
 void PreProcesarDatos::generarIndiceDocumentos(){
-
 	string auxLinea;
 	float frecPond;
 	this->manejador = new ManejadorArchivos(); //posible perdida de memoria.
@@ -342,16 +307,14 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 	string clave;
 	char* aux;
 	float frecuencia = 0;
-	int i=0; //aunque creo que no se usa.
+	int i=0;
 
-	while ( this->manejador->leerUnaLineaIndice(auxLinea)){
-
+	while (this->manejador->leerUnaLineaIndice(auxLinea)) {
 		char *linea = new char[1024000];
 		strcpy(linea, auxLinea.c_str());
 		aux = strtok(linea, ", ");
 		i++;
 		while (aux != NULL) {
-			
 			clave = aux;
 			frecuencia = atof(strtok(NULL, ", "));
 			if (hashPrincipal.count(clave) > 0){
@@ -364,7 +327,6 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 		hash2 nuevoHash = generarHashMemoria();
 		hashDocsEnMemoria = nuevoHash;
 		delete []linea;
-
 	}
 	indiceDocumentos.close();
 }
@@ -373,11 +335,9 @@ void PreProcesarDatos::generarIndiceDocumentos(){
 /**********************************************************************/
 
 
-//Genera un nuevo hash en memoria con el vocabulario de palabras completo
+// Genera un nuevo hash en memoria con el vocabulario de palabras completo
 hash2 PreProcesarDatos::generarHashMemoria() {
-	
 	hash2 hashDocsEnMemoria;
-	
 	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
 		if (it->second != 0) 
 			hashDocsEnMemoria[it->first] = 0;//Linea dudosa
@@ -385,70 +345,59 @@ hash2 PreProcesarDatos::generarHashMemoria() {
 	return hashDocsEnMemoria;
 }
 
-
-
 /**********************************************************************/
 /**********************************************************************/
 
 
-//Calcula el peso total mediante TFxIDF
+// Calcula el peso total mediante TFxIDF
 float PreProcesarDatos::calcular_TF_IDF(string clave, float frecuencia, int tamVectorArchivos){
 	if (vector_archivos.size() > 0 ){
 		return (frecuencia * log10f(( (vector_archivos.size())) / (this->hashPrincipal[clave])));
 	}
 	return (frecuencia * log10f(( (tamVectorArchivos)) / (this->hashPrincipal[clave])));
-	
 }
 
 /**********************************************************************/
 /**********************************************************************/
 
 
-//Aplica Stemming a palabras mediante el Algoritmo de Porter
+// Aplica Stemming a palabras mediante el Algoritmo de Porter
 string PreProcesarDatos::stem_palabra(string palabra){
-	
 	char *palabra_c = new char[palabra.length() + 1];
 	strcpy(palabra_c, palabra.c_str());
-
 	int final = stem(palabra_c, 0, strlen(palabra_c)-1);
 	delete [] palabra_c;
-	
 	return palabra.substr(0,final);
-		
 }
 
-
 /**********************************************************************/
 /**********************************************************************/
 
-//A partir de la ruta donde se encuentra el documento genera su vector de
-//frecuencias ponderadas.
+
+// A partir de la ruta donde se encuentra el documento genera su vector de
+// frecuencias ponderadas.
 Punto PreProcesarDatos::procesarNuevoDocumento(string ruta, int tamVectorArchivos){
-
 	string auxLinea;
 	string palabra;
 	hash2 hashNuevoDoc = generarHashMemoria();
 	this->manejador = new ManejadorArchivos();
 	this->manejador->abrirLectura(ruta);
 	
-	//recupero nombre del archivo:
+	// Recupero nombre del archivo:
 	string nombre, directorio;
 	relative_dir_base_split(ruta,directorio,nombre);
 	
 	while (this->manejador->leerUnaLinea(auxLinea)){
-		
 		char *linea = new char[1024000];
 		strcpy(linea, auxLinea.c_str());
-		//auxPalabra va a ir conteniendo cada palabra sacando los tokens
+		// auxPalabra va a ir conteniendo cada palabra sacando los tokens
 		tokenizar(linea);
 		char* auxPalabra = strtok(linea,this->invalidos);
 
 		while ( auxPalabra != NULL ) {
-			
 			palabra = auxPalabra;
 			pasarAminusculas(palabra);
-			
-			//veo si es un stopword y sino lo agrego a hashes:
+			// Veo si es un stopword y sino lo agrego a hashes:
 			if(!this->verifStopWord->verificarPalabra(palabra)){
 				palabra = stem_palabra(palabra);
 				if (palabra.length() > 1) contarEnHash(hashNuevoDoc, palabra);
@@ -458,35 +407,18 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta, int tamVectorArchivo
 		delete []linea;
 		delete auxPalabra;
 	}
-	delete this->manejador;		
-	
-	//string clave;
-	//float frecuencia=0;
+	delete this->manejador;
 	int i = 0;
-
 	vector<float> vectorDoc;
-	
-//	for (hash2::iterator it= hashNuevoDoc.begin(); it != hashNuevoDoc.end(); it++){
-//
-//		//clave = hashNuevoDoc[it->first];
-//		//frecuencia = hashNuevoDoc[it->second];
-//		cout<<"it first: :"<<it->first<<endl;
-//		vectorDoc.push_back(calcular_TF_IDF(it->first, it->second));//divide por cero.
-//		i++;
-//	}
+
 	for (hash2::iterator it= hashNuevoDoc.begin(); it != hashNuevoDoc.end(); it++){
-		
-		//clave = hashNuevoDoc[it->first];
-		//frecuencia = hashNuevoDoc[it->second];
-		
 		vectorDoc.push_back(calcular_TF_IDF(it->first, it->second, tamVectorArchivos));
 		i++;
 	}
 	
 	Punto puntoNuevoDoc = Punto(vectorDoc, 10000000, nombre);
-	//Falta ver como setear el numero del doc en la instancia de Punto
+	// Falta ver como setear el numero del doc en la instancia de Punto
 	return puntoNuevoDoc;
-
 }
 
 /**********************************************************************/
@@ -494,7 +426,6 @@ Punto PreProcesarDatos::procesarNuevoDocumento(string ruta, int tamVectorArchivo
 
 //Devuelve el hashPrincipal
 map<string, int> PreProcesarDatos::obtenerHashVocabulario (){
-	
 	return hashPrincipal;
 }
 
@@ -509,7 +440,7 @@ vector<string> PreProcesarDatos::getVectorArchivos(){
 /**********************************************************************/
 /**********************************************************************/
 
-//Persistencia del Hash principal
+// Persistencia del Hash principal
 void PreProcesarDatos::escribirArchivoDeHashPrincipal(hash hash){
 	string aux;
 	ofstream archivoHashPrincipal;
@@ -524,11 +455,13 @@ void PreProcesarDatos::escribirArchivoDeHashPrincipal(hash hash){
 	archivoHashPrincipal << ",/";
 	archivoHashPrincipal.close();
 	cout<<"cerrar archivo\n";
-
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 void PreProcesarDatos::reducirDimensionalidad(){
-	
 	priority_queue<Par> heap;
 	int cantComponentes;
 	float peso;
@@ -536,65 +469,26 @@ void PreProcesarDatos::reducirDimensionalidad(){
 	string clave;
 	hash aux;
 	
-	//se empieza a truncar recien a partir de los 1000 docs
+	// Se empieza a truncar recien a partir de los 1000 docs
 	if (hashTF.size() < 10000) return;
-	
-	
-	//cantComponentes = 5000;
-	/*
-	//pongo en un heap las claves con su valor total en el cuerpo de docs
-	for (hash::iterator it= hashPrincipal.begin(); it != hashPrincipal.end(); it++){
-		//peso = calcular_TF_IDF(it->first, (float)it->second);
-		peso = (float) (it->second)/(this->vector_archivos.size());
-		//cout<< peso<< "\n";
-		heap.push(Par(peso, it->first));
-	}
-	
-	int totalPalabras = 0;
-	
-	for (hash::iterator it= hashTF.begin(); it != hashTF.end(); it++){
-<<<<<<< .mine
-		totalPalabras = totalPalabras + it->second;
-	}
-	
-	//genero un hash solo con las palabras de mas peso
-	for (int j = 0; j < this->vector_archivos.size(); j++) {
-		datos = heap.top();
-		clave = datos.getPalabra();
-		if ((datos.getPesoTotal() < 0.7) && ((hashTF[clave]/totalPalabras) < 0.4)){
-			aux[clave] = this->hashPrincipal[clave];
-		}
-			heap.pop();
-	}
-	*/
-
-
 	cantComponentes = 10000;
 
-	//pongo en un heap las claves con su valor total en el cuerpo de docs
+	// Pongo en un heap las claves con su valor total en el cuerpo de docs
 	for (hash::iterator it= hashTF.begin(); it != hashTF.end(); it++){
 		peso = calcular_TF_IDF(it->first, (float)it->second,0);
 		//cout<< peso<< "\n";
 		heap.push(Par(peso, it->first));
 	}
 	
-	//genero un hash solo con las palabras de mas peso
+	// Genero un hash solo con las palabras de mas peso
 	for (int j = 0; j <= cantComponentes; j++) {
 		datos = heap.top();
-		//if (datos.getPesoTotal() < ) {
-			clave = datos.getPalabra();
-			aux[clave] = this->hashPrincipal[clave];
-		//}
+    clave = datos.getPalabra();
+    aux[clave] = this->hashPrincipal[clave];
 		heap.pop();
 	}
 
-
-
-	//pongo como hashPrincipal el hash truncado aux
+	// Pongo como hashPrincipal el hash truncado aux
 	hash aux2 = hashPrincipal;
 	this->hashPrincipal = aux;
-	
-/*	for (hash::iterator it= this->hashPrincipal.begin(); it != this->hashPrincipal.end(); it++){
-		cout<<it->first<<","<<it->second<<"\n";
-	}*/
 }

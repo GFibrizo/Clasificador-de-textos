@@ -43,17 +43,14 @@ private:
 			int frecuencia;
 			int documentos;
 		}t_datosHash;
-		//hashes a utilizar:
-		//typedef tr1::unordered_map<string,t_datosHash> t_hashPrincipal;
+  // Hashes a utilizar:
 	typedef map<string,int> hash;
-	typedef map<string,float> hash2;	
-		
+	typedef map<string,float> hash2;
 	hash hashAux;
 	hash hashPrincipal;
 	hash hashTF;
 	hash hashSecundario;
 	queue<hash> colaHashesSecundarios;
-	//fstream archivoHashSecundario;
 	ofstream archivoHashSecundario;
 	vector<string> vector_archivos;
 	const char* invalidos;
@@ -61,13 +58,11 @@ private:
 	VerificadorStopWords* verifStopWord;
 	int  verifDocDiferentes;
 	string directorio;
-
 	void pasarAminusculas(string& str);
 	void escribirArchivoDeHash(hash hash);
 	void escribirArchivoIndice(hash2 hash, ofstream& indiceDocumentos);
 	void agregarElementoAHash(hash& hash, string clave);
 	void agregarElementoAHash(hash2& hash, string clave);
-	
 	string numberToString(float number);
 	void generarIndiceDocumentos();
 	string stem_palabra(string palabra);
@@ -75,7 +70,7 @@ private:
 	void relative_dir_base_split(const string& path, string& dir, string& nombre);
 	const char* getInvalidos();
 	void tokenizar(char* linea);
-	//Genera un hash con las claves del hash principal y frecuencia 0.
+	// Genera un hash con las claves del hash principal y frecuencia 0.
 	hash2 generarHashMemoria();
 	float calcular_TF_IDF(string clave, float frecuencia, int tamVectorArchivos);
 public:
@@ -89,7 +84,7 @@ public:
 	map<string, int> obtenerHashVocabulario();
 	vector<string> getVectorArchivos();
 	void reducirDimensionalidad();
-	//Persistencia del Hash principal
+	// Persistencia del Hash principal
 	void escribirArchivoDeHashPrincipal(hash hash);
 	void contarEnHash(hash2& hash, string clave);
 

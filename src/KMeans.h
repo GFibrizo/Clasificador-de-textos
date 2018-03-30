@@ -12,9 +12,6 @@ using namespace std;
 #include "Cluster.h"
 #include "Punto.h"
 #include <iostream>
-/*#define MAX_ITERACIONES 5
-#define CORRIMIENTO_MINIMO 0.8
-#define PORCENTAJE_CENTROIDES 0.75*/
 
 class KMeans {
 private:

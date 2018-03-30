@@ -30,7 +30,6 @@ class Clasificador{
 
 
 private:
-
 	PreProcesarDatos* PreProcesador;
 	vector<Cluster*> clusters;
 	bool multiPertenencia;
@@ -42,7 +41,6 @@ public:
 	Clasificador(vector<Cluster*> clusters, hash hashPrincipal,bool multiPertenencia);
 	void clasificarNuevoPunto(string ruta,int tamVectorArchivos);
 	virtual ~Clasificador();
-	
 };
 
 

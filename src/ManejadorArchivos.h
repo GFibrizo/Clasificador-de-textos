@@ -33,30 +33,22 @@ private:
    std::fstream  miarchivo;  // mi archivo
 	typedef map<string,int> hash;
 public:
-
   //Constructor
   ManejadorArchivos();
   //Destructor
   ~ManejadorArchivos();
-
-  void cerrarArchivo();		
-
+  void cerrarArchivo();
   void abrirLectura(const string& miruta);
-
   bool leerUnaLinea(string& micadena);
-
   bool leerUnaLineaIndice(string& micadena);
-
   void terminarLinea();
-
   bool estaAlFinal();
-
   char* leerArchivo();
-  //Recibe un vector con numeros de docs, lee el archivo del hash secundario y crea y devuelve la lista de puntos correspondiente.
+  // Recibe un vector con numeros de docs, lee el archivo del hash secundario y crea y devuelve
+  // la lista de puntos correspondiente.
   vector<Punto> LevantarListaDePuntos(vector<int> numero_doc, vector<string> vectorArchivos);
   // Lee las claves del archivo file_hash1 y las carga en memoria con frecuencia cero.
   map<string, int> LevantarHashPrincipal();
   vector<Punto> LevantarListaDePuntosTotal(vector<string> vectorArchivos);
-
 };
 #endif /* MANEJADORARCHIVOS_H_ */

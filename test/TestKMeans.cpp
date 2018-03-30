@@ -10,8 +10,6 @@ using namespace std;
 
 TestKMeans::TestKMeans() {
 
-	//this->generarPuntos();
-	//this->generarSemillas();
 	double nums1[] = { 1, 2, 3 };
 	double nums2[] = { 1, 3, 6 };
 	double nums3[] = { 6, 15, 9 };
@@ -38,56 +36,87 @@ TestKMeans::TestKMeans() {
 	delete punto4;
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 TestKMeans::~TestKMeans() {
 	delete this->kMeans;
 }
 
-void TestKMeans::generarPuntos() {
+/**********************************************************************/
+/**********************************************************************/
 
+
+void TestKMeans::generarPuntos() {
 	Punto* puntoTemp;
 	double nums[] = { 1, 2, 3 };
 	vector<double> frecPond(nums, nums + sizeof(nums) / sizeof(double));
 	for (unsigned int i = 0; i < this->cantPuntos; i++) {
-		//generarFrecPond(frecPond, i);
-		puntoTemp = new Punto(frecPond, i);
+    puntoTemp = new Punto(frecPond, i);
 		this->puntos.push_back(*puntoTemp);
-
 		delete puntoTemp;
 	}
 }
-void TestKMeans::generarFrecPond(vector<double> &frecPond, unsigned int i) {
 
+/**********************************************************************/
+/**********************************************************************/
+
+
+void TestKMeans::generarFrecPond(vector<double> &frecPond, unsigned int i) {
 	for (unsigned int j = 0; j < frecPond.size(); ++j) {
 		frecPond[j] = frecPond[j] * i;
 	}
-
 }
 
-void TestKMeans::generarSemillas() {
+/**********************************************************************/
+/**********************************************************************/
 
+
+void TestKMeans::generarSemillas() {
 	for (unsigned int j = 0; j < this->cantSemillas; ++j) {
 			this->semillas[j]=this->puntos[rand()%this->puntos.size()];
 		}
-
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+
 vector<Cluster*> TestKMeans::getResultadoKMeans(){
 	this->kMeans=new KMeans(&this->puntos,3,&this->semillas,true);
 	this->kMeans->calcularClusters();
 	return this->kMeans->getClusters();
-
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
 
 unsigned int TestKMeans::getCantSemillas(){
 	return this->cantSemillas;
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 unsigned int TestKMeans::getCantPuntos(){
 	return this->cantPuntos;
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 vector<Punto> TestKMeans::getPuntos(){
 	return this->puntos;
 }
+
+/**********************************************************************/
+/**********************************************************************/
+
+
 vector<Punto> TestKMeans::getSemillas(){
 	return this->semillas;
 }

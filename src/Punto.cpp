@@ -12,7 +12,6 @@
 
 
 Punto::Punto(vector<float> frecPond,int doc) {
-
 	this->frecPond = frecPond;
 	this->doc=doc;
 	this->nombreDoc = " ";
@@ -24,7 +23,6 @@ Punto::Punto(vector<float> frecPond,int doc) {
 
 
 Punto::Punto(vector<float> frecPond,int doc, string nombreDoc) {
-
 	this->frecPond = frecPond;
 	this->doc=doc;
 	this->nombreDoc = nombreDoc;
@@ -35,8 +33,6 @@ Punto::Punto(vector<float> frecPond,int doc, string nombreDoc) {
 
 
 Punto::Punto(int doc, string nombreDoc) {
-
-//	this->frecPond = NULL;
 	this->doc=doc;
 	this->nombreDoc = nombreDoc;
 }
@@ -46,7 +42,6 @@ Punto::Punto(int doc, string nombreDoc) {
 
 
 Punto::Punto(){
-	
 }
 
 /**********************************************************************/
@@ -62,7 +57,6 @@ Punto::~Punto() {
 
 float Punto::calcularNorma(){
 	float acum=0;
-
 		for (unsigned int i = 0; i < this->frecPond.size(); i++) {
 			acum+=pow(this->frecPond[i],2.0);
 		}
@@ -89,15 +83,12 @@ string Punto::getNombreDoc(){
 
 
 double Punto::distanciaCoseno(Punto otroPunto){
-
 	double suma =0.0;
 	double coseno=0.0;
-
 	for (unsigned int i=0; i<this->frecPond.size(); i++){
 		suma=suma+(this->frecPond[i] * otroPunto.frecPond[i]);
 	}
 	coseno = suma / (this->getNorma() * otroPunto.getNorma() );
-
 	return coseno;
 }
 
@@ -123,6 +114,10 @@ Punto  Punto::calcularCercanos(vector<Punto>  puntos){
 	return vector_mas_cercano;
 }
 
+/**********************************************************************/
+/**********************************************************************/
+
+
 int Punto::getDocumento(){
 	return this->doc;
 }
@@ -140,6 +135,5 @@ vector<float> Punto::vectorDeFrecuencias(){
 
 
 void Punto::setVector(vector<float> vectorDoc){
-	
 	this->frecPond = vectorDoc;
 }

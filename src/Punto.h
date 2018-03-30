@@ -33,7 +33,6 @@ public:
 	void setVector(vector<float> vectorDoc);
 	string getNombreDoc();
 	vector<float> vectorDeFrecuencias();
-
 };
 
 #endif /* PUNTO_H_ */

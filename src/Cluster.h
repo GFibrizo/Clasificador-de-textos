@@ -27,7 +27,6 @@ public:
 	void setCentroide(Punto centroide);
 	void agregarElementoSinCalcularCentroide(Punto punto);
 	void calcularCentroide();
-
 };
 
 #endif /* CLUSTER_H_ */

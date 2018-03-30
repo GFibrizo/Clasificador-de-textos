@@ -11,9 +11,8 @@
 /**********************************************************************/
 
 
-//constructor: levanta el archivo de stopwords
+// Constructor: levanta el archivo de stopwords
 VerificadorStopWords::VerificadorStopWords(std::string ruta) {
-
 		ManejadorArchivos archivo;
 		archivo.abrirLectura(ruta);
 		std::string lineaaux;
@@ -28,7 +27,6 @@ VerificadorStopWords::VerificadorStopWords(std::string ruta) {
 
 
 bool VerificadorStopWords::verificarPalabra(std::string palabra){
-
 	if(tabla.count(palabra)==0){
 		return false;
 	}

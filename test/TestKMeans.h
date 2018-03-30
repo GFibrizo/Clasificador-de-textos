@@ -13,7 +13,10 @@ using namespace std;
 #include <vector>
 #include <cstdlib>
 #include <iostream>
+
+
 class TestKMeans {
+
 private:
 	KMeans* kMeans;
 	vector<Punto> semillas;

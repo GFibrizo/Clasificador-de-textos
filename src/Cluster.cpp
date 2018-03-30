@@ -77,28 +77,26 @@ float Cluster::gradoCohesion(){
 
 // Se calcula como el promedio de los puntos que tiene el cluster.
 void Cluster::calcularCentroide(){
-
 	unsigned int cantPuntos = this->puntos.size();
-
-	//obtengo el tamaño que va a tener el vector de frecuencias
+	// Obtengo el tamaño que va a tener el vector de frecuencias
 	vector<float> frecTemp(this->puntos[0].vectorDeFrecuencias().size());
-	//Acumulo en un punto temporal la suma de todas las componentes de los
-	//puntos de cluster. Divido cada termino por el total de puntos para normalizar.
+
+	/* Acumulo en un punto temporal la suma de todas las componentes de los
+	  puntos de cluster. Divido cada termino por el total de puntos para normalizar. */
 	for (unsigned int i = 0;  i < cantPuntos; i++) {
 		for (unsigned int j = 0;  j < this->puntos[i].vectorDeFrecuencias().size(); j++) {
-			//frecTemp[j] =frecTemp[j] + (this->puntos[i].vectorDeFrecuencias()[j])/cantPuntos;
 			frecTemp[j] =frecTemp[j] + (this->puntos[i].vectorDeFrecuencias()[j]);
 		}
 	}
+
 	for (unsigned int i = 0; i < frecTemp.size(); i++) {
 		frecTemp[i]=frecTemp[i]/cantPuntos;
 	}
-	//Se crea un nuevo punto con el promedio de las frecuencias ponderadas de los puntos del cluster
-	//y que tiene como documento al -1 (ya que es un punto que puede ser ficticio)
 
+	/* Se crea un nuevo punto con el promedio de las frecuencias ponderadas de los puntos del cluster
+	y que tiene como documento al -1 (ya que es un punto que puede ser ficticio) */
 	Punto temp= Punto(frecTemp,-1);
 	this->centroide = temp;
-
 }
 
 /**********************************************************************/
