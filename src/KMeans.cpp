@@ -129,7 +129,7 @@ vector<Cluster*> KMeans::getClustersDistanciaMinima(Punto punto) {
 
 //Verifica si en la iteracion se realizo un cambio significativo de cada centroide
 bool KMeans::cambiosClusters() {
-	int cantDiferentes = 0;
+	unsigned int cantDiferentes = 0;
 	double difCentroides;
 	Punto oldCentroid, newCentroid;
 	for (unsigned int i = 0; i < this->clusters.size(); i++) {
