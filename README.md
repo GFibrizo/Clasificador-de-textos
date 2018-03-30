@@ -10,8 +10,8 @@ Trabajo práctico para la materia 7506 Organización de Datos de la facultado de
 
 ### Argumentos del programa
 
-- -d Directorio en el cual se encuentran los archivos de texto a agrupar en clusters.
-- -c Cantidad de clusters deseados.
-- -o 'Y' si se desea que un texto pueda pertenecer a mas de un cluster,, 'N' en caso contrario.
-- -l Lista todos los documentos y el cluster al que pertenece cada uno
-- -g Lista los clusters existentes y los documentos dentro de cada uno.
+- `-d PATH` Directorio en el cual se encuentran los archivos de texto a agrupar en clusters.
+- `-c CANT_CLUSTERS` Cantidad de clusters deseados.
+- `-o Y/N` 'Y' si se desea que un texto pueda pertenecer a mas de un cluster,, 'N' en caso contrario.
+- `-l` Lista todos los documentos y el cluster al que pertenece cada uno
+- `-g` Lista los clusters existentes y los documentos dentro de cada uno.
